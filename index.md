@@ -1,0 +1,203 @@
+# eleccionesdb ![](reference/figures/logo.png)
+
+> R client for the [EleccionesDB
+> API](https://github.com/example/eleccionesdb-api) — Spanish electoral
+> data as tidy tibbles.
+
+## Installation
+
+``` r
+# Install from local source
+devtools::install_local("path/to/eleccionesdb")
+
+# Or with remotes (when published)
+# remotes::install_github("user/eleccionesdb")
+```
+
+## Configuration
+
+By default, the package connects to `http://localhost:8000`. You can
+change this:
+
+``` r
+library(eleccionesdb)
+
+# Option 1: Environment variable (set before loading the package)
+Sys.setenv(ELECCIONESDB_URL = "http://my-server:8000")
+
+# Option 2: At runtime
+edb_set_base_url("http://my-server:8000")
+edb_get_base_url()
+#> [1] "http://my-server:8000"
+```
+
+## Quick start
+
+``` r
+library(eleccionesdb)
+library(dplyr)
+
+# Check API is running
+get_health()
+#> # A tibble: 1 × 3
+#>   status environment database
+#>   <chr>  <chr>       <chr>
+#> 1 ok     development ok
+
+# List election types
+get_tipos_eleccion()
+#> # A tibble: 5 × 2
+#>   codigo descripcion
+#>   <chr>  <chr>
+#> 1 A      Autonomicas
+#> 2 E      Europeas
+#> 3 G      Congreso
+#> 4 L      Locales
+#> 5 S      Senado
+
+# General elections in 2019
+get_elecciones(tipo_eleccion = "G", year = "2019")
+#> # A tibble: 2 × 9
+#>      id tipo_eleccion year  mes   dia   fecha      descripcion           ambito   slug
+#>   <int> <chr>         <chr> <chr> <chr> <date>     <chr>                 <chr>    <chr>
+#> 1   208 G             2019  04    28    2019-04-28 Elecciones Generales… Nacional elecciones…
+#> 2   226 G             2019  11    10    2019-11-10 Elecciones Generales… Nacional elecciones…
+
+# Full detail for one election
+get_eleccion(208)
+
+# Provincial results for April 2019 general election — clean output
+get_resultados(
+  tipo_eleccion = "G", year = "2019",
+  tipo_territorio = "provincia",
+  codigo_ccaa = "01"  # Andalucía
+)
+```
+
+## Pagination
+
+All list endpoints support pagination:
+
+``` r
+# Default: first 50 records
+get_elecciones()
+
+# Custom page size
+get_elecciones(limit = 100, skip = 50)
+
+# Fetch ALL records automatically (loops through all pages)
+get_elecciones(all_pages = TRUE)
+```
+
+The tibble returned carries an `"edb_total"` attribute with the total
+count:
+
+``` r
+tbl <- get_elecciones(tipo_eleccion = "G")
+attr(tbl, "edb_total")
+#> [1] 16
+```
+
+## Function reference
+
+### Elections
+
+| Function                                                  | Description                            |
+|-----------------------------------------------------------|----------------------------------------|
+| [`get_tipos_eleccion()`](reference/get_tipos_eleccion.md) | Catalogue of election types            |
+| `get_tipo_eleccion(codigo)`                               | Single election type by code           |
+| `get_elecciones(...)`                                     | List elections (filterable, paginated) |
+| `get_eleccion(id)`                                        | Election detail (with tipo flattened)  |
+
+### Territories
+
+| Function                   | Description                              |
+|----------------------------|------------------------------------------|
+| `get_territorios(...)`     | List territories (filterable, paginated) |
+| `get_territorio(id)`       | Territory detail (all codes)             |
+| `get_territorio_hijos(id)` | Children of a territory                  |
+
+### Parties
+
+| Function                   | Description                          |
+|----------------------------|--------------------------------------|
+| `get_partidos(...)`        | List parties (filterable, paginated) |
+| `get_partido(id)`          | Party detail (with recode flattened) |
+| `get_partidos_recode(...)` | List recode groups (paginated)       |
+| `get_partido_recode(id)`   | Recode detail + associated parties   |
+
+### Results
+
+| Function                                   | Description                                |
+|--------------------------------------------|--------------------------------------------|
+| `get_totales_territorio_eleccion(id, ...)` | Territorial totals for one election        |
+| `get_resultado_completo(elec_id, terr_id)` | Totals + per-party votes                   |
+| `get_totales_territorio(...)`              | Territorial totals (cross-election)        |
+| `get_votos_partido(...)`                   | Per-party votes (cross-election)           |
+| `get_resultados(...)`                      | Fully expanded results (best for analysis) |
+
+### CERA (overseas vote)
+
+| Function                | Description          |
+|-------------------------|----------------------|
+| `get_cera_resumen(...)` | CERA summaries       |
+| `get_cera_votos(...)`   | CERA per-party votes |
+
+### Configuration
+
+| Function                                              | Description              |
+|-------------------------------------------------------|--------------------------|
+| `edb_set_base_url(url)`                               | Set API base URL         |
+| [`edb_get_base_url()`](reference/edb_get_base_url.md) | Get current API base URL |
+
+## Nested data handling
+
+The package flattens nested JSON objects into prefixed columns for easy
+analysis:
+
+- **[`get_eleccion()`](reference/get_eleccion.md)**: `tipo` →
+  `tipo_codigo`, `tipo_descripcion`
+- **[`get_partido()`](reference/get_partido.md)**: `recode` →
+  `recode_id`, `recode_partido_recode`, `recode_agrupacion`,
+  `recode_color`
+- **[`get_resultados()`](reference/get_resultados.md)**: Flattens and
+  renames `partido.*`, `recode.*`, `territorio.*`, `eleccion.*`
+  (`clean = TRUE` by default)
+
+When an endpoint returns heterogeneous structures (a summary + a list of
+votes), the function returns a **named list** instead of trying to force
+it into one tibble:
+
+``` r
+result <- get_resultado_completo(208, 20)
+result$totales_territorio  # 1-row tibble with census/participation data
+result$votos_partido       # tibble of per-party votes (partido flattened)
+
+recode <- get_partido_recode(47)
+recode$recode    # 1-row tibble with group info
+recode$partidos  # tibble of associated parties (can be thousands)
+```
+
+## Error handling
+
+``` r
+# 404 — resource not found
+get_eleccion(99999)
+#> Error: API error (404): Elección no encontrada
+
+# 422 — validation error
+get_elecciones(limit = -5)
+#> Error: Error de validacion (422):
+#> [query > limit] Input should be greater than or equal to 1
+
+# Network failure
+edb_set_base_url("http://nonexistent:9999")
+get_health()
+#> Error: No se pudo conectar con la API de EleccionesDB.
+#> ℹ URL base: http://nonexistent:9999
+#> ℹ Verifica que el servidor esta en ejecucion.
+```
+
+## License
+
+MIT
