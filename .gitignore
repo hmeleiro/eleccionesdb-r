@@ -1,0 +1,33 @@
+# R history and environment
+.Rhistory
+.Rapp.history
+.RData
+.Ruserdata
+
+# RStudio files
+*.Rproj
+.Rproj.user/
+
+# Compiled R files
+*.Rcheck/
+*.tar.gz
+
+# pkgdown site (built locally)
+docs/
+
+# Byte-compiled files
+*.o
+*.so
+*.dll
+
+# Generated man pages cache
+Meta/
+
+# knitr/rmarkdown output
+*_cache/
+/doc/
+/inst/doc/
+
+# OS files
+.DS_Store
+Thumbs.db

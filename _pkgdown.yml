@@ -1,0 +1,56 @@
+url: ~
+template:
+  bootstrap: 5
+  bootswatch: cosmo
+
+navbar:
+  structure:
+    left: [intro, reference, articles]
+    right: [search, github]
+
+articles:
+  - title: Primeros pasos
+    contents:
+      - introduccion
+  - title: Guías
+    contents:
+      - datos-maestros
+      - analisis-resultados
+      - voto-exterior-cera
+
+reference:
+  - title: Configuración
+    contents:
+      - edb_set_base_url
+      - edb_get_base_url
+  - title: Elecciones
+    contents:
+      - get_tipos_eleccion
+      - get_tipo_eleccion
+      - get_elecciones
+      - get_eleccion
+  - title: Territorios
+    contents:
+      - get_territorios
+      - get_territorio
+      - get_territorio_hijos
+  - title: Partidos
+    contents:
+      - get_partidos
+      - get_partido
+      - get_partidos_recode
+      - get_partido_recode
+  - title: Resultados
+    contents:
+      - get_totales_territorio_eleccion
+      - get_resultado_completo
+      - get_resultados
+      - get_totales_territorio
+      - get_votos_partido
+  - title: Voto exterior (CERA)
+    contents:
+      - get_cera_resumen
+      - get_cera_votos
+  - title: Utilidades
+    contents:
+      - get_health

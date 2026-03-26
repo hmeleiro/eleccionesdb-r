@@ -1,0 +1,35 @@
+Package: eleccionesdb
+Title: R Client for the EleccionesDB API
+Version: 0.1.0
+Authors@R:
+    person("First", "Last", email = "first.last@example.com",
+           role = c("aut", "cre"))
+Description: Provides functions to access the EleccionesDB REST API for
+    Spanish electoral data. Returns tidy tibbles ready for analysis,
+    supports automatic pagination, and handles nested JSON structures
+    with sensible flattening. Covers elections, territories, parties,
+    results, and CERA (overseas vote) endpoints.
+License: MIT + file LICENSE
+URL: https://github.com/example/eleccionesdb
+BugReports: https://github.com/example/eleccionesdb/issues
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
+Imports:
+    cli,
+    httr2 (>= 1.0.0),
+    rlang (>= 1.0.0),
+    tibble,
+    vctrs
+Suggests:
+    dplyr,
+    ggplot2,
+    knitr,
+    pkgdown,
+    rmarkdown,
+    testthat (>= 3.0.0),
+    tidyr,
+    withr
+Config/testthat/edition: 3
+Config/Needs/website: pkgdown
+VignetteBuilder: knitr

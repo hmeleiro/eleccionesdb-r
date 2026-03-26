@@ -1,0 +1,507 @@
+---
+title: "Análisis de resultados electorales"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Análisis de resultados electorales}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  eval = FALSE
+)
+```
+
+```{r library}
+library(eleccionesdb)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+Este vignette muestra flujos de trabajo completos para analizar resultados
+electorales españoles con **dplyr** y **ggplot2**, desde la consulta de datos
+hasta la visualización.
+
+---
+
+## Funciones de resultados
+
+El paquete ofrece varias funciones para acceder a resultados. Es importante
+entender la diferencia entre ellas:
+
+| Función | Alcance | Devuelve |
+|---|---|---|
+| `get_totales_territorio_eleccion()` | Una elección | Totales territoriales (censo, participación, votos) |
+| `get_resultado_completo()` | Una elección + un territorio | Lista: `$totales_territorio` + `$votos_partido` (por partido) |
+| `get_totales_territorio()` | Cruce de elecciones | Totales territoriales filtrables |
+| `get_votos_partido()` | Cruce de elecciones | Votos por partido filtrables |
+| `get_resultados()` | Cruce de elecciones | Todo expandido: votos + partido + recode + territorio + elección |
+
+Para la mayoría de análisis, **`get_resultados()`** es la opción
+más práctica, ya que devuelve toda la información aplanada y lista para
+usar con dplyr. Por defecto, `clean = TRUE` renombra las columnas con
+prefijo a nombres cortos (`year`, `siglas`, `territorio_nombre`...).
+
+---
+
+## Desnormalización de IDs
+
+Las funciones `get_totales_territorio()`, `get_votos_partido()`,
+`get_totales_territorio_eleccion()`,
+`get_resultado_completo()`, `get_cera_resumen()` y `get_cera_votos()` devuelven
+columnas de ID (`eleccion_id`, `territorio_id`, `partido_id`) que hacen
+referencia a otras tablas. Para facilitar el análisis sin necesidad de hacer
+joins manuales, puedes usar el parámetro `denormalize = TRUE`:
+
+```{r denormalize-basico}
+# Sin desnormalizar: solo IDs
+votos <- get_votos_partido(eleccion_id = 208, territorio_id = 20)
+votos
+#> # A tibble: 22 × 6
+#>       id eleccion_id territorio_id partido_id votos representantes
+#>    <int>       <int>         <int>      <int> <int>          <int>
+#>  1 50001         208            20       9451 89432              3
+#> ...
+
+# Con desnormalización: se añaden columnas descriptivas
+votos_dn <- get_votos_partido(
+  eleccion_id = 208,
+  territorio_id = 20,
+  denormalize = TRUE
+)
+votos_dn
+#> # A tibble: 22 × 9
+#>       id eleccion_id eleccion_descripcion   territorio_id territorio_nombre
+#>    <int>       <int> <chr>                          <int> <chr>
+#>  1 50001         208 Elecciones Generales…             20 Almeria
+#> # ℹ … partido_id partido_nombre votos representantes
+```
+
+Las columnas descriptivas se insertan justo después de su columna de ID
+correspondiente:
+
+| ID original | Columna añadida | Origen |
+|---|---|---|
+| `eleccion_id` | `eleccion_descripcion` | Campo `descripcion` de la elección |
+| `territorio_id` | `territorio_nombre` | Campo `nombre` del territorio |
+| `partido_id` | `partido_nombre` | Campo `siglas` del partido |
+
+### Usar la agrupación (recode) como nombre del partido
+
+Cuando se trabaja con datos electorales, es habitual agrupar los votos de las
+distintas candidaturas locales de un mismo partido bajo una misma etiqueta.
+El parámetro `use_recode = TRUE` hace que `partido_nombre` use la agrupación
+del recode (de la tabla `partidos_recode`) en lugar de las siglas originales
+del partido. Si un partido no tiene recode asignado, se mantienen sus siglas:
+
+```{r denormalize-recode}
+# partido_nombre usa la agrupación del recode
+votos_recode <- get_votos_partido(
+  eleccion_id = 208,
+  tipo_territorio = "provincia",
+  all_pages = TRUE,
+  denormalize = TRUE,
+  use_recode = TRUE
+)
+
+# Ahora es fácil agrupar por partido sin joins adicionales
+votos_recode |>
+  group_by(partido_nombre) |>
+  summarise(total = sum(votos), .groups = "drop") |>
+  slice_max(total, n = 5)
+#> # A tibble: 5 × 2
+#>   partido_nombre     total
+#>   <chr>              <int>
+#> 1 PSOE             7480076
+#> 2 AP/PP            4356646
+#> 3 Cs               2692092
+#> 4 UP               2381960
+#> 5 VOX              2677173
+```
+
+### Desnormalizar con `get_totales_territorio()`
+
+Las funciones sin `partido_id` (`get_totales_territorio()`,
+`get_totales_territorio_eleccion()`,
+`get_cera_resumen()`) solo añaden `eleccion_descripcion` y `territorio_nombre`:
+
+```{r denormalize-resumen}
+resumenes <- get_totales_territorio(
+  eleccion_id = 208,
+  tipo_territorio = "provincia",
+  all_pages = TRUE,
+  denormalize = TRUE
+)
+resumenes |>
+  select(eleccion_id, eleccion_descripcion,
+         territorio_id, territorio_nombre,
+         censo_ine, votos_validos)
+#> # A tibble: 52 × 6
+#>   eleccion_id eleccion_descripcion    territorio_id territorio_nombre   censo_ine
+#>         <int> <chr>                           <int> <chr>                   <int>
+#> 1         208 Elecciones Generales…              20 Almeria                402054
+#> 2         208 Elecciones Generales…              21 Cadiz                  816291
+#> ...
+```
+
+### `get_resultado_completo()` con desnormalización
+
+`get_resultado_completo()` devuelve una lista con `$totales_territorio` y
+`$votos_partido`. Con `denormalize = TRUE`, ambos elementos reciben las
+columnas descriptivas:
+
+```{r denormalize-completo}
+resultado <- get_resultado_completo(
+  208, 20,
+  denormalize = TRUE,
+  use_recode = TRUE
+)
+
+# Los totales incluyen eleccion_descripcion y territorio_nombre
+resultado$totales_territorio |>
+  select(eleccion_id, eleccion_descripcion,
+         territorio_id, territorio_nombre)
+
+# Los votos incluyen además partido_nombre (con recode)
+resultado$votos_partido |>
+  select(partido_nombre, partido_siglas, votos, representantes) |>
+  head(5)
+#> # A tibble: 5 × 4
+#>   partido_nombre partido_siglas votos representantes
+#>   <chr>          <chr>          <int>          <int>
+#> 1 PSOE           P.S.O.E.      89432              3
+#> 2 AP/PP          PP            72105              2
+#> ...
+```
+
+---
+
+## 1. Resultados de una elección concreta
+
+### Identificar la elección
+
+```{r buscar-eleccion}
+# Elecciones generales de abril de 2019
+elecciones_2019 <- get_elecciones(tipo_eleccion = "G", year = "2019")
+elecciones_2019
+#> # A tibble: 2 × 9
+#>      id tipo_eleccion year  mes   dia   fecha      descripcion       ambito   slug
+#>   <int> <chr>         <chr> <chr> <chr> <date>     <chr>             <chr>    <chr>
+#> 1   208 G             2019  04    28    2019-04-28 Elecciones Gene…  Nacional elecc…
+#> 2   226 G             2019  11    10    2019-11-10 Elecciones Gene…  Nacional elecc…
+
+# La de abril es la id = 208
+elec_id <- 208
+```
+
+### Resúmenes por provincia
+
+```{r resultados-eleccion}
+# Totales provinciales de la elección 208
+resumenes <- get_totales_territorio_eleccion(
+  eleccion_id = elec_id,
+  tipo_territorio = "provincia",
+  all_pages = TRUE
+)
+resumenes
+#> # A tibble: 52 × 11
+#>       id eleccion_id territorio_id censo_ine participacion_1 participacion_2
+#>    <int>       <int>         <int>     <int>           <int>           <int>
+#>  1  1001         208            20    402054          261543          290178
+#>  2  1002         208            21    816291          531099          574123
+#> # ℹ 50 more rows
+#> # ℹ 5 more variables: participacion_3 <int>, votos_validos <int>,
+#> #   votos_nulos <int>, votos_blanco <int>, nrepresentantes <int>
+```
+
+### Resultado completo de un territorio
+
+`get_resultado_completo()` devuelve una lista con los totales territoriales
+y el desglose de votos por partido para una combinación elección-territorio:
+
+```{r resultado-completo}
+# Resultado completo de Almería (territorio_id = 20) en la elección 208
+resultado <- get_resultado_completo(eleccion_id = 208, territorio_id = 20)
+
+# Totales territorio: censo, participación, abstención
+resultado$totales_territorio
+#> # A tibble: 1 × 11
+#>      id eleccion_id territorio_id censo_ine participacion_1 participacion_2
+#>   <int>       <int>         <int>     <int>           <int>           <int>
+#> 1  1001         208            20    402054          261543          290178
+#> # ℹ 5 more variables: ...
+
+# Votos por partido (con datos del partido aplanados)
+resultado$votos_partido
+#> # A tibble: 22 × 7
+#>       id eleccion_id territorio_id partido_id votos representantes partido_siglas
+#>    <int>       <int>         <int>      <int> <int>          <int> <chr>
+#>  1 50001         208            20       9451 89432              3 P.S.O.E.
+#>  2 50002         208            20       3421 72105              2 PP
+#> # ℹ 20 more rows
+```
+
+---
+
+## 2. Análisis con resultados combinados
+
+`get_resultados()` es la función más potente: devuelve cada fila de
+votos con todos los objetos anidados aplanados (partido + recode, territorio,
+elección). Por defecto, `clean = TRUE` renombra los campos con prefijo a
+nombres cortos y descarta las columnas de IDs y slugs.
+
+### Votos por partido en una comunidad autónoma
+
+```{r combinados-ccaa}
+# Resultados provinciales de Andalucía en las generales de abril 2019
+andalucia <- get_resultados(
+  tipo_eleccion = "G", year = "2019",
+  tipo_territorio = "provincia",
+  codigo_ccaa = "01",
+  all_pages = TRUE
+)
+
+# Columnas limpias (clean = TRUE por defecto):
+names(andalucia)
+#>  [1] "year"               "mes"                "tipo_eleccion"
+#>  [4] "tipo_territorio"    "territorio_nombre"  "codigo_ccaa"
+#>  [7] "codigo_provincia"   "siglas"             "denominacion"
+#> [10] "partido_recode"     "votos"              "representantes"
+```
+
+### Ejemplo: Top 5 partidos por votos totales
+
+```{r top-partidos}
+top5 <- andalucia |>
+  group_by(partido_recode) |>
+  summarise(total_votos = sum(votos), .groups = "drop") |>
+  filter(!is.na(partido_recode)) |>
+  slice_max(total_votos, n = 5)
+
+top5
+#> # A tibble: 5 × 2
+#>   partido_recode total_votos
+#>   <chr>                <int>
+#> 1 PSOE               1568432
+#> 2 AP/PP              1023456
+#> 3 Cs                  789012
+#> 4 UP                  456789
+#> 5 VOX                 345678
+```
+
+Para obtener los colores del recode, podemos consultar la tabla de agrupaciones:
+
+```{r colores-recode}
+recodes <- get_partidos_recode(all_pages = TRUE)
+colores <- recodes |>
+  filter(agrupacion %in% top5$partido_recode) |>
+  with(setNames(color, agrupacion))
+```
+
+### Gráfico de barras: votos por agrupación
+
+```{r grafico-barras, fig.width = 7, fig.height = 4}
+ggplot(top5, aes(x = reorder(partido_recode, total_votos), y = total_votos)) +
+  geom_col(aes(fill = partido_recode)) +
+  scale_fill_manual(values = colores) +
+  coord_flip() +
+  scale_y_continuous(labels = scales::label_number(scale = 1e-6, suffix = "M")) +
+  labs(
+    title = "Elecciones Generales 28-A 2019 — Andalucía",
+    subtitle = "Votos totales por agrupación (nivel provincia)",
+    x = NULL,
+    y = "Votos"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+### Votos por partido y provincia
+
+```{r votos-provincia}
+# Desglose de los 5 principales partidos por provincia
+por_provincia <- andalucia |>
+  filter(partido_recode %in% top5$partido_recode) |>
+  select(territorio_nombre, partido_recode, votos)
+
+por_provincia |>
+  pivot_wider(
+    names_from = partido_recode,
+    values_from = votos,
+    values_fill = 0
+  )
+```
+
+### Gráfico: distribución provincial
+
+```{r grafico-provincia, fig.width = 8, fig.height = 5}
+ggplot(
+  por_provincia,
+  aes(x = territorio_nombre, y = votos, fill = partido_recode)
+) +
+  geom_col(position = "dodge") +
+  scale_fill_manual(values = colores) +
+  scale_y_continuous(labels = scales::label_comma()) +
+  labs(
+    title = "Votos por partido y provincia — Andalucía 28-A 2019",
+    x = NULL,
+    y = "Votos",
+    fill = "Agrupación"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+---
+
+## 3. Comparar participación entre elecciones
+
+`get_totales_territorio()` permite consultar totales territoriales cruzando
+múltiples elecciones:
+
+```{r comparar-participacion}
+# Totales a nivel de CCAA para todas las generales
+resumenes_generales <- get_totales_territorio(
+  tipo_eleccion = "G",
+  tipo_territorio = "ccaa",
+  all_pages = TRUE
+)
+
+# Calcular tasa de participación por elección y territorio
+participacion <- resumenes_generales |>
+  mutate(tasa_participacion = participacion_1 / censo_ine * 100) |>
+  select(eleccion_id, territorio_id, tasa_participacion)
+```
+
+Para enriquecer con los datos de la elección, podemos cruzar con
+`get_elecciones()`:
+
+```{r participacion-enriquecida}
+elecciones <- get_elecciones(tipo_eleccion = "G", all_pages = TRUE)
+
+participacion_enriquecida <- participacion |>
+  left_join(
+    elecciones |> select(id, year, fecha),
+    by = c("eleccion_id" = "id")
+  )
+```
+
+### Gráfico: evolución de la participación
+
+```{r grafico-participacion, fig.width = 8, fig.height = 4}
+# Participación media nacional por elección
+media_nacional <- participacion_enriquecida |>
+  group_by(fecha) |>
+  summarise(media_participacion = mean(tasa_participacion, na.rm = TRUE))
+
+ggplot(media_nacional, aes(x = fecha, y = media_participacion)) +
+  geom_line(linewidth = 1, color = "#333333") +
+  geom_point(size = 3, color = "#E30613") +
+  scale_y_continuous(limits = c(50, 85), labels = function(x) paste0(x, "%")) +
+  labs(
+    title = "Evolución de la participación en elecciones generales",
+    x = NULL,
+    y = "Participación media (%)"
+  ) +
+  theme_minimal()
+```
+
+---
+
+## 4. Evolución del voto de una agrupación
+
+`get_votos_partido()` devuelve votos por partido, cruzando elecciones.
+Combinado con las agrupaciones de recode permite hacer análisis temporales:
+
+```{r evolucion-partido}
+# Usamos get_resultados para obtener votos con partido y elección
+votos_combinados <- get_resultados(
+  tipo_eleccion = "G",
+  tipo_territorio = "provincia",
+  all_pages = TRUE
+)
+
+# Total nacional por agrupación y elección
+evolucion <- votos_combinados |>
+  filter(!is.na(partido_recode)) |>
+  group_by(year, partido_recode) |>
+  summarise(total_votos = sum(votos), .groups = "drop")
+```
+
+### Gráfico: evolución temporal de los principales partidos
+
+```{r grafico-evolucion, fig.width = 9, fig.height = 5}
+# Seleccionar las 4 agrupaciones con más votos históricos
+top_agrupaciones <- evolucion |>
+  group_by(partido_recode) |>
+  summarise(total = sum(total_votos)) |>
+  slice_max(total, n = 4)
+
+# Obtener colores de las agrupaciones
+recodes_colores <- get_partidos_recode(all_pages = TRUE)
+colores_top <- recodes_colores |>
+  filter(agrupacion %in% top_agrupaciones$partido_recode) |>
+  with(setNames(color, agrupacion))
+
+evolucion |>
+  filter(partido_recode %in% top_agrupaciones$partido_recode) |>
+  ggplot(aes(x = year, y = total_votos, color = partido_recode, group = partido_recode)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2) +
+  scale_color_manual(values = colores_top) +
+  scale_y_continuous(labels = scales::label_number(scale = 1e-6, suffix = "M")) +
+  labs(
+    title = "Evolución del voto en elecciones generales",
+    subtitle = "Total nacional por agrupación (nivel provincia)",
+    x = NULL,
+    y = "Votos totales",
+    color = "Agrupación"
+  ) +
+  theme_minimal()
+```
+
+---
+
+## 5. Mapa de calor: representantes por provincia
+
+```{r heatmap, fig.width = 9, fig.height = 7}
+# Representantes por provincia y agrupación en las generales 28-A 2019
+representantes <- get_resultados(
+  tipo_eleccion = "G", year = "2019",
+  tipo_territorio = "provincia",
+  all_pages = TRUE
+) |>
+  filter(partido_recode %in% c("PSOE", "AP/PP", "Cs", "UP", "VOX")) |>
+  select(territorio_nombre, partido_recode, representantes)
+
+ggplot(representantes, aes(
+  x = partido_recode,
+  y = territorio_nombre,
+  fill = representantes
+)) +
+  geom_tile(color = "white") +
+  scale_fill_viridis_c(option = "plasma", direction = -1) +
+  labs(
+    title = "Representantes por provincia — 28-A 2019",
+    x = NULL,
+    y = NULL,
+    fill = "Escaños"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+---
+
+## Siguientes pasos
+
+- **Introducción**: si aún no lo has leído, repasa los conceptos básicos en
+  `vignette("introduccion")`.
+- **Territorios y partidos**: profundiza en los datos maestros en
+  `vignette("datos-maestros")`.
+- **Voto exterior (CERA)**: analiza el voto de los españoles en el extranjero
+  en `vignette("voto-exterior-cera")`.

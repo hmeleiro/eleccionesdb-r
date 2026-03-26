@@ -1,0 +1,53 @@
+#' @keywords internal
+#' @importFrom rlang %||%
+"_PACKAGE"
+
+#' eleccionesdb: R Client for the EleccionesDB API
+#'
+#' Provides functions to access the EleccionesDB REST API for Spanish
+#' electoral data. All functions return tidy tibbles ready for analysis
+#' with the tidyverse.
+#'
+#' @section Configuration:
+#' The API base URL defaults to `http://localhost:8000` and can be
+#' configured via:
+#' - The `ELECCIONESDB_URL` environment variable (read on package load)
+#' - [edb_set_base_url()] at runtime
+#'
+#' @section Main functions:
+#'
+#' **Elections:**
+#' - [get_tipos_eleccion()] — catalogue of election types
+#' - [get_tipo_eleccion()] — single election type by code
+#' - [get_elecciones()] — list elections (paginated, filterable)
+#' - [get_eleccion()] — single election detail
+#'
+#' **Territories:**
+#' - [get_territorios()] — list territories (paginated, filterable)
+#' - [get_territorio()] — single territory detail
+#' - [get_territorio_hijos()] — child territories (hierarchy)
+#'
+#' **Parties:**
+#' - [get_partidos()] — list parties (paginated, filterable)
+#' - [get_partido()] — single party detail (with recode)
+#' - [get_partidos_recode()] — list recode groups (paginated)
+#' - [get_partido_recode()] — single recode group with party list
+#'
+#' **Results:**
+#' - [get_totales_territorio_eleccion()] — territorial totals for an election
+#' - [get_resultado_completo()] — full result (totals + votes) for election+territory
+#' - [get_totales_territorio()] — territorial totals (cross-election)
+#' - [get_votos_partido()] — per-party votes (cross-election)
+#' - [get_resultados()] — fully expanded votes (best for analysis)
+#'
+#' **CERA (overseas vote):**
+#' - [get_cera_resumen()] — overseas summaries
+#' - [get_cera_votos()] — overseas per-party votes
+#'
+#' @section Pagination:
+#' All list endpoints support `limit`, `skip`, and `all_pages` parameters.
+#' Set `all_pages = TRUE` to automatically fetch all records.
+#'
+#' @docType package
+#' @name eleccionesdb-package
+NULL
