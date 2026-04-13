@@ -12,7 +12,8 @@ get_tipo_eleccion(codigo)
 
 - codigo:
 
-  Character. The election type code (e.g. `"G"`, `"A"`, `"L"`).
+  Character. The election type code. Valid values: `"A"` (Autonomicas),
+  `"E"` (Europeas), `"G"` (Congreso), `"L"` (Locales), `"S"` (Senado).
 
 ## Value
 

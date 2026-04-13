@@ -21,14 +21,15 @@ devtools::install_local("ruta/a/eleccionesdb")
 
 ## Configuración
 
-Por defecto el paquete se conecta a `http://localhost:8000`. Puedes
-cambiar la URL base de dos formas:
+Por defecto el paquete se conecta a
+`https://api.spainelectoralproject.com/`. Puedes cambiar la URL base de
+dos formas:
 
 ``` r
 library(eleccionesdb)
 
 # Opción 1: variable de entorno (antes de cargar el paquete)
-Sys.setenv(ELECCIONESDB_URL = "http://mi-servidor:8000")
+Sys.setenv(ELECCIONESDB_URL = "http://mi-servidor:8000") # o tu propio despliegue
 
 # Opción 2: en tiempo de ejecución
 edb_set_base_url("http://mi-servidor:8000")

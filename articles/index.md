@@ -9,3 +9,7 @@
 - [Territorios y partidos](datos-maestros.md):
 - [Análisis de resultados electorales](analisis-resultados.md):
 - [Voto exterior (CERA)](voto-exterior-cera.md):
+
+### Avanzado
+
+- [Despliegue propio de la base de datos y la API](autodespliegue.md):

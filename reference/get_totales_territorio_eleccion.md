@@ -11,6 +11,7 @@ get_totales_territorio_eleccion(
   tipo_territorio = NULL,
   codigo_ccaa = NULL,
   codigo_provincia = NULL,
+  codigo_municipio = NULL,
   ...,
   territorio_id = NULL,
   limit = 50L,
@@ -29,16 +30,23 @@ get_totales_territorio_eleccion(
 
 - tipo_territorio:
 
-  Character vector. Filter by territory type (e.g. `"provincia"`).
-  Optional.
+  Character vector. Filter by territory type. Valid values: `"ccaa"`,
+  `"provincia"`, `"municipio"`, `"distrito"`, `"seccion"`,
+  `"circunscripcion"`, `"cera"`. Optional.
 
 - codigo_ccaa:
 
-  Character vector. Filter by CCAA code(s). Optional.
+  Character vector. Filter by autonomous community INE code(s) (e.g.
+  `"01"`, `"13"`). Optional.
 
 - codigo_provincia:
 
-  Character vector. Filter by province code(s). Optional.
+  Character vector. Filter by province INE code(s) (e.g. `"28"`,
+  `"08"`). Optional.
+
+- codigo_municipio:
+
+  Character vector. Filter by municipality INE code(s). Optional.
 
 - ...:
 

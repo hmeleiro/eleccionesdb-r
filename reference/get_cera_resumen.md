@@ -28,7 +28,9 @@ get_cera_resumen(
 
 - tipo_eleccion:
 
-  Character vector. Filter by election type(s). Optional.
+  Character vector. Filter by election type code(s). Valid values: `"A"`
+  (Autonomicas), `"E"` (Europeas), `"G"` (Congreso), `"L"` (Locales),
+  `"S"` (Senado). Optional.
 
 - ...:
 

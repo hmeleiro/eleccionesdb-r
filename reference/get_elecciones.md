@@ -21,8 +21,9 @@ get_elecciones(
 
 - tipo_eleccion:
 
-  Character vector. Filter by election type codes (e.g. `"G"`,
-  `c("G", "A")`). Optional.
+  Character vector. Filter by election type code(s). Valid values: `"A"`
+  (Autonomicas), `"E"` (Europeas), `"G"` (Congreso), `"L"` (Locales),
+  `"S"` (Senado). Optional.
 
 - year:
 

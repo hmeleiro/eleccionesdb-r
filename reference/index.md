@@ -1,12 +1,5 @@
 # Package index
 
-## Configuración
-
-- [`edb_set_base_url()`](edb_set_base_url.md) : Set the EleccionesDB API
-  base URL
-- [`edb_get_base_url()`](edb_get_base_url.md) : Get the current
-  EleccionesDB API base URL
-
 ## Elecciones
 
 - [`get_tipos_eleccion()`](get_tipos_eleccion.md) : List all election
@@ -58,3 +51,14 @@
 ## Utilidades
 
 - [`get_health()`](get_health.md) : Check API health status
+
+## Configuración avanzada
+
+Funciones para apuntar el paquete a una instancia propia de la API. Ver
+[`vignette("autodespliegue")`](../articles/autodespliegue.md) para más
+detalles.
+
+- [`edb_set_base_url()`](edb_set_base_url.md) : Set the EleccionesDB API
+  base URL
+- [`edb_get_base_url()`](edb_get_base_url.md) : Get the current
+  EleccionesDB API base URL

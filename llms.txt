@@ -1,34 +1,17 @@
 # eleccionesdb ![](reference/figures/logo.png)
 
 > R client for the [EleccionesDB
-> API](https://github.com/example/eleccionesdb-api) — Spanish electoral
+> API](https://hmeleiro.github.io/eleccionesdb-api/) — Spanish electoral
 > data as tidy tibbles.
 
 ## Installation
 
 ``` r
 # Install from local source
-devtools::install_local("path/to/eleccionesdb")
+devtools::install_local("hmeleiro/eleccionesdb-r")
 
 # Or with remotes (when published)
-# remotes::install_github("user/eleccionesdb")
-```
-
-## Configuration
-
-By default, the package connects to `http://localhost:8000`. You can
-change this:
-
-``` r
-library(eleccionesdb)
-
-# Option 1: Environment variable (set before loading the package)
-Sys.setenv(ELECCIONESDB_URL = "http://my-server:8000")
-
-# Option 2: At runtime
-edb_set_base_url("http://my-server:8000")
-edb_get_base_url()
-#> [1] "http://my-server:8000"
+# remotes::install_github("hmeleiro/eleccionesdb-r")
 ```
 
 ## Quick start
@@ -37,8 +20,7 @@ edb_get_base_url()
 library(eleccionesdb)
 library(dplyr)
 
-# Check API is running
-get_health()
+get_health() # Check API is running
 #> # A tibble: 1 × 3
 #>   status environment database
 #>   <chr>  <chr>       <chr>
@@ -204,13 +186,6 @@ MIT
 
 # Package index
 
-## Configuración
-
-- [`edb_set_base_url()`](edb_set_base_url.md) : Set the EleccionesDB API
-  base URL
-- [`edb_get_base_url()`](edb_get_base_url.md) : Get the current
-  EleccionesDB API base URL
-
 ## Elecciones
 
 - [`get_tipos_eleccion()`](get_tipos_eleccion.md) : List all election
@@ -263,6 +238,17 @@ MIT
 
 - [`get_health()`](get_health.md) : Check API health status
 
+## Configuración avanzada
+
+Funciones para apuntar el paquete a una instancia propia de la API. Ver
+[`vignette("autodespliegue")`](../articles/autodespliegue.md) para más
+detalles.
+
+- [`edb_set_base_url()`](edb_set_base_url.md) : Set the EleccionesDB API
+  base URL
+- [`edb_get_base_url()`](edb_get_base_url.md) : Get the current
+  EleccionesDB API base URL
+
 # Articles
 
 ### Primeros pasos
@@ -274,3 +260,7 @@ MIT
 - [Territorios y partidos](datos-maestros.md):
 - [Análisis de resultados electorales](analisis-resultados.md):
 - [Voto exterior (CERA)](voto-exterior-cera.md):
+
+### Avanzado
+
+- [Despliegue propio de la base de datos y la API](autodespliegue.md):

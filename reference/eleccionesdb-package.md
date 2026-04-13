@@ -12,8 +12,8 @@ with the tidyverse.
 
 ## Configuration
 
-The API base URL defaults to `http://localhost:8000` and can be
-configured via:
+The API base URL defaults to `https://api.spainelectoralproject.com/`
+and can be configured via:
 
 - The `ELECCIONESDB_URL` environment variable (read on package load)
 

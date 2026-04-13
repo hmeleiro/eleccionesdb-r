@@ -2,20 +2,20 @@
 
 ## Authors
 
-- **First Last**. Author, maintainer.
+- **Héctor Meleiro**. Author, maintainer.
 
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/example/eleccionesdb/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/hmeleiro/eleccionesdb-r/blob/main/DESCRIPTION)
 
-Last F (2026). *eleccionesdb: R Client for the EleccionesDB API*. R
-package version 0.1.0, <https://github.com/example/eleccionesdb>.
+Meleiro H (2026). *eleccionesdb: R Client for the EleccionesDB API*. R
+package version 0.1.0, <https://github.com/hmeleiro/eleccionesdb-r>.
 
     @Manual{,
       title = {eleccionesdb: R Client for the EleccionesDB API},
-      author = {First Last},
+      author = {Héctor Meleiro},
       year = {2026},
       note = {R package version 0.1.0},
-      url = {https://github.com/example/eleccionesdb},
+      url = {https://github.com/hmeleiro/eleccionesdb-r},
     }

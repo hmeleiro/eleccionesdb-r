@@ -1,34 +1,17 @@
 # eleccionesdb ![](reference/figures/logo.png)
 
 > R client for the [EleccionesDB
-> API](https://github.com/example/eleccionesdb-api) — Spanish electoral
+> API](https://hmeleiro.github.io/eleccionesdb-api/) — Spanish electoral
 > data as tidy tibbles.
 
 ## Installation
 
 ``` r
 # Install from local source
-devtools::install_local("path/to/eleccionesdb")
+devtools::install_local("hmeleiro/eleccionesdb-r")
 
 # Or with remotes (when published)
-# remotes::install_github("user/eleccionesdb")
-```
-
-## Configuration
-
-By default, the package connects to `http://localhost:8000`. You can
-change this:
-
-``` r
-library(eleccionesdb)
-
-# Option 1: Environment variable (set before loading the package)
-Sys.setenv(ELECCIONESDB_URL = "http://my-server:8000")
-
-# Option 2: At runtime
-edb_set_base_url("http://my-server:8000")
-edb_get_base_url()
-#> [1] "http://my-server:8000"
+# remotes::install_github("hmeleiro/eleccionesdb-r")
 ```
 
 ## Quick start
@@ -37,8 +20,7 @@ edb_get_base_url()
 library(eleccionesdb)
 library(dplyr)
 
-# Check API is running
-get_health()
+get_health() # Check API is running
 #> # A tibble: 1 × 3
 #>   status environment database
 #>   <chr>  <chr>       <chr>

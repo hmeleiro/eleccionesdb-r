@@ -23,22 +23,23 @@ get_territorios(
 
 - tipo:
 
-  Character vector. Filter by territory type (e.g. `"ccaa"`,
-  `"provincia"`, `"municipio"`). Optional.
+  Character vector. Filter by territory type. Valid values: `"ccaa"`,
+  `"provincia"`, `"municipio"`, `"distrito"`, `"seccion"`,
+  `"circunscripcion"`, `"cera"`. Optional.
 
 - codigo_ccaa:
 
-  Character vector. Filter by autonomous community code (e.g. `"01"`,
-  `"13"`). Optional.
+  Character vector. Filter by autonomous community INE code(s) (e.g.
+  `"01"`, `"13"`). Optional.
 
 - codigo_provincia:
 
-  Character vector. Filter by province code (e.g. `"28"`, `"08"`).
-  Optional.
+  Character vector. Filter by province INE code(s) (e.g. `"28"`,
+  `"08"`). Optional.
 
 - codigo_municipio:
 
-  Character vector. Filter by municipality code. Optional.
+  Character vector. Filter by municipality INE code(s). Optional.
 
 - codigo_circunscripcion:
 

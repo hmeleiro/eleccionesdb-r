@@ -29,7 +29,9 @@ get_cera_votos(
 
 - tipo_eleccion:
 
-  Character vector. Filter by election type(s). Optional.
+  Character vector. Filter by election type code(s). Valid values: `"A"`
+  (Autonomicas), `"E"` (Europeas), `"G"` (Congreso), `"L"` (Locales),
+  `"S"` (Senado). Optional.
 
 - ...:
 
@@ -93,7 +95,8 @@ if (FALSE) { # \dontrun{
 get_cera_votos(tipo_eleccion = "G", year = "2019")
 
 # With denormalized names using recode grouping
-get_cera_votos(tipo_eleccion = "G",
+get_cera_votos(
+    tipo_eleccion = "G",
     denormalize = TRUE, use_recode = TRUE
 )
 } # }

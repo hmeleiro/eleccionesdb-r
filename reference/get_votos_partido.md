@@ -11,6 +11,7 @@ get_votos_partido(
   tipo_territorio = NULL,
   codigo_ccaa = NULL,
   codigo_provincia = NULL,
+  codigo_municipio = NULL,
   ...,
   eleccion_id = NULL,
   territorio_id = NULL,
@@ -32,19 +33,29 @@ get_votos_partido(
 
 - tipo_eleccion:
 
-  Character vector. Filter by election type(s). Optional.
+  Character vector. Filter by election type code(s). Valid values: `"A"`
+  (Autonomicas), `"E"` (Europeas), `"G"` (Congreso), `"L"` (Locales),
+  `"S"` (Senado). Optional.
 
 - tipo_territorio:
 
-  Character vector. Filter by territory type(s). Optional.
+  Character vector. Filter by territory type(s). Valid values: `"ccaa"`,
+  `"provincia"`, `"municipio"`, `"distrito"`, `"seccion"`,
+  `"circunscripcion"`, `"cera"`. Optional.
 
 - codigo_ccaa:
 
-  Character vector. Filter by CCAA code(s). Optional.
+  Character vector. Filter by autonomous community INE code(s) (e.g.
+  `"01"`, `"13"`). Optional.
 
 - codigo_provincia:
 
-  Character vector. Filter by province code(s). Optional.
+  Character vector. Filter by province INE code(s) (e.g. `"28"`,
+  `"08"`). Optional.
+
+- codigo_municipio:
+
+  Character vector. Filter by municipality INE code(s). Optional.
 
 - ...:
 

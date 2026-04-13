@@ -16,5 +16,5 @@ Character string with the current base URL.
 
 ``` r
 edb_get_base_url()
-#> [1] "http://localhost:8000"
+#> [1] "https://api.spainelectoralproject.com"
 ```
