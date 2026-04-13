@@ -1,6 +1,6 @@
 # eleccionesdb ![](reference/figures/logo.png)
 
-> R client for the [EleccionesDB
+> R client for the [eleccionesdb
 > API](https://hmeleiro.github.io/eleccionesdb-api/) — Spanish electoral
 > data as tidy tibbles.
 
