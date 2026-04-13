@@ -46,7 +46,7 @@ get_cera_resumen <- function(year = NULL, tipo_eleccion = NULL,
         tipo_eleccion = tipo_eleccion
     )
     tbl <- edb_paginated_get(
-        path = "/api/v1/resultados/cera/resumen",
+        path = "/v1/resultados/cera/resumen",
         params = params,
         limit = limit,
         skip = skip,
@@ -117,7 +117,7 @@ get_cera_votos <- function(year = NULL, tipo_eleccion = NULL,
         tipo_eleccion = tipo_eleccion
     )
     tbl <- edb_paginated_get(
-        path = "/api/v1/resultados/cera/votos",
+        path = "/v1/resultados/cera/votos",
         params = params,
         limit = limit,
         skip = skip,

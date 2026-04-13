@@ -22,7 +22,9 @@ get_cera_votos(
 \arguments{
 \item{year}{Character vector. Filter by year(s). Optional.}
 
-\item{tipo_eleccion}{Character vector. Filter by election type(s). Optional.}
+\item{tipo_eleccion}{Character vector. Filter by election type code(s).
+Valid values: \code{"A"} (Autonomicas), \code{"E"} (Europeas), \code{"G"} (Congreso),
+\code{"L"} (Locales), \code{"S"} (Senado). Optional.}
 
 \item{...}{Arguments after \code{...} must be named.}
 
@@ -66,7 +68,8 @@ Returns paginated per-party votes for the overseas electorate.
 get_cera_votos(tipo_eleccion = "G", year = "2019")
 
 # With denormalized names using recode grouping
-get_cera_votos(tipo_eleccion = "G",
+get_cera_votos(
+    tipo_eleccion = "G",
     denormalize = TRUE, use_recode = TRUE
 )
 }

@@ -1,10 +1,9 @@
 # Package-level environment for mutable state
 .eleccionesdb_env <- new.env(parent = emptyenv())
 
-.onLoad <- function(libname, pkgname) {
-    url <- Sys.getenv("ELECCIONESDB_URL", unset = "http://localhost:8000")
+ .onLoad <- function(libname, pkgname) {
+    url <- Sys.getenv("ELECCIONESDB_URL", unset = "https://api.spainelectoralproject.com/")
     # Strip trailing slash
-
-    url <- sub("/+$", "", url)
+    url <- sub("/+$$", "", url)
     .eleccionesdb_env$base_url <- url
 }

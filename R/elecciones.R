@@ -18,7 +18,7 @@
 #' # 5 S      Senado
 #' }
 get_tipos_eleccion <- function() {
-    json <- edb_get("/api/v1/tipos-eleccion")
+    json <- edb_get("/v1/tipos-eleccion")
     parse_array(json)
 }
 
@@ -34,7 +34,7 @@ get_tipos_eleccion <- function() {
 #' get_tipo_eleccion("G")
 #' }
 get_tipo_eleccion <- function(codigo) {
-    json <- edb_get(paste0("/api/v1/tipos-eleccion/", codigo))
+    json <- edb_get(paste0("/v1/tipos-eleccion/", codigo))
     parse_single(json)
 }
 
@@ -82,7 +82,7 @@ get_elecciones <- function(tipo_eleccion = NULL, year = NULL, mes = NULL,
         ambito = ambito
     )
     edb_paginated_get(
-        path = "/api/v1/elecciones",
+        path = "/v1/elecciones",
         params = params,
         limit = limit,
         skip = skip,
@@ -106,7 +106,7 @@ get_elecciones <- function(tipo_eleccion = NULL, year = NULL, mes = NULL,
 #' get_eleccion(208)
 #' }
 get_eleccion <- function(eleccion_id) {
-    json <- edb_get(paste0("/api/v1/elecciones/", eleccion_id))
+    json <- edb_get(paste0("/v1/elecciones/", eleccion_id))
     tbl <- parse_single(json)
     tbl <- flatten_nested(tbl, "tipo", "tipo")
     tbl <- coerce_dates(tbl)

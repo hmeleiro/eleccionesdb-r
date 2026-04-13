@@ -10,6 +10,7 @@ get_totales_territorio(
   tipo_territorio = NULL,
   codigo_ccaa = NULL,
   codigo_provincia = NULL,
+  codigo_municipio = NULL,
   ...,
   eleccion_id = NULL,
   territorio_id = NULL,
@@ -23,13 +24,22 @@ get_totales_territorio(
 \arguments{
 \item{year}{Character vector. Filter by year(s). Optional.}
 
-\item{tipo_eleccion}{Character vector. Filter by election type(s). Optional.}
+\item{tipo_eleccion}{Character vector. Filter by election type code(s).
+Valid values: \code{"A"} (Autonomicas), \code{"E"} (Europeas), \code{"G"} (Congreso),
+\code{"L"} (Locales), \code{"S"} (Senado). Optional.}
 
-\item{tipo_territorio}{Character vector. Filter by territory type(s). Optional.}
+\item{tipo_territorio}{Character vector. Filter by territory type(s).
+Valid values: \code{"ccaa"}, \code{"provincia"}, \code{"municipio"}, \code{"distrito"},
+\code{"seccion"}, \code{"circunscripcion"}, \code{"cera"}. Optional.}
 
-\item{codigo_ccaa}{Character vector. Filter by CCAA code(s). Optional.}
+\item{codigo_ccaa}{Character vector. Filter by autonomous community INE
+code(s) (e.g. \code{"01"}, \code{"13"}). Optional.}
 
-\item{codigo_provincia}{Character vector. Filter by province code(s). Optional.}
+\item{codigo_provincia}{Character vector. Filter by province INE code(s)
+(e.g. \code{"28"}, \code{"08"}). Optional.}
+
+\item{codigo_municipio}{Character vector. Filter by municipality INE
+code(s). Optional.}
 
 \item{...}{Arguments after \code{...} must be named.}
 

@@ -1,6 +1,6 @@
 #' Set the EleccionesDB API base URL
 #'
-#' @param url Character string with the base URL (e.g. `"http://localhost:8000"`).
+#' @param url Character string with the base URL (e.g. `"https://data.hmeleiro.com/"`).
 #' @return The previous base URL, invisibly.
 #' @export
 #' @examples
@@ -30,7 +30,7 @@ edb_get_base_url <- function() {
 
 #' Build a base httr2 request for the API
 #'
-#' @param path Character. The API path (e.g. `"/api/v1/elecciones"`).
+#' @param path Character. The API path (e.g. `"/v1/elecciones"`).
 #' @return An httr2 request object.
 #' @noRd
 edb_base_request <- function(path) {

@@ -17,16 +17,18 @@ get_territorios(
 )
 }
 \arguments{
-\item{tipo}{Character vector. Filter by territory type
-(e.g. \code{"ccaa"}, \code{"provincia"}, \code{"municipio"}). Optional.}
+\item{tipo}{Character vector. Filter by territory type. Valid values:
+\code{"ccaa"}, \code{"provincia"}, \code{"municipio"}, \code{"distrito"}, \code{"seccion"},
+\code{"circunscripcion"}, \code{"cera"}. Optional.}
 
-\item{codigo_ccaa}{Character vector. Filter by autonomous community code
-(e.g. \code{"01"}, \code{"13"}). Optional.}
+\item{codigo_ccaa}{Character vector. Filter by autonomous community INE
+code(s) (e.g. \code{"01"}, \code{"13"}). Optional.}
 
-\item{codigo_provincia}{Character vector. Filter by province code
+\item{codigo_provincia}{Character vector. Filter by province INE code(s)
 (e.g. \code{"28"}, \code{"08"}). Optional.}
 
-\item{codigo_municipio}{Character vector. Filter by municipality code. Optional.}
+\item{codigo_municipio}{Character vector. Filter by municipality INE
+code(s). Optional.}
 
 \item{codigo_circunscripcion}{Character vector. Filter by constituency code. Optional.}
 

@@ -59,7 +59,7 @@ add_eleccion_desc <- function(tbl) {
     lookup <- vapply(ids, function(id) {
         tryCatch(
             {
-                json <- edb_get(paste0("/api/v1/elecciones/", id))
+                json <- edb_get(paste0("/v1/elecciones/", id))
                 json[["descripcion"]] %||% NA_character_
             },
             error = function(err) NA_character_
@@ -84,7 +84,7 @@ add_territorio_nombre <- function(tbl) {
     lookup <- vapply(ids, function(id) {
         tryCatch(
             {
-                json <- edb_get(paste0("/api/v1/territorios/", id))
+                json <- edb_get(paste0("/v1/territorios/", id))
                 json[["nombre"]] %||% NA_character_
             },
             error = function(err) NA_character_
@@ -114,7 +114,7 @@ add_partido_nombre <- function(tbl, use_recode = FALSE) {
     lookup <- vapply(ids, function(id) {
         tryCatch(
             {
-                json <- edb_get(paste0("/api/v1/partidos/", id))
+                json <- edb_get(paste0("/v1/partidos/", id))
                 if (use_recode) {
                     recode <- json[["recode"]]
                     if (is.list(recode) && !is.null(recode[["agrupacion"]])) {

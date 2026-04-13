@@ -9,7 +9,7 @@
 #' with the tidyverse.
 #'
 #' @section Configuration:
-#' The API base URL defaults to `http://localhost:8000` and can be
+#' The API base URL defaults to `https://api.spainelectoralproject.com/` and can be
 #' configured via:
 #' - The `ELECCIONESDB_URL` environment variable (read on package load)
 #' - [edb_set_base_url()] at runtime
@@ -48,6 +48,7 @@
 #' All list endpoints support `limit`, `skip`, and `all_pages` parameters.
 #' Set `all_pages = TRUE` to automatically fetch all records.
 #'
-#' @docType package
+#' @details
+#' This is a package-level documentation file for eleccionesdb.
 #' @name eleccionesdb-package
 NULL

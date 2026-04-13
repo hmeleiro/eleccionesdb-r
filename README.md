@@ -1,41 +1,24 @@
-# eleccionesdb <img src="man/figures/logo.png" align="right" height="139" />
+# eleccionesdb <img src="man/figures/logo.png" align="right" height="139"/>
 
-> R client for the [EleccionesDB API](https://github.com/example/eleccionesdb-api) — Spanish electoral data as tidy tibbles.
+> R client for the [EleccionesDB API](https://hmeleiro.github.io/eleccionesdb-api/) — Spanish electoral data as tidy tibbles.
 
 ## Installation
 
-```r
+``` r
 # Install from local source
-devtools::install_local("path/to/eleccionesdb")
+devtools::install_local("hmeleiro/eleccionesdb-r")
 
 # Or with remotes (when published)
-# remotes::install_github("user/eleccionesdb")
-```
-
-## Configuration
-
-By default, the package connects to `http://localhost:8000`. You can change this:
- 
-```r
-library(eleccionesdb)
-
-# Option 1: Environment variable (set before loading the package)
-Sys.setenv(ELECCIONESDB_URL = "http://my-server:8000")
-
-# Option 2: At runtime
-edb_set_base_url("http://my-server:8000")
-edb_get_base_url()
-#> [1] "http://my-server:8000"
+# remotes::install_github("hmeleiro/eleccionesdb-r")
 ```
 
 ## Quick start
 
-```r
+``` r
 library(eleccionesdb)
 library(dplyr)
 
-# Check API is running
-get_health()
+get_health() # Check API is running
 #> # A tibble: 1 × 3
 #>   status environment database
 #>   <chr>  <chr>       <chr>
@@ -75,7 +58,7 @@ get_resultados(
 
 All list endpoints support pagination:
 
-```r
+``` r
 # Default: first 50 records
 get_elecciones()
 
@@ -88,7 +71,7 @@ get_elecciones(all_pages = TRUE)
 
 The tibble returned carries an `"edb_total"` attribute with the total count:
 
-```r
+``` r
 tbl <- get_elecciones(tipo_eleccion = "G")
 attr(tbl, "edb_total")
 #> [1] 16
@@ -97,31 +80,35 @@ attr(tbl, "edb_total")
 ## Function reference
 
 ### Elections
-| Function | Description |
-|---|---|
-| `get_tipos_eleccion()` | Catalogue of election types |
-| `get_tipo_eleccion(codigo)` | Single election type by code |
-| `get_elecciones(...)` | List elections (filterable, paginated) |
-| `get_eleccion(id)` | Election detail (with tipo flattened) |
+
+| Function                    | Description                            |
+|-----------------------------|----------------------------------------|
+| `get_tipos_eleccion()`      | Catalogue of election types            |
+| `get_tipo_eleccion(codigo)` | Single election type by code           |
+| `get_elecciones(...)`       | List elections (filterable, paginated) |
+| `get_eleccion(id)`          | Election detail (with tipo flattened)  |
 
 ### Territories
-| Function | Description |
-|---|---|
-| `get_territorios(...)` | List territories (filterable, paginated) |
-| `get_territorio(id)` | Territory detail (all codes) |
-| `get_territorio_hijos(id)` | Children of a territory |
+
+| Function                   | Description                              |
+|----------------------------|------------------------------------------|
+| `get_territorios(...)`     | List territories (filterable, paginated) |
+| `get_territorio(id)`       | Territory detail (all codes)             |
+| `get_territorio_hijos(id)` | Children of a territory                  |
 
 ### Parties
-| Function | Description |
-|---|---|
-| `get_partidos(...)` | List parties (filterable, paginated) |
-| `get_partido(id)` | Party detail (with recode flattened) |
-| `get_partidos_recode(...)` | List recode groups (paginated) |
-| `get_partido_recode(id)` | Recode detail + associated parties |
+
+| Function                   | Description                          |
+|----------------------------|--------------------------------------|
+| `get_partidos(...)`        | List parties (filterable, paginated) |
+| `get_partido(id)`          | Party detail (with recode flattened) |
+| `get_partidos_recode(...)` | List recode groups (paginated)       |
+| `get_partido_recode(id)`   | Recode detail + associated parties   |
 
 ### Results
+
 | Function | Description |
-|---|---|
+|----|----|
 | `get_totales_territorio_eleccion(id, ...)` | Territorial totals for one election |
 | `get_resultado_completo(elec_id, terr_id)` | Totals + per-party votes |
 | `get_totales_territorio(...)` | Territorial totals (cross-election) |
@@ -129,28 +116,30 @@ attr(tbl, "edb_total")
 | `get_resultados(...)` | Fully expanded results (best for analysis) |
 
 ### CERA (overseas vote)
-| Function | Description |
-|---|---|
-| `get_cera_resumen(...)` | CERA summaries |
-| `get_cera_votos(...)` | CERA per-party votes |
+
+| Function                | Description          |
+|-------------------------|----------------------|
+| `get_cera_resumen(...)` | CERA summaries       |
+| `get_cera_votos(...)`   | CERA per-party votes |
 
 ### Configuration
-| Function | Description |
-|---|---|
-| `edb_set_base_url(url)` | Set API base URL |
-| `edb_get_base_url()` | Get current API base URL |
+
+| Function                | Description              |
+|-------------------------|--------------------------|
+| `edb_set_base_url(url)` | Set API base URL         |
+| `edb_get_base_url()`    | Get current API base URL |
 
 ## Nested data handling
 
 The package flattens nested JSON objects into prefixed columns for easy analysis:
 
-- **`get_eleccion()`**: `tipo` → `tipo_codigo`, `tipo_descripcion`
-- **`get_partido()`**: `recode` → `recode_id`, `recode_partido_recode`, `recode_agrupacion`, `recode_color`
-- **`get_resultados()`**: Flattens and renames `partido.*`, `recode.*`, `territorio.*`, `eleccion.*` (`clean = TRUE` by default)
+-   **`get_eleccion()`**: `tipo` → `tipo_codigo`, `tipo_descripcion`
+-   **`get_partido()`**: `recode` → `recode_id`, `recode_partido_recode`, `recode_agrupacion`, `recode_color`
+-   **`get_resultados()`**: Flattens and renames `partido.*`, `recode.*`, `territorio.*`, `eleccion.*` (`clean = TRUE` by default)
 
 When an endpoint returns heterogeneous structures (a summary + a list of votes), the function returns a **named list** instead of trying to force it into one tibble:
 
-```r
+``` r
 result <- get_resultado_completo(208, 20)
 result$totales_territorio  # 1-row tibble with census/participation data
 result$votos_partido       # tibble of per-party votes (partido flattened)
@@ -162,7 +151,7 @@ recode$partidos  # tibble of associated parties (can be thousands)
 
 ## Error handling
 
-```r
+``` r
 # 404 — resource not found
 get_eleccion(99999)
 #> Error: API error (404): Elección no encontrada

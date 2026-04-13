@@ -20,7 +20,9 @@ get_cera_resumen(
 \arguments{
 \item{year}{Character vector. Filter by year(s). Optional.}
 
-\item{tipo_eleccion}{Character vector. Filter by election type(s). Optional.}
+\item{tipo_eleccion}{Character vector. Filter by election type code(s).
+Valid values: \code{"A"} (Autonomicas), \code{"E"} (Europeas), \code{"G"} (Congreso),
+\code{"L"} (Locales), \code{"S"} (Senado). Optional.}
 
 \item{...}{Arguments after \code{...} must be named.}
 

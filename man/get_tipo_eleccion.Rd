@@ -7,7 +7,9 @@
 get_tipo_eleccion(codigo)
 }
 \arguments{
-\item{codigo}{Character. The election type code (e.g. \code{"G"}, \code{"A"}, \code{"L"}).}
+\item{codigo}{Character. The election type code. Valid values: \code{"A"}
+(Autonomicas), \code{"E"} (Europeas), \code{"G"} (Congreso), \code{"L"} (Locales),
+\code{"S"} (Senado).}
 }
 \value{
 A 1-row tibble with columns \code{codigo} and \code{descripcion}.

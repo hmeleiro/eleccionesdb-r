@@ -32,7 +32,7 @@ get_partidos <- function(siglas = NULL, denominacion = NULL,
         partido_recode_id = partido_recode_id
     )
     edb_paginated_get(
-        path = "/api/v1/partidos",
+        path = "/v1/partidos",
         params = params,
         limit = limit,
         skip = skip,
@@ -62,7 +62,7 @@ get_partidos <- function(siglas = NULL, denominacion = NULL,
 #' get_partido(11911)
 #' }
 get_partido <- function(partido_id) {
-    json <- edb_get(paste0("/api/v1/partidos/", partido_id))
+    json <- edb_get(paste0("/v1/partidos/", partido_id))
     tbl <- parse_single(json)
     tbl <- flatten_nested(tbl, "recode", "recode")
     tbl
@@ -91,7 +91,7 @@ get_partidos_recode <- function(agrupacion = NULL, limit = 50L, skip = 0L,
                                 all_pages = FALSE) {
     params <- list(agrupacion = agrupacion)
     edb_paginated_get(
-        path = "/api/v1/partidos-recode",
+        path = "/v1/partidos-recode",
         params = params,
         limit = limit,
         skip = skip,
@@ -123,7 +123,7 @@ get_partidos_recode <- function(agrupacion = NULL, limit = 50L, skip = 0L,
 #' nrow(result$partidos) # Can be ~2200 for IU
 #' }
 get_partido_recode <- function(partido_recode_id) {
-    json <- edb_get(paste0("/api/v1/partidos-recode/", partido_recode_id))
+    json <- edb_get(paste0("/v1/partidos-recode/", partido_recode_id))
 
     partidos_data <- json[["partidos"]] %||% list()
     json[["partidos"]] <- NULL

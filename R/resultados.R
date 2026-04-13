@@ -65,7 +65,7 @@ get_totales_territorio_eleccion <- function(eleccion_id,
         codigo_municipio = codigo_municipio
     )
     tbl <- edb_paginated_get(
-        path = paste0("/api/v1/elecciones/", eleccion_id, "/totales-territorio"),
+        path = paste0("/v1/elecciones/", eleccion_id, "/totales-territorio"),
         params = params,
         limit = limit,
         skip = skip,
@@ -135,7 +135,7 @@ get_resultado_completo <- function(eleccion_id, territorio_id, ...,
                                    use_recode = FALSE,
                                    clean = denormalize) {
     path <- paste0(
-        "/api/v1/elecciones/", eleccion_id, "/totales-territorio/",
+        "/v1/elecciones/", eleccion_id, "/totales-territorio/",
         territorio_id
     )
     json <- edb_get(path)
@@ -242,7 +242,7 @@ get_totales_territorio <- function(year = NULL, tipo_eleccion = NULL,
         codigo_municipio = codigo_municipio
     )
     tbl <- edb_paginated_get(
-        path = "/api/v1/resultados/totales-territorio",
+        path = "/v1/resultados/totales-territorio",
         params = params,
         limit = limit,
         skip = skip,
@@ -334,7 +334,7 @@ get_votos_partido <- function(year = NULL, tipo_eleccion = NULL,
         codigo_municipio = codigo_municipio
     )
     tbl <- edb_paginated_get(
-        path = "/api/v1/resultados/votos-partido",
+        path = "/v1/resultados/votos-partido",
         params = params,
         limit = limit,
         skip = skip,
@@ -433,7 +433,7 @@ get_resultados <- function(year = NULL, tipo_eleccion = NULL,
         codigo_municipio = codigo_municipio
     )
     tbl <- edb_paginated_get(
-        path = "/api/v1/resultados/combinados",
+        path = "/v1/resultados/combinados",
         params = params,
         limit = limit,
         skip = skip,

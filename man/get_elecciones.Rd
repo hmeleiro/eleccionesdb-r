@@ -15,8 +15,9 @@ get_elecciones(
 )
 }
 \arguments{
-\item{tipo_eleccion}{Character vector. Filter by election type codes
-(e.g. \code{"G"}, \code{c("G", "A")}). Optional.}
+\item{tipo_eleccion}{Character vector. Filter by election type code(s).
+Valid values: \code{"A"} (Autonomicas), \code{"E"} (Europeas), \code{"G"} (Congreso),
+\code{"L"} (Locales), \code{"S"} (Senado). Optional.}
 
 \item{year}{Character vector. Filter by year (e.g. \code{"2019"},
 \code{c("2019", "2023")}). Optional.}

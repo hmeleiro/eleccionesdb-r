@@ -1,0 +1,165 @@
+/* ============================================================
+   eleccionesdb pkgdown — Spain Electoral Project style overrides
+   Aligns with the main site design system (main.css tokens)
+   ============================================================ */
+
+/* --- Design tokens ----------------------------------------- */
+:root {
+  --sep-accent: #2d5bff;
+  --sep-accent-hover: #1a45e0;
+  --sep-accent-soft: #eef2ff;
+  --sep-bg: #fafbfc;
+  --sep-surface: #ffffff;
+  --sep-text: #1a1a2e;
+  --sep-text-secondary: #5a5a7a;
+  --sep-border: #e5e7eb;
+  --sep-border-light: #f3f4f6;
+  --sep-radius-sm: 0.375rem;
+  --sep-radius-md: 0.5rem;
+  --sep-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --sep-shadow-md: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --sep-transition: 150ms ease;
+}
+
+/* --- Typography -------------------------------------------- */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  line-height: 1.25;
+  color: var(--sep-text);
+}
+
+/* --- Navbar ------------------------------------------------ */
+.navbar {
+  background: var(--sep-surface) !important;
+  border-bottom: 1px solid var(--sep-border);
+  box-shadow: none;
+}
+
+.navbar .navbar-brand,
+.navbar .nav-link {
+  color: var(--sep-text) !important;
+  font-weight: 500;
+  font-size: 0.875rem;
+  transition: color var(--sep-transition);
+}
+
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: var(--sep-accent) !important;
+}
+
+.navbar .nav-link.active {
+  color: var(--sep-accent) !important;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  font-size: 1.125rem !important;
+}
+
+/* --- Links ------------------------------------------------- */
+a {
+  transition: color var(--sep-transition);
+}
+
+a:hover {
+  color: var(--sep-accent-hover);
+}
+
+/* --- Code blocks ------------------------------------------- */
+pre {
+  background: var(--sep-text) !important;
+  color: #e5e7eb;
+  border-radius: var(--sep-radius-md);
+  border: none;
+}
+
+code {
+  background: var(--sep-accent-soft);
+  padding: 0.15em 0.4em;
+  border-radius: var(--sep-radius-sm);
+  font-size: 0.9em;
+}
+
+pre code {
+  background: none;
+  padding: 0;
+  border-radius: 0;
+  font-size: inherit;
+  color: inherit;
+}
+
+/* --- Cards & content blocks -------------------------------- */
+.card {
+  border: 1px solid var(--sep-border);
+  border-radius: var(--sep-radius-md);
+  box-shadow: var(--sep-shadow-sm);
+  transition: box-shadow var(--sep-transition);
+}
+
+.card:hover {
+  box-shadow: var(--sep-shadow-md);
+}
+
+/* --- Sidebar / table of contents --------------------------- */
+.sidebar {
+  border-right: 1px solid var(--sep-border-light);
+}
+
+.sidebar .nav-link {
+  color: var(--sep-text-secondary);
+  font-size: 0.875rem;
+  border-radius: var(--sep-radius-sm);
+  transition: all var(--sep-transition);
+}
+
+.sidebar .nav-link:hover {
+  color: var(--sep-text);
+  background: var(--sep-accent-soft);
+}
+
+.sidebar .nav-link.active {
+  color: var(--sep-accent);
+  background: var(--sep-accent-soft);
+}
+
+/* --- Buttons ----------------------------------------------- */
+.btn-primary {
+  background: var(--sep-accent);
+  border-color: var(--sep-accent);
+}
+
+.btn-primary:hover {
+  background: var(--sep-accent-hover);
+  border-color: var(--sep-accent-hover);
+}
+
+/* --- Footer ------------------------------------------------ */
+footer {
+  border-top: 1px solid var(--sep-border);
+  color: var(--sep-text-secondary);
+  font-size: 0.875rem;
+}
+
+/* --- Reference index table --------------------------------- */
+.ref-index td,
+.ref-index th {
+  border-color: var(--sep-border-light);
+}
+
+/* --- Badges / tags ----------------------------------------- */
+.badge {
+  border-radius: var(--sep-radius-sm);
+  font-weight: 500;
+}
+
+/* --- Page title area --------------------------------------- */
+.page-header {
+  border-bottom: none;
+}

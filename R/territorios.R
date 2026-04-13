@@ -45,7 +45,7 @@ get_territorios <- function(tipo = NULL, codigo_ccaa = NULL,
         nombre = nombre
     )
     edb_paginated_get(
-        path = "/api/v1/territorios",
+        path = "/v1/territorios",
         params = params,
         limit = limit,
         skip = skip,
@@ -69,7 +69,7 @@ get_territorios <- function(tipo = NULL, codigo_ccaa = NULL,
 #' get_territorio(63) # Madrid (province)
 #' }
 get_territorio <- function(territorio_id) {
-    json <- edb_get(paste0("/api/v1/territorios/", territorio_id))
+    json <- edb_get(paste0("/v1/territorios/", territorio_id))
     parse_single(json)
 }
 

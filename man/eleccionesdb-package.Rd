@@ -13,7 +13,7 @@ with the tidyverse.
 }
 \section{Configuration}{
 
-The API base URL defaults to \verb{http://localhost:8000} and can be
+The API base URL defaults to \verb{https://api.spainelectoralproject.com/} and can be
 configured via:
 \itemize{
 \item The \code{ELECCIONESDB_URL} environment variable (read on package load)
