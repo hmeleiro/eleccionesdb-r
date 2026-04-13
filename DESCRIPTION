@@ -31,5 +31,5 @@ Suggests:
     tidyr,
     withr
 Config/testthat/edition: 3
-Config/Needs/website: pkgdown
+Config/Needs/website: hmeleiro/spainelectoraltheme
 VignetteBuilder: knitr

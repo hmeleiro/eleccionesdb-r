@@ -2,9 +2,9 @@
 #' @importFrom rlang %||%
 "_PACKAGE"
 
-#' eleccionesdb: R Client for the EleccionesDB API
+#' eleccionesdb: R Client for the eleccionesdb API
 #'
-#' Provides functions to access the EleccionesDB REST API for Spanish
+#' Provides functions to access the eleccionesdb REST API for Spanish
 #' electoral data. All functions return tidy tibbles ready for analysis
 #' with the tidyverse.
 #'

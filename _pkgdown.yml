@@ -1,34 +1,9 @@
 url: ~
 template:
+  package: spainelectoraltheme
   bootstrap: 5
-  light-switch: false
-  bslib:
-    # Match Spain Electoral Project design tokens
-    primary: "#2d5bff"
-    secondary: "#5a5a7a"
-    success: "#0d9488"
-    warning: "#d97706"
-    info: "#2563eb"
-    bg: "#fafbfc"
-    fg: "#1a1a2e"
-    body-bg: "#fafbfc"
-    body-color: "#1a1a2e"
-    link-color: "#2d5bff"
-    link-hover-color: "#1a45e0"
-    border-color: "#e5e7eb"
-    code-bg: "#eef2ff"
-    base_font:
-      google: "Inter"
-    heading_font:
-      google: "Inter"
-    code_font:
-      google: "JetBrains Mono"
-  includes:
-    in_header: <link rel="preconnect" href="https://fonts.googleapis.com">
 
 navbar:
-  bg: "#ffffff"
-  type: light
   structure:
     left: [intro, reference, articles]
     right: [search, github]

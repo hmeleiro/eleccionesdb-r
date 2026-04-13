@@ -1,6 +1,6 @@
 # eleccionesdb <img src="man/figures/logo.png" align="right" height="139"/>
 
-> R client for the [EleccionesDB API](https://hmeleiro.github.io/eleccionesdb-api/) — Spanish electoral data as tidy tibbles.
+> R client for the [eleccionesdb API](https://hmeleiro.github.io/eleccionesdb-api/) — Spanish electoral data as tidy tibbles.
 
 ## Installation
 
