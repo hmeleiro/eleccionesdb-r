@@ -35,7 +35,8 @@
 get_territorios <- function(tipo = NULL, codigo_ccaa = NULL,
                             codigo_provincia = NULL, codigo_municipio = NULL,
                             codigo_circunscripcion = NULL, nombre = NULL,
-                            limit = 50L, skip = 0L, all_pages = FALSE) {
+                            limit = 50L, skip = 0L, all_pages = FALSE, api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     params <- list(
         tipo = tipo,
         codigo_ccaa = codigo_ccaa,
@@ -49,7 +50,8 @@ get_territorios <- function(tipo = NULL, codigo_ccaa = NULL,
         params = params,
         limit = limit,
         skip = skip,
-        all_pages = all_pages
+        all_pages = all_pages,
+        api_key = api_key
     )
 }
 
@@ -68,8 +70,9 @@ get_territorios <- function(tipo = NULL, codigo_ccaa = NULL,
 #' get_territorio(1) # Andalucia
 #' get_territorio(63) # Madrid (province)
 #' }
-get_territorio <- function(territorio_id) {
-    json <- edb_get(paste0("/v1/territorios/", territorio_id))
+get_territorio <- function(territorio_id, api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
+    json <- edb_get(paste0("/v1/territorios/", territorio_id), api_key = api_key)
     parse_single(json)
 }
 
@@ -91,11 +94,13 @@ get_territorio <- function(territorio_id) {
 #' get_territorio_hijos(1, all_pages = TRUE)
 #' }
 get_territorio_hijos <- function(territorio_id, limit = 50L, skip = 0L,
-                                 all_pages = FALSE) {
+                                 all_pages = FALSE, api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     edb_paginated_get(
-        path = paste0("/api/v1/territorios/", territorio_id, "/hijos"),
+        path = paste0("/v1/territorios/", territorio_id, "/hijos"),
         limit = limit,
         skip = skip,
-        all_pages = all_pages
+        all_pages = all_pages,
+        api_key = api_key
     )
 }

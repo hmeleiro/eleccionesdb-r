@@ -11,14 +11,14 @@
 #' @return A tibble with all records.
 #' @noRd
 edb_get_all_pages <- function(path, params = list(), max_limit = 500L,
-                              parse_fn = identity) {
+                              parse_fn = identity, api_key = NULL) {
     params <- drop_nulls(params)
 
     # Probe request to check total before downloading
     probe_params <- params
     probe_params[["limit"]] <- 1L
     probe_params[["skip"]] <- 0L
-    probe_json <- do.call(edb_get, c(list(path = path), probe_params))
+    probe_json <- do.call(edb_get, c(list(path = path, api_key = api_key), probe_params))
     total <- probe_json[["total"]] %||% 0L
 
     if (total > 25000) {
@@ -35,7 +35,7 @@ edb_get_all_pages <- function(path, params = list(), max_limit = 500L,
     # Start actual download
     params[["limit"]] <- max_limit
     params[["skip"]] <- 0L
-    json <- do.call(edb_get, c(list(path = path), params))
+    json <- do.call(edb_get, c(list(path = path, api_key = api_key), params))
 
     first_page <- parse_fn(parse_paginated(json))
     collected <- list(first_page)
@@ -58,7 +58,7 @@ edb_get_all_pages <- function(path, params = list(), max_limit = 500L,
 
     while (fetched < total) {
         params[["skip"]] <- fetched
-        json <- do.call(edb_get, c(list(path = path), params))
+        json <- do.call(edb_get, c(list(path = path, api_key = api_key), params))
         page <- parse_fn(parse_paginated(json))
         if (nrow(page) == 0) break
         collected <- c(collected, list(page))
@@ -88,14 +88,14 @@ edb_get_all_pages <- function(path, params = list(), max_limit = 500L,
 #' @return A tibble.
 #' @noRd
 edb_paginated_get <- function(path, params = list(), limit = 50L, skip = 0L,
-                              all_pages = FALSE, parse_fn = identity) {
+                              all_pages = FALSE, parse_fn = identity, api_key = NULL) {
     if (all_pages) {
-        return(edb_get_all_pages(path, params, parse_fn = parse_fn))
+        return(edb_get_all_pages(path, params, parse_fn = parse_fn, api_key = api_key))
     }
 
     params <- drop_nulls(params)
     params[["limit"]] <- limit
     params[["skip"]] <- skip
-    json <- do.call(edb_get, c(list(path = path), params))
+    json <- do.call(edb_get, c(list(path = path, api_key = api_key), params))
     parse_fn(parse_paginated(json))
 }

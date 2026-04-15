@@ -9,7 +9,7 @@ Description: Provides functions to access the EleccionesDB REST API for
     supports automatic pagination, and handles nested JSON structures
     with sensible flattening. Covers elections, territories, parties,
     results, and CERA (overseas vote) endpoints.
-License: MIT + file LICENSE
+License: GPL (>= 3)
 URL: https://github.com/hmeleiro/eleccionesdb-r
 BugReports: https://github.com/hmeleiro/eleccionesdb-r/issues
 Encoding: UTF-8

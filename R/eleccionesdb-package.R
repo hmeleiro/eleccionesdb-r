@@ -8,11 +8,14 @@
 #' electoral data. All functions return tidy tibbles ready for analysis
 #' with the tidyverse.
 #'
-#' @section Configuration:
-#' The API base URL defaults to `https://api.spainelectoralproject.com/` and can be
-#' configured via:
-#' - The `ELECCIONESDB_URL` environment variable (read on package load)
-#' - [edb_set_base_url()] at runtime
+#' @section Autenticación y configuración:
+#' Desde abril de 2026, la mayoría de endpoints requieren autenticación mediante API key.
+#' Registra tu clave con [edb_set_api_key()] para que se use automáticamente en todas las funciones protegidas.
+#' Puedes sobrescribir la clave global pasando `api_key` como argumento en cada función.
+#'
+#' La URL base de la API se puede configurar con:
+#' - La variable de entorno `ELECCIONESDB_URL` (leída al cargar el paquete)
+#' - [edb_set_base_url()] en tiempo de ejecución
 #'
 #' @section Main functions:
 #'

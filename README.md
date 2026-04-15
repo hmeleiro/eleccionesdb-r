@@ -124,9 +124,48 @@ attr(tbl, "edb_total")
 
 ### Configuration
 
-| Function                | Description              |
-|-------------------------|--------------------------|
-| `edb_set_base_url(url)` | Set API base URL         |
+### Autenticación y configuración
+
+Desde abril de 2026, la mayoría de endpoints requieren autenticación mediante API key.
+
+#### Cómo obtener tu API key
+
+1. Regístrate en el endpoint `/v1/auth/register` de la API y verifica tu email.
+2. Recibirás una clave personal que deberás usar en todas las peticiones protegidas.
+
+#### Cómo registrar la clave en R
+
+```r
+# Guardar la clave solo para la sesión actual:
+edb_set_api_key("TU_API_KEY")
+
+# Guardar la clave de forma persistente (en ~/.Renviron):
+edb_set_api_key("TU_API_KEY", persist = TRUE)
+# Reinicia R para que esté disponible globalmente.
+```
+
+Puedes consultar la clave actual con:
+
+```r
+edb_get_api_key()
+```
+
+#### Uso automático y sobrescritura
+
+Todas las funciones que acceden a endpoints protegidos usan la clave registrada automáticamente. Si lo deseas, puedes pasar una clave distinta solo para una llamada:
+
+```r
+get_partidos(siglas = "psoe", api_key = "OTRA_CLAVE")
+```
+
+#### Funciones de configuración
+
+| Function                | Description                              |
+|-------------------------|------------------------------------------|
+| `edb_set_base_url(url)` | Set API base URL                         |
+| `edb_get_base_url()`    | Get current API base URL                 |
+| `edb_set_api_key(key, persist=FALSE)` | Set API key (session/persistente) |
+| `edb_get_api_key()`     | Get current API key                      |
 | `edb_get_base_url()`    | Get current API base URL |
 
 ## Nested data handling

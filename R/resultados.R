@@ -56,7 +56,9 @@ get_totales_territorio_eleccion <- function(eleccion_id,
                                             limit = 50L, skip = 0L,
                                             all_pages = FALSE,
                                             denormalize = FALSE,
-                                            clean = denormalize) {
+                                            clean = denormalize,
+                                            api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     params <- list(
         territorio_id = territorio_id,
         tipo_territorio = tipo_territorio,
@@ -69,7 +71,8 @@ get_totales_territorio_eleccion <- function(eleccion_id,
         params = params,
         limit = limit,
         skip = skip,
-        all_pages = all_pages
+        all_pages = all_pages,
+        api_key = api_key
     )
     if (denormalize) {
         tbl <- denormalize_tbl(tbl)
@@ -77,7 +80,7 @@ get_totales_territorio_eleccion <- function(eleccion_id,
     if (clean) {
         tbl <- clean_result_tbl(tbl)
     }
-    tbl
+    sort_result_tbl(tbl)
 }
 
 #' Get complete result for an election and territory
@@ -133,12 +136,14 @@ get_totales_territorio_eleccion <- function(eleccion_id,
 get_resultado_completo <- function(eleccion_id, territorio_id, ...,
                                    denormalize = FALSE,
                                    use_recode = FALSE,
-                                   clean = denormalize) {
+                                   clean = denormalize,
+                                   api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     path <- paste0(
         "/v1/elecciones/", eleccion_id, "/totales-territorio/",
         territorio_id
     )
-    json <- edb_get(path)
+    json <- edb_get(path, api_key = api_key)
 
     totales_data <- json[["totales_territorio"]]
     votos_data <- json[["votos_partido"]] %||% list()
@@ -163,8 +168,8 @@ get_resultado_completo <- function(eleccion_id, territorio_id, ...,
     }
 
     list(
-        totales_territorio = totales_tbl,
-        votos_partido = votos_tbl
+        totales_territorio = sort_result_tbl(totales_tbl),
+        votos_partido = sort_result_tbl(votos_tbl)
     )
 }
 
@@ -230,7 +235,9 @@ get_totales_territorio <- function(year = NULL, tipo_eleccion = NULL,
                                    eleccion_id = NULL, territorio_id = NULL,
                                    limit = 50L, skip = 0L, all_pages = FALSE,
                                    denormalize = FALSE,
-                                   clean = denormalize) {
+                                   clean = denormalize,
+                                   api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     params <- list(
         eleccion_id = eleccion_id,
         territorio_id = territorio_id,
@@ -246,7 +253,8 @@ get_totales_territorio <- function(year = NULL, tipo_eleccion = NULL,
         params = params,
         limit = limit,
         skip = skip,
-        all_pages = all_pages
+        all_pages = all_pages,
+        api_key = api_key
     )
     if (denormalize) {
         tbl <- denormalize_tbl(tbl)
@@ -254,7 +262,7 @@ get_totales_territorio <- function(year = NULL, tipo_eleccion = NULL,
     if (clean) {
         tbl <- clean_result_tbl(tbl)
     }
-    tbl
+    sort_result_tbl(tbl)
 }
 
 #' List per-party votes (cross-election)
@@ -321,7 +329,9 @@ get_votos_partido <- function(year = NULL, tipo_eleccion = NULL,
                               partido_id = NULL,
                               limit = 50L, skip = 0L, all_pages = FALSE,
                               denormalize = FALSE, use_recode = FALSE,
-                              clean = denormalize) {
+                              clean = denormalize,
+                              api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     params <- list(
         eleccion_id = eleccion_id,
         territorio_id = territorio_id,
@@ -338,7 +348,8 @@ get_votos_partido <- function(year = NULL, tipo_eleccion = NULL,
         params = params,
         limit = limit,
         skip = skip,
-        all_pages = all_pages
+        all_pages = all_pages,
+        api_key = api_key
     )
     if (denormalize) {
         tbl <- denormalize_tbl(tbl, use_recode = use_recode)
@@ -346,7 +357,7 @@ get_votos_partido <- function(year = NULL, tipo_eleccion = NULL,
     if (clean) {
         tbl <- clean_result_tbl(tbl)
     }
-    tbl
+    sort_result_tbl(tbl)
 }
 
 #' List combined results (fully expanded)
@@ -420,7 +431,9 @@ get_resultados <- function(year = NULL, tipo_eleccion = NULL,
                            partido_id = NULL,
                            limit = 50L, skip = 0L,
                            all_pages = FALSE,
-                           clean = TRUE) {
+                           clean = TRUE,
+                           api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     params <- list(
         eleccion_id = eleccion_id,
         territorio_id = territorio_id,
@@ -438,10 +451,13 @@ get_resultados <- function(year = NULL, tipo_eleccion = NULL,
         limit = limit,
         skip = skip,
         all_pages = all_pages,
-        parse_fn = flatten_combinados
+        parse_fn = flatten_combinados,
+        api_key = api_key
     )
     if (clean) {
         tbl <- clean_combinados_tbl(tbl)
+    } else {
+        tbl <- sort_result_tbl(tbl)
     }
     tbl
 }

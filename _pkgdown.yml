@@ -60,3 +60,11 @@ reference:
     contents:
       - edb_set_base_url
       - edb_get_base_url
+
+footer:
+  structure:
+    left: developed_by
+    right: [license, built_with]
+  components:
+    license: >
+      Licenciado bajo <a href="https://www.gnu.org/licenses/gpl-3.0" target="_blank" rel="noopener">GPL-3</a>.

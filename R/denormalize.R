@@ -149,6 +149,54 @@ reorder_after <- function(tbl, ref_col, new_col) {
     tbl[new_order]
 }
 
+#' Sort a result tibble by the canonical column order
+#'
+#' Sorts by available columns from the ordered list:
+#' year, mes, tipo_eleccion, codigo_ccaa, codigo_provincia,
+#' codigo_municipio, codigo_distrito, codigo_seccion (all ascending),
+#' then votos (descending). Only present columns are used.
+#' Preserves pagination attributes.
+#'
+#' @param tbl A tibble.
+#' @return The sorted tibble.
+#' @noRd
+sort_result_tbl <- function(tbl) {
+    if (nrow(tbl) == 0L) return(tbl)
+
+    pag_attrs <- list(
+        edb_total = attr(tbl, "edb_total"),
+        edb_skip  = attr(tbl, "edb_skip"),
+        edb_limit = attr(tbl, "edb_limit")
+    )
+
+    sort_cols <- intersect(
+        c(
+            "year", "mes", "tipo_eleccion",
+            "codigo_ccaa", "codigo_provincia",
+            "codigo_municipio", "codigo_distrito", "codigo_seccion"
+        ),
+        names(tbl)
+    )
+
+    if (length(sort_cols) > 0L || "votos" %in% names(tbl)) {
+        ord_args <- lapply(sort_cols, function(col) tbl[[col]])
+        if ("votos" %in% names(tbl)) {
+            ord_args <- c(ord_args, list(-tbl[["votos"]]))
+        }
+        if (length(ord_args) > 0L) {
+            tbl <- tbl[do.call(order, ord_args), ]
+            row.names(tbl) <- NULL
+        }
+    }
+
+    for (nm in names(pag_attrs)) {
+        if (!is.null(pag_attrs[[nm]])) {
+            attr(tbl, nm) <- pag_attrs[[nm]]
+        }
+    }
+    tbl
+}
+
 #' Remove ID and slug columns from a result tibble
 #'
 #' Drops `id` and any column ending in `_id`, plus slug columns.
@@ -219,7 +267,8 @@ clean_combinados_tbl <- function(tbl) {
         territorio_codigo_seccion = "codigo_seccion",
         partido_siglas = "siglas",
         partido_denominacion = "denominacion",
-        recode_agrupacion = "partido_recode"
+        recode_partido_recode = "partido_recode",
+        recode_agrupacion = "partido_agrupacion"
     )
 
     cols <- names(tbl)
@@ -237,29 +286,14 @@ clean_combinados_tbl <- function(tbl) {
         "codigo_ccaa", "codigo_provincia",
         "codigo_circunscripcion", "codigo_municipio",
         "codigo_distrito", "codigo_seccion",
-        "siglas", "denominacion", "partido_recode",
+        "siglas", "denominacion", "partido_recode", "partido_agrupacion",
         "votos", "representantes"
     )
 
     keep <- intersect(keep_ordered, names(tbl))
     tbl <- tbl[keep]
 
-    # Sort by territory codes (ascending) then votos (descending)
-    sort_cols <- intersect(
-        c(
-            "codigo_ccaa", "codigo_provincia", "codigo_circunscripcion",
-            "codigo_municipio", "codigo_distrito", "codigo_seccion"
-        ),
-        names(tbl)
-    )
-    if (length(sort_cols) > 0L) {
-        ord_args <- lapply(sort_cols, function(col) tbl[[col]])
-        if ("votos" %in% names(tbl)) {
-            ord_args <- c(ord_args, list(-tbl[["votos"]]))
-        }
-        tbl <- tbl[do.call(order, ord_args), ]
-        row.names(tbl) <- NULL
-    }
+    tbl <- sort_result_tbl(tbl)
 
     for (nm in names(pag_attrs)) {
         if (!is.null(pag_attrs[[nm]])) {

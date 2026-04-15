@@ -17,8 +17,9 @@
 #' # 4 L      Locales
 #' # 5 S      Senado
 #' }
-get_tipos_eleccion <- function() {
-    json <- edb_get("/v1/tipos-eleccion")
+get_tipos_eleccion <- function(api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
+    json <- edb_get("/v1/tipos-eleccion", api_key = api_key)
     parse_array(json)
 }
 
@@ -33,8 +34,9 @@ get_tipos_eleccion <- function() {
 #' \dontrun{
 #' get_tipo_eleccion("G")
 #' }
-get_tipo_eleccion <- function(codigo) {
-    json <- edb_get(paste0("/v1/tipos-eleccion/", codigo))
+get_tipo_eleccion <- function(codigo, api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
+    json <- edb_get(paste0("/v1/tipos-eleccion/", codigo), api_key = api_key)
     parse_single(json)
 }
 
@@ -74,7 +76,8 @@ get_tipo_eleccion <- function(codigo) {
 #' }
 get_elecciones <- function(tipo_eleccion = NULL, year = NULL, mes = NULL,
                            ambito = NULL, limit = 50L, skip = 0L,
-                           all_pages = FALSE) {
+                           all_pages = FALSE, api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     params <- list(
         tipo_eleccion = tipo_eleccion,
         year = year,
@@ -87,7 +90,8 @@ get_elecciones <- function(tipo_eleccion = NULL, year = NULL, mes = NULL,
         limit = limit,
         skip = skip,
         all_pages = all_pages,
-        parse_fn = coerce_dates
+        parse_fn = coerce_dates,
+        api_key = api_key
     )
 }
 
@@ -105,8 +109,9 @@ get_elecciones <- function(tipo_eleccion = NULL, year = NULL, mes = NULL,
 #' \dontrun{
 #' get_eleccion(208)
 #' }
-get_eleccion <- function(eleccion_id) {
-    json <- edb_get(paste0("/v1/elecciones/", eleccion_id))
+get_eleccion <- function(eleccion_id, api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
+    json <- edb_get(paste0("/v1/elecciones/", eleccion_id), api_key = api_key)
     tbl <- parse_single(json)
     tbl <- flatten_nested(tbl, "tipo", "tipo")
     tbl <- coerce_dates(tbl)

@@ -12,6 +12,8 @@
 #' @param limit Integer. Maximum records per page (1-500, default 50).
 #' @param skip Integer. Records to skip (default 0).
 #' @param all_pages Logical. If `TRUE`, fetches all pages. Default `FALSE`.
+
+#' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
 #' @return A tibble with columns: `id`, `siglas`, `denominacion`,
 #'   `partido_recode_id`.
 #' @export
@@ -22,10 +24,14 @@
 #'
 #' # All parties in a specific recode group
 #' get_partidos(partido_recode_id = 80, all_pages = TRUE)
+#'
+#' # Usar clave explícita solo para esta llamada
+#' get_partidos(siglas = "psoe", api_key = "OTRA_CLAVE")
 #' }
 get_partidos <- function(siglas = NULL, denominacion = NULL,
                          partido_recode_id = NULL,
-                         limit = 50L, skip = 0L, all_pages = FALSE) {
+                         limit = 50L, skip = 0L, all_pages = FALSE,
+                         api_key = NULL) {
     params <- list(
         siglas = siglas,
         denominacion = denominacion,
@@ -36,7 +42,8 @@ get_partidos <- function(siglas = NULL, denominacion = NULL,
         params = params,
         limit = limit,
         skip = skip,
-        all_pages = all_pages
+        all_pages = all_pages,
+        api_key = api_key
     )
 }
 
@@ -106,6 +113,7 @@ get_partidos_recode <- function(agrupacion = NULL, limit = 50L, skip = 0L,
 #' returns a named list instead of a single tibble.
 #'
 #' @param partido_recode_id Integer. The recode group ID.
+#' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
 #' @return A named list with two elements:
 #'   \describe{
 #'     \item{`recode`}{A 1-row tibble with `id`, `partido_recode`,
@@ -122,15 +130,14 @@ get_partidos_recode <- function(agrupacion = NULL, limit = 50L, skip = 0L,
 #' result$partidos
 #' nrow(result$partidos) # Can be ~2200 for IU
 #' }
-get_partido_recode <- function(partido_recode_id) {
-    json <- edb_get(paste0("/v1/partidos-recode/", partido_recode_id))
+get_partido_recode <- function(partido_recode_id, api_key = NULL) {
+    json <- edb_get(paste0("/v1/partidos-recode/", partido_recode_id), api_key = api_key)
 
     partidos_data <- json[["partidos"]] %||% list()
     json[["partidos"]] <- NULL
 
     recode_tbl <- parse_single(json)
     partidos_tbl <- safe_tibble(partidos_data)
-
     list(
         recode = recode_tbl,
         partidos = partidos_tbl

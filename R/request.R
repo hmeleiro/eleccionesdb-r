@@ -75,9 +75,9 @@ try_parse_body <- function(resp) {
 #'   Vector values are passed as repeated params (`.multi = "explode"`).
 #' @return Parsed JSON as an R list.
 #' @noRd
-edb_get <- function(path, ...) {
+edb_get <- function(path, ..., api_key = NULL) {
     params <- drop_nulls(list(...))
-    req <- edb_base_request(path)
+    req <- edb_base_request(path, api_key = api_key)
     if (length(params) > 0) {
         req <- httr2::req_url_query(req, !!!params, .multi = "explode")
     }

@@ -38,7 +38,9 @@ get_cera_resumen <- function(year = NULL, tipo_eleccion = NULL,
                              eleccion_id = NULL, territorio_id = NULL,
                              limit = 50L, skip = 0L, all_pages = FALSE,
                              denormalize = FALSE,
-                             clean = denormalize) {
+                             clean = denormalize,
+                             api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     params <- list(
         eleccion_id = eleccion_id,
         territorio_id = territorio_id,
@@ -50,7 +52,8 @@ get_cera_resumen <- function(year = NULL, tipo_eleccion = NULL,
         params = params,
         limit = limit,
         skip = skip,
-        all_pages = all_pages
+        all_pages = all_pages,
+        api_key = api_key
     )
     if (denormalize) {
         tbl <- denormalize_tbl(tbl)
@@ -58,7 +61,7 @@ get_cera_resumen <- function(year = NULL, tipo_eleccion = NULL,
     if (clean) {
         tbl <- clean_result_tbl(tbl)
     }
-    tbl
+    sort_result_tbl(tbl)
 }
 
 #' List CERA (overseas) per-party votes
@@ -108,7 +111,9 @@ get_cera_votos <- function(year = NULL, tipo_eleccion = NULL,
                            partido_id = NULL,
                            limit = 50L, skip = 0L, all_pages = FALSE,
                            denormalize = FALSE, use_recode = FALSE,
-                           clean = denormalize) {
+                           clean = denormalize,
+                           api_key = NULL) {
+    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
     params <- list(
         eleccion_id = eleccion_id,
         territorio_id = territorio_id,
@@ -121,7 +126,8 @@ get_cera_votos <- function(year = NULL, tipo_eleccion = NULL,
         params = params,
         limit = limit,
         skip = skip,
-        all_pages = all_pages
+        all_pages = all_pages,
+        api_key = api_key
     )
     if (denormalize) {
         tbl <- denormalize_tbl(tbl, use_recode = use_recode)
@@ -129,5 +135,5 @@ get_cera_votos <- function(year = NULL, tipo_eleccion = NULL,
     if (clean) {
         tbl <- clean_result_tbl(tbl)
     }
-    tbl
+    sort_result_tbl(tbl)
 }
