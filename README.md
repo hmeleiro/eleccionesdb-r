@@ -122,16 +122,18 @@ attr(tbl, "edb_total")
 | `get_cera_resumen(...)` | CERA summaries       |
 | `get_cera_votos(...)`   | CERA per-party votes |
 
-### Configuration
+## Configuración
 
 ### Autenticación y configuración
 
-Desde abril de 2026, la mayoría de endpoints requieren autenticación mediante API key.
+Desde abril de 2026, la mayoría de endpoints requieren autenticación
+mediante API key.
 
 #### Cómo obtener tu API key
 
-1. Regístrate en el endpoint `/v1/auth/register` de la API y verifica tu email.
-2. Recibirás una clave personal que deberás usar en todas las peticiones protegidas.
+1.  Regístrate en la web de [eleccionesdb API](https://hmeleiro.github.io/eleccionesdb-api/developers/) con tu correo electrónico.
+2.  Recibirás una clave personal que deberás usar en todas las
+    peticiones protegidas.
 
 #### Cómo registrar la clave en R
 

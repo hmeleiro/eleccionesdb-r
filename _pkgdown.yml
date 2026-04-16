@@ -1,4 +1,4 @@
-url: ~
+url: https://hmeleiro.github.io/eleccionesdb-r
 template:
   package: spainelectoraltheme
   bootstrap: 5
@@ -20,6 +20,7 @@ articles:
   - title: Avanzado
     contents:
       - autodespliegue
+      - autenticacion-api-key
 
 reference:
   - title: Elecciones
