@@ -60,8 +60,9 @@ get_tipo_eleccion("G")
 
 ## Listar elecciones
 
-[`get_elecciones()`](../reference/get_elecciones.md) devuelve un listado
-paginado de elecciones. Puedes filtrar por tipo, año, mes y ámbito:
+[`get_elecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_elecciones.md)
+devuelve un listado paginado de elecciones. Puedes filtrar por tipo,
+año, mes y ámbito:
 
 ``` r
 # Todas las elecciones generales
@@ -82,9 +83,9 @@ get_elecciones(tipo_eleccion = "A", mes = "05")
 
 ## Detalle de una elección
 
-[`get_eleccion()`](../reference/get_eleccion.md) devuelve una fila con
-los datos completos de una elección, incluyendo el tipo expandido en
-columnas `tipo_codigo` y `tipo_descripcion`:
+[`get_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_eleccion.md)
+devuelve una fila con los datos completos de una elección, incluyendo el
+tipo expandido en columnas `tipo_codigo` y `tipo_descripcion`:
 
 ``` r
 get_eleccion(208)
@@ -180,16 +181,16 @@ get_votos_partido(
 ```
 
 Más detalles y ejemplos en
-[`vignette("analisis-resultados")`](../articles/analisis-resultados.md).
+[`vignette("analisis-resultados")`](https://hmeleiro.github.io/eleccionesdb-r/articles/analisis-resultados.md).
 
 ## Siguientes pasos
 
 - **Territorios y partidos**: aprende a explorar la jerarquía
   territorial española y las agrupaciones de partidos en
-  [`vignette("datos-maestros")`](../articles/datos-maestros.md).
+  [`vignette("datos-maestros")`](https://hmeleiro.github.io/eleccionesdb-r/articles/datos-maestros.md).
 - **Análisis de resultados**: flujos de trabajo completos con dplyr y
   ggplot2 en
-  [`vignette("analisis-resultados")`](../articles/analisis-resultados.md).
+  [`vignette("analisis-resultados")`](https://hmeleiro.github.io/eleccionesdb-r/articles/analisis-resultados.md).
 - **Voto exterior (CERA)**: datos del Censo de Españoles Residentes
   Ausentes en
-  [`vignette("voto-exterior-cera")`](../articles/voto-exterior-cera.md).
+  [`vignette("voto-exterior-cera")`](https://hmeleiro.github.io/eleccionesdb-r/articles/voto-exterior-cera.md).

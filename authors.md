@@ -10,12 +10,12 @@ Source:
 [`DESCRIPTION`](https://github.com/hmeleiro/eleccionesdb-r/blob/main/DESCRIPTION)
 
 Meleiro H (2026). *eleccionesdb: R Client for the EleccionesDB API*. R
-package version 0.1.0, <https://github.com/hmeleiro/eleccionesdb-r>.
+package version 0.1.0, <https://hmeleiro.github.io/eleccionesdb-r>.
 
     @Manual{,
       title = {eleccionesdb: R Client for the EleccionesDB API},
       author = {Héctor Meleiro},
       year = {2026},
       note = {R package version 0.1.0},
-      url = {https://github.com/hmeleiro/eleccionesdb-r},
+      url = {https://hmeleiro.github.io/eleccionesdb-r},
     }

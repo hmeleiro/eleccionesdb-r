@@ -84,12 +84,12 @@ attr(tbl, "edb_total")
 
 ### Elections
 
-| Function                                                  | Description                            |
-|-----------------------------------------------------------|----------------------------------------|
-| [`get_tipos_eleccion()`](reference/get_tipos_eleccion.md) | Catalogue of election types            |
-| `get_tipo_eleccion(codigo)`                               | Single election type by code           |
-| `get_elecciones(...)`                                     | List elections (filterable, paginated) |
-| `get_eleccion(id)`                                        | Election detail (with tipo flattened)  |
+| Function                                                                                            | Description                            |
+|-----------------------------------------------------------------------------------------------------|----------------------------------------|
+| [`get_tipos_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_tipos_eleccion.md) | Catalogue of election types            |
+| `get_tipo_eleccion(codigo)`                                                                         | Single election type by code           |
+| `get_elecciones(...)`                                                                               | List elections (filterable, paginated) |
+| `get_eleccion(id)`                                                                                  | Election detail (with tipo flattened)  |
 
 ### Territories
 
@@ -125,26 +125,71 @@ attr(tbl, "edb_total")
 | `get_cera_resumen(...)` | CERA summaries       |
 | `get_cera_votos(...)`   | CERA per-party votes |
 
-### Configuration
+## Configuración
 
-| Function                                              | Description              |
-|-------------------------------------------------------|--------------------------|
-| `edb_set_base_url(url)`                               | Set API base URL         |
-| [`edb_get_base_url()`](reference/edb_get_base_url.md) | Get current API base URL |
+### Autenticación y configuración
+
+Desde abril de 2026, la mayoría de endpoints requieren autenticación
+mediante API key.
+
+#### Cómo obtener tu API key
+
+1.  Regístrate en la web de [eleccionesdb
+    API](https://hmeleiro.github.io/eleccionesdb-api/developers/) con tu
+    correo electrónico.
+2.  Recibirás una clave personal que deberás usar en todas las
+    peticiones protegidas.
+
+#### Cómo registrar la clave en R
+
+``` r
+# Guardar la clave solo para la sesión actual:
+edb_set_api_key("TU_API_KEY")
+
+# Guardar la clave de forma persistente (en ~/.Renviron):
+edb_set_api_key("TU_API_KEY", persist = TRUE)
+# Reinicia R para que esté disponible globalmente.
+```
+
+Puedes consultar la clave actual con:
+
+``` r
+edb_get_api_key()
+```
+
+#### Uso automático y sobrescritura
+
+Todas las funciones que acceden a endpoints protegidos usan la clave
+registrada automáticamente. Si lo deseas, puedes pasar una clave
+distinta solo para una llamada:
+
+``` r
+get_partidos(siglas = "psoe", api_key = "OTRA_CLAVE")
+```
+
+#### Funciones de configuración
+
+| Function                                                                                        | Description                       |
+|-------------------------------------------------------------------------------------------------|-----------------------------------|
+| `edb_set_base_url(url)`                                                                         | Set API base URL                  |
+| [`edb_get_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_base_url.md) | Get current API base URL          |
+| `edb_set_api_key(key, persist=FALSE)`                                                           | Set API key (session/persistente) |
+| `edb_get_api_key()`                                                                             | Get current API key               |
+| [`edb_get_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_base_url.md) | Get current API base URL          |
 
 ## Nested data handling
 
 The package flattens nested JSON objects into prefixed columns for easy
 analysis:
 
-- **[`get_eleccion()`](reference/get_eleccion.md)**: `tipo` →
-  `tipo_codigo`, `tipo_descripcion`
-- **[`get_partido()`](reference/get_partido.md)**: `recode` →
-  `recode_id`, `recode_partido_recode`, `recode_agrupacion`,
+- **[`get_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_eleccion.md)**:
+  `tipo` → `tipo_codigo`, `tipo_descripcion`
+- **[`get_partido()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_partido.md)**:
+  `recode` → `recode_id`, `recode_partido_recode`, `recode_agrupacion`,
   `recode_color`
-- **[`get_resultados()`](reference/get_resultados.md)**: Flattens and
-  renames `partido.*`, `recode.*`, `territorio.*`, `eleccion.*`
-  (`clean = TRUE` by default)
+- **[`get_resultados()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultados.md)**:
+  Flattens and renames `partido.*`, `recode.*`, `territorio.*`,
+  `eleccion.*` (`clean = TRUE` by default)
 
 When an endpoint returns heterogeneous structures (a summary + a list of
 votes), the function returns a **named list** instead of trying to force

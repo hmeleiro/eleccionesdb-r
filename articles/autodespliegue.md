@@ -116,9 +116,9 @@ get_health()
 ```
 
 A partir de aquí, todas las funciones del paquete
-([`get_elecciones()`](../reference/get_elecciones.md),
-[`get_resultados()`](../reference/get_resultados.md), etc.) usarán tu
-instancia de la API.
+([`get_elecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_elecciones.md),
+[`get_resultados()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultados.md),
+etc.) usarán tu instancia de la API.
 
 ## Volver a la API pública
 

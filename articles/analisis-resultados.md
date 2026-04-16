@@ -18,34 +18,37 @@ consulta de datos hasta la visualización.
 El paquete ofrece varias funciones para acceder a resultados. Es
 importante entender la diferencia entre ellas:
 
-| Función                                                                                | Alcance                      | Devuelve                                                         |
-|----------------------------------------------------------------------------------------|------------------------------|------------------------------------------------------------------|
-| [`get_totales_territorio_eleccion()`](../reference/get_totales_territorio_eleccion.md) | Una elección                 | Totales territoriales (censo, participación, votos)              |
-| [`get_resultado_completo()`](../reference/get_resultado_completo.md)                   | Una elección + un territorio | Lista: `$totales_territorio` + `$votos_partido` (por partido)    |
-| [`get_totales_territorio()`](../reference/get_totales_territorio.md)                   | Cruce de elecciones          | Totales territoriales filtrables                                 |
-| [`get_votos_partido()`](../reference/get_votos_partido.md)                             | Cruce de elecciones          | Votos por partido filtrables                                     |
-| [`get_resultados()`](../reference/get_resultados.md)                                   | Cruce de elecciones          | Todo expandido: votos + partido + recode + territorio + elección |
+| Función                                                                                                                       | Alcance                      | Devuelve                                                         |
+|-------------------------------------------------------------------------------------------------------------------------------|------------------------------|------------------------------------------------------------------|
+| [`get_totales_territorio_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio_eleccion.md) | Una elección                 | Totales territoriales (censo, participación, votos)              |
+| [`get_resultado_completo()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultado_completo.md)                   | Una elección + un territorio | Lista: `$totales_territorio` + `$votos_partido` (por partido)    |
+| [`get_totales_territorio()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio.md)                   | Cruce de elecciones          | Totales territoriales filtrables                                 |
+| [`get_votos_partido()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_votos_partido.md)                             | Cruce de elecciones          | Votos por partido filtrables                                     |
+| [`get_resultados()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultados.md)                                   | Cruce de elecciones          | Todo expandido: votos + partido + recode + territorio + elección |
 
 Para la mayoría de análisis,
-**[`get_resultados()`](../reference/get_resultados.md)** es la opción
-más práctica, ya que devuelve toda la información aplanada y lista para
-usar con dplyr. Por defecto, `clean = TRUE` renombra las columnas con
-prefijo a nombres cortos (`year`, `siglas`, `territorio_nombre`…).
+**[`get_resultados()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultados.md)**
+es la opción más práctica, ya que devuelve toda la información aplanada
+y lista para usar con dplyr. Por defecto, `clean = TRUE` renombra las
+columnas con prefijo a nombres cortos (`year`, `siglas`,
+`territorio_nombre`…).
 
 ------------------------------------------------------------------------
 
 ## Desnormalización de IDs
 
 Las funciones
-[`get_totales_territorio()`](../reference/get_totales_territorio.md),
-[`get_votos_partido()`](../reference/get_votos_partido.md),
-[`get_totales_territorio_eleccion()`](../reference/get_totales_territorio_eleccion.md),
-[`get_resultado_completo()`](../reference/get_resultado_completo.md),
-[`get_cera_resumen()`](../reference/get_cera_resumen.md) y
-[`get_cera_votos()`](../reference/get_cera_votos.md) devuelven columnas
-de ID (`eleccion_id`, `territorio_id`, `partido_id`) que hacen
-referencia a otras tablas. Para facilitar el análisis sin necesidad de
-hacer joins manuales, puedes usar el parámetro `denormalize = TRUE`:
+[`get_totales_territorio()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio.md),
+[`get_votos_partido()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_votos_partido.md),
+[`get_totales_territorio_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio_eleccion.md),
+[`get_resultado_completo()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultado_completo.md),
+[`get_cera_resumen()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_cera_resumen.md)
+y
+[`get_cera_votos()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_cera_votos.md)
+devuelven columnas de ID (`eleccion_id`, `territorio_id`, `partido_id`)
+que hacen referencia a otras tablas. Para facilitar el análisis sin
+necesidad de hacer joins manuales, puedes usar el parámetro
+`denormalize = TRUE`:
 
 ``` r
 # Sin desnormalizar: solo IDs
@@ -117,10 +120,10 @@ votos_recode |>
 ### Desnormalizar con `get_totales_territorio()`
 
 Las funciones sin `partido_id`
-([`get_totales_territorio()`](../reference/get_totales_territorio.md),
-[`get_totales_territorio_eleccion()`](../reference/get_totales_territorio_eleccion.md),
-[`get_cera_resumen()`](../reference/get_cera_resumen.md)) solo añaden
-`eleccion_descripcion` y `territorio_nombre`:
+([`get_totales_territorio()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio.md),
+[`get_totales_territorio_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio_eleccion.md),
+[`get_cera_resumen()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_cera_resumen.md))
+solo añaden `eleccion_descripcion` y `territorio_nombre`:
 
 ``` r
 resumenes <- get_totales_territorio(
@@ -143,7 +146,7 @@ resumenes |>
 
 ### `get_resultado_completo()` con desnormalización
 
-[`get_resultado_completo()`](../reference/get_resultado_completo.md)
+[`get_resultado_completo()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultado_completo.md)
 devuelve una lista con `$totales_territorio` y `$votos_partido`. Con
 `denormalize = TRUE`, ambos elementos reciben las columnas descriptivas:
 
@@ -213,7 +216,7 @@ resumenes
 
 ### Resultado completo de un territorio
 
-[`get_resultado_completo()`](../reference/get_resultado_completo.md)
+[`get_resultado_completo()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultado_completo.md)
 devuelve una lista con los totales territoriales y el desglose de votos
 por partido para una combinación elección-territorio:
 
@@ -243,11 +246,11 @@ resultado$votos_partido
 
 ## 2. Análisis con resultados combinados
 
-[`get_resultados()`](../reference/get_resultados.md) es la función más
-potente: devuelve cada fila de votos con todos los objetos anidados
-aplanados (partido + recode, territorio, elección). Por defecto,
-`clean = TRUE` renombra los campos con prefijo a nombres cortos y
-descarta las columnas de IDs y slugs.
+[`get_resultados()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultados.md)
+es la función más potente: devuelve cada fila de votos con todos los
+objetos anidados aplanados (partido + recode, territorio, elección). Por
+defecto, `clean = TRUE` renombra los campos con prefijo a nombres cortos
+y descarta las columnas de IDs y slugs.
 
 ### Votos por partido en una comunidad autónoma
 
@@ -356,7 +359,7 @@ ggplot(
 
 ## 3. Comparar participación entre elecciones
 
-[`get_totales_territorio()`](../reference/get_totales_territorio.md)
+[`get_totales_territorio()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio.md)
 permite consultar totales territoriales cruzando múltiples elecciones:
 
 ``` r
@@ -374,7 +377,7 @@ participacion <- resumenes_generales |>
 ```
 
 Para enriquecer con los datos de la elección, podemos cruzar con
-[`get_elecciones()`](../reference/get_elecciones.md):
+[`get_elecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_elecciones.md):
 
 ``` r
 elecciones <- get_elecciones(tipo_eleccion = "G", all_pages = TRUE)
@@ -410,9 +413,9 @@ ggplot(media_nacional, aes(x = fecha, y = media_participacion)) +
 
 ## 4. Evolución del voto de una agrupación
 
-[`get_votos_partido()`](../reference/get_votos_partido.md) devuelve
-votos por partido, cruzando elecciones. Combinado con las agrupaciones
-de recode permite hacer análisis temporales:
+[`get_votos_partido()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_votos_partido.md)
+devuelve votos por partido, cruzando elecciones. Combinado con las
+agrupaciones de recode permite hacer análisis temporales:
 
 ``` r
 # Usamos get_resultados para obtener votos con partido y elección
@@ -497,9 +500,10 @@ ggplot(representantes, aes(
 ## Siguientes pasos
 
 - **Introducción**: si aún no lo has leído, repasa los conceptos básicos
-  en [`vignette("introduccion")`](../articles/introduccion.md).
+  en
+  [`vignette("introduccion")`](https://hmeleiro.github.io/eleccionesdb-r/articles/introduccion.md).
 - **Territorios y partidos**: profundiza en los datos maestros en
-  [`vignette("datos-maestros")`](../articles/datos-maestros.md).
+  [`vignette("datos-maestros")`](https://hmeleiro.github.io/eleccionesdb-r/articles/datos-maestros.md).
 - **Voto exterior (CERA)**: analiza el voto de los españoles en el
   extranjero en
-  [`vignette("voto-exterior-cera")`](../articles/voto-exterior-cera.md).
+  [`vignette("voto-exterior-cera")`](https://hmeleiro.github.io/eleccionesdb-r/articles/voto-exterior-cera.md).

@@ -2,7 +2,7 @@
 
 Returns paginated territorial totals across elections, with flexible
 filters. Unlike
-[`get_totales_territorio_eleccion()`](get_totales_territorio_eleccion.md),
+[`get_totales_territorio_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio_eleccion.md),
 this can query across multiple elections.
 
 ## Usage

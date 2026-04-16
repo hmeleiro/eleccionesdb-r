@@ -2,14 +2,21 @@
 
 ### Primeros pasos
 
-- [Introducción a eleccionesdb](introduccion.md):
+- [Introducción a
+  eleccionesdb](https://hmeleiro.github.io/eleccionesdb-r/articles/introduccion.md):
 
 ### Guías
 
-- [Territorios y partidos](datos-maestros.md):
-- [Análisis de resultados electorales](analisis-resultados.md):
-- [Voto exterior (CERA)](voto-exterior-cera.md):
+- [Territorios y
+  partidos](https://hmeleiro.github.io/eleccionesdb-r/articles/datos-maestros.md):
+- [Análisis de resultados
+  electorales](https://hmeleiro.github.io/eleccionesdb-r/articles/analisis-resultados.md):
+- [Voto exterior
+  (CERA)](https://hmeleiro.github.io/eleccionesdb-r/articles/voto-exterior-cera.md):
 
 ### Avanzado
 
-- [Despliegue propio de la base de datos y la API](autodespliegue.md):
+- [Despliegue propio de la base de datos y la
+  API](https://hmeleiro.github.io/eleccionesdb-r/articles/autodespliegue.md):
+- [Autenticación: cómo establecer la API
+  key](https://hmeleiro.github.io/eleccionesdb-r/articles/autenticacion-api-key.md):

@@ -17,68 +17,74 @@ and can be configured via:
 
 - The `ELECCIONESDB_URL` environment variable (read on package load)
 
-- [`edb_set_base_url()`](edb_set_base_url.md) at runtime
+- [`edb_set_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_set_base_url.md)
+  at runtime
 
 ## Main functions
 
 **Elections:**
 
-- [`get_tipos_eleccion()`](get_tipos_eleccion.md) — catalogue of
-  election types
+- [`get_tipos_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_tipos_eleccion.md)
+  — catalogue of election types
 
-- [`get_tipo_eleccion()`](get_tipo_eleccion.md) — single election type
-  by code
+- [`get_tipo_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_tipo_eleccion.md)
+  — single election type by code
 
-- [`get_elecciones()`](get_elecciones.md) — list elections (paginated,
-  filterable)
+- [`get_elecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_elecciones.md)
+  — list elections (paginated, filterable)
 
-- [`get_eleccion()`](get_eleccion.md) — single election detail
+- [`get_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_eleccion.md)
+  — single election detail
 
 **Territories:**
 
-- [`get_territorios()`](get_territorios.md) — list territories
-  (paginated, filterable)
+- [`get_territorios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_territorios.md)
+  — list territories (paginated, filterable)
 
-- [`get_territorio()`](get_territorio.md) — single territory detail
+- [`get_territorio()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_territorio.md)
+  — single territory detail
 
-- [`get_territorio_hijos()`](get_territorio_hijos.md) — child
-  territories (hierarchy)
+- [`get_territorio_hijos()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_territorio_hijos.md)
+  — child territories (hierarchy)
 
 **Parties:**
 
-- [`get_partidos()`](get_partidos.md) — list parties (paginated,
-  filterable)
+- [`get_partidos()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_partidos.md)
+  — list parties (paginated, filterable)
 
-- [`get_partido()`](get_partido.md) — single party detail (with recode)
+- [`get_partido()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_partido.md)
+  — single party detail (with recode)
 
-- [`get_partidos_recode()`](get_partidos_recode.md) — list recode groups
-  (paginated)
+- [`get_partidos_recode()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_partidos_recode.md)
+  — list recode groups (paginated)
 
-- [`get_partido_recode()`](get_partido_recode.md) — single recode group
-  with party list
+- [`get_partido_recode()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_partido_recode.md)
+  — single recode group with party list
 
 **Results:**
 
-- [`get_totales_territorio_eleccion()`](get_totales_territorio_eleccion.md)
+- [`get_totales_territorio_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio_eleccion.md)
   — territorial totals for an election
 
-- [`get_resultado_completo()`](get_resultado_completo.md) — full result
-  (totals + votes) for election+territory
+- [`get_resultado_completo()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultado_completo.md)
+  — full result (totals + votes) for election+territory
 
-- [`get_totales_territorio()`](get_totales_territorio.md) — territorial
-  totals (cross-election)
+- [`get_totales_territorio()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio.md)
+  — territorial totals (cross-election)
 
-- [`get_votos_partido()`](get_votos_partido.md) — per-party votes
-  (cross-election)
+- [`get_votos_partido()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_votos_partido.md)
+  — per-party votes (cross-election)
 
-- [`get_resultados()`](get_resultados.md) — fully expanded votes (best
-  for analysis)
+- [`get_resultados()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultados.md)
+  — fully expanded votes (best for analysis)
 
 **CERA (overseas vote):**
 
-- [`get_cera_resumen()`](get_cera_resumen.md) — overseas summaries
+- [`get_cera_resumen()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_cera_resumen.md)
+  — overseas summaries
 
-- [`get_cera_votos()`](get_cera_votos.md) — overseas per-party votes
+- [`get_cera_votos()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_cera_votos.md)
+  — overseas per-party votes
 
 ## Pagination
 
