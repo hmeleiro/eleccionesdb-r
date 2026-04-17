@@ -16,15 +16,15 @@ apunte a tu servidor.
 El proyecto se compone de dos piezas que puedes desplegar de forma
 independiente:
 
-| Componente           | Descripción                                                                                                 | Documentación                                                 |
-|----------------------|-------------------------------------------------------------------------------------------------------------|---------------------------------------------------------------|
-| **eleccionesdb-etl** | Pipeline ETL (R + {targets}) que genera la base de datos PostgreSQL a partir de datos electorales en bruto. | [Documentación](https://hmeleiro.github.io/eleccionesdb-etl/) |
-| **eleccionesdb-api** | API REST (Python + FastAPI) que expone la base de datos como endpoints JSON.                                | [Documentación](https://hmeleiro.github.io/eleccionesdb-api/) |
+| Componente           | Descripción                                                                                                 | Documentación                                                        |
+|----------------------|-------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------|
+| **eleccionesdb-etl** | Pipeline ETL (R + {targets}) que genera la base de datos PostgreSQL a partir de datos electorales en bruto. | [Documentación](https://eleccionesdb.spainelectoralproject.com/)     |
+| **eleccionesdb-api** | API REST (Python + FastAPI) que expone la base de datos como endpoints JSON.                                | [Documentación](https://eleccionesdb-api.spainelectoralproject.com/) |
 
 ## Paso 1: Levantar la base de datos
 
 El repositorio
-[eleccionesdb-etl](https://hmeleiro.github.io/eleccionesdb-etl/)
+[eleccionesdb-etl](https://eleccionesdb.spainelectoralproject.com/)
 contiene un pipeline reproducible que descarga datos electorales
 oficiales, los transforma y los carga en una base PostgreSQL.
 
@@ -47,13 +47,13 @@ Rscript -e "source('run.R'); run_all()"
 ```
 
 Consulta la [documentación completa del
-ETL](https://hmeleiro.github.io/eleccionesdb-etl/) para requisitos
+ETL](https://eleccionesdb.spainelectoralproject.com/) para requisitos
 previos (PostgreSQL, paquetes R) y opciones avanzadas.
 
 ## Paso 2: Levantar la API
 
 El repositorio
-[eleccionesdb-api](https://hmeleiro.github.io/eleccionesdb-api/)
+[eleccionesdb-api](https://eleccionesdb-api.spainelectoralproject.com/)
 proporciona una API REST lista para producción construida con FastAPI.
 
 La forma más sencilla de desplegarla es con Docker:
@@ -80,8 +80,8 @@ curl http://localhost:8000/health
 ```
 
 Consulta la [documentación completa de la
-API](https://hmeleiro.github.io/eleccionesdb-api/) para opciones de
-configuración, autenticación y despliegue en la nube.
+API](https://eleccionesdb-api.spainelectoralproject.com/) para opciones
+de configuración, autenticación y despliegue en la nube.
 
 ## Paso 3: Configurar eleccionesdb
 

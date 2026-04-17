@@ -1,8 +1,8 @@
 # eleccionesdb ![](reference/figures/logo.png)
 
 > R client for the [eleccionesdb
-> API](https://hmeleiro.github.io/eleccionesdb-api/) — Spanish electoral
-> data as tidy tibbles.
+> API](https://eleccionesdb-api.spainelectoralproject.com/) — Spanish
+> electoral data as tidy tibbles.
 
 ## Installation
 
@@ -135,8 +135,8 @@ mediante API key.
 #### Cómo obtener tu API key
 
 1.  Regístrate en la web de [eleccionesdb
-    API](https://hmeleiro.github.io/eleccionesdb-api/developers/) con tu
-    correo electrónico.
+    API](https://eleccionesdb-api.spainelectoralproject.com/developers/)
+    con tu correo electrónico.
 2.  Recibirás una clave personal que deberás usar en todas las
     peticiones protegidas.
 

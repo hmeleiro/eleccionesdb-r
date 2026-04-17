@@ -8,7 +8,9 @@
 <title>Despliegue propio de la base de datos y la API • eleccionesdb</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/Inter-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/JetBrains_Mono-0.4.10/font.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Despliegue propio de la base de datos y la API">
 </head>
@@ -92,13 +94,13 @@ independiente:</p>
 <td><strong>eleccionesdb-etl</strong></td>
 <td>Pipeline ETL (R + {targets}) que genera la base de datos PostgreSQL
 a partir de datos electorales en bruto.</td>
-<td><a href="https://hmeleiro.github.io/eleccionesdb-etl/" class="external-link">Documentación</a></td>
+<td><a href="https://eleccionesdb.spainelectoralproject.com/" class="external-link">Documentación</a></td>
 </tr>
 <tr class="even">
 <td><strong>eleccionesdb-api</strong></td>
 <td>API REST (Python + FastAPI) que expone la base de datos como
 endpoints JSON.</td>
-<td><a href="https://hmeleiro.github.io/eleccionesdb-api/" class="external-link">Documentación</a></td>
+<td><a href="https://eleccionesdb-api.spainelectoralproject.com/" class="external-link">Documentación</a></td>
 </tr>
 </tbody>
 </table>
@@ -106,7 +108,7 @@ endpoints JSON.</td>
 <div class="section level2">
 <h2 id="paso-1-levantar-la-base-de-datos">Paso 1: Levantar la base de datos<a class="anchor" aria-label="anchor" href="#paso-1-levantar-la-base-de-datos"></a>
 </h2>
-<p>El repositorio <a href="https://hmeleiro.github.io/eleccionesdb-etl/" class="external-link">eleccionesdb-etl</a>
+<p>El repositorio <a href="https://eleccionesdb.spainelectoralproject.com/" class="external-link">eleccionesdb-etl</a>
 contiene un pipeline reproducible que descarga datos electorales
 oficiales, los transforma y los carga en una base PostgreSQL.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Clonar el repositorio</span></span>
@@ -124,14 +126,14 @@ oficiales, los transforma y los carga en una base PostgreSQL.</p>
 <span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a></span>
 <span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co"># Ejecutar el pipeline desde R</span></span>
 <span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="ex">Rscript</span> <span class="at">-e</span> <span class="st">"source('run.R'); run_all()"</span></span></code></pre></div>
-<p>Consulta la <a href="https://hmeleiro.github.io/eleccionesdb-etl/" class="external-link">documentación
+<p>Consulta la <a href="https://eleccionesdb.spainelectoralproject.com/" class="external-link">documentación
 completa del ETL</a> para requisitos previos (PostgreSQL, paquetes R) y
 opciones avanzadas.</p>
 </div>
 <div class="section level2">
 <h2 id="paso-2-levantar-la-api">Paso 2: Levantar la API<a class="anchor" aria-label="anchor" href="#paso-2-levantar-la-api"></a>
 </h2>
-<p>El repositorio <a href="https://hmeleiro.github.io/eleccionesdb-api/" class="external-link">eleccionesdb-api</a>
+<p>El repositorio <a href="https://eleccionesdb-api.spainelectoralproject.com/" class="external-link">eleccionesdb-api</a>
 proporciona una API REST lista para producción construida con
 FastAPI.</p>
 <p>La forma más sencilla de desplegarla es con Docker:</p>
@@ -149,7 +151,7 @@ FastAPI.</p>
 Puedes verificarlo con:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">curl</span> http://localhost:8000/health</span>
 <span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co"># {"status":"ok","environment":"production","database":"ok"}</span></span></code></pre></div>
-<p>Consulta la <a href="https://hmeleiro.github.io/eleccionesdb-api/" class="external-link">documentación
+<p>Consulta la <a href="https://eleccionesdb-api.spainelectoralproject.com/" class="external-link">documentación
 completa de la API</a> para opciones de configuración, autenticación y
 despliegue en la nube.</p>
 </div>
