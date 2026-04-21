@@ -238,19 +238,19 @@ get_totales_territorio <- function(year = NULL, tipo_eleccion = NULL,
                                    clean = denormalize,
                                    api_key = NULL) {
     #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
-    params <- list(
-        eleccion_id = eleccion_id,
-        territorio_id = territorio_id,
-        year = year,
-        tipo_eleccion = tipo_eleccion,
-        tipo_territorio = tipo_territorio,
-        codigo_ccaa = codigo_ccaa,
-        codigo_provincia = codigo_provincia,
-        codigo_municipio = codigo_municipio
-    )
-    tbl <- edb_paginated_get(
+    filters <- Filter(Negate(is.null), list(
+        eleccion_id    = to_json_array(eleccion_id),
+        territorio_id  = to_json_array(territorio_id),
+        year           = to_json_str_array(year),
+        tipo_eleccion  = to_json_str_array(tipo_eleccion),
+        tipo_territorio = to_json_str_array(tipo_territorio),
+        codigo_ccaa    = to_json_str_array(codigo_ccaa),
+        codigo_provincia = to_json_str_array(codigo_provincia),
+        codigo_municipio = to_json_str_array(codigo_municipio)
+    ))
+    tbl <- edb_paginated_post(
         path = "/v1/resultados/totales-territorio",
-        params = params,
+        filters = filters,
         limit = limit,
         skip = skip,
         all_pages = all_pages,
@@ -332,20 +332,20 @@ get_votos_partido <- function(year = NULL, tipo_eleccion = NULL,
                               clean = denormalize,
                               api_key = NULL) {
     #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
-    params <- list(
-        eleccion_id = eleccion_id,
-        territorio_id = territorio_id,
-        partido_id = partido_id,
-        year = year,
-        tipo_eleccion = tipo_eleccion,
-        tipo_territorio = tipo_territorio,
-        codigo_ccaa = codigo_ccaa,
-        codigo_provincia = codigo_provincia,
-        codigo_municipio = codigo_municipio
-    )
-    tbl <- edb_paginated_get(
+    filters <- Filter(Negate(is.null), list(
+        eleccion_id    = to_json_array(eleccion_id),
+        territorio_id  = to_json_array(territorio_id),
+        partido_id     = to_json_array(partido_id),
+        year           = to_json_str_array(year),
+        tipo_eleccion  = to_json_str_array(tipo_eleccion),
+        tipo_territorio = to_json_str_array(tipo_territorio),
+        codigo_ccaa    = to_json_str_array(codigo_ccaa),
+        codigo_provincia = to_json_str_array(codigo_provincia),
+        codigo_municipio = to_json_str_array(codigo_municipio)
+    ))
+    tbl <- edb_paginated_post(
         path = "/v1/resultados/votos-partido",
-        params = params,
+        filters = filters,
         limit = limit,
         skip = skip,
         all_pages = all_pages,
@@ -360,20 +360,25 @@ get_votos_partido <- function(year = NULL, tipo_eleccion = NULL,
     sort_result_tbl(tbl)
 }
 
-#' List combined results (fully expanded)
+#' List combined results — main analysis function
 #'
-#' Returns paginated votes with party (including recode), territory, and
-#' election information fully expanded and flattened into a wide tibble.
-#' This is the most convenient function for cross-dimensional analysis.
+#' `get_resultados()` is the primary function of the package for analytical
+#' use. It returns a wide, ready-to-analyse tibble that combines per-party
+#' votes with territorial summary data (census, turnout, blank/null votes)
+#' and election metadata, all joined internally so no manual merging is
+#' needed.
 #'
-#' When `clean = TRUE` (the default), prefixed columns are renamed to
-#' short names and only the most useful subset is returned:
-#' `year`, `mes`, `tipo_eleccion`, `tipo_territorio`, `territorio_nombre`,
-#' `codigo_ccaa`, `codigo_provincia`, `siglas`, `denominacion`,
-#' `partido_recode`, `votos`, `representantes`.
+#' Two API calls are made internally: one to `/v1/resultados/combinados`
+#' (votes + party + territory + election, fully expanded) and one to
+#' `/v1/resultados/totales-territorio` (census and turnout totals). The
+#' results are joined by `(eleccion_id, territorio_id)` before being
+#' returned.
 #'
-#' Set `clean = FALSE` to get the full flattened tibble with all prefixed
-#' columns (`partido_*`, `recode_*`, `territorio_*`, `eleccion_*`).
+#' When `clean = TRUE` (the default), prefixed columns are renamed to short,
+#' user-friendly names and only the most useful columns are returned.
+#' Set `clean = FALSE` to get all flattened columns with their original
+#' prefixes (`partido_*`, `recode_*`, `territorio_*`, `eleccion_*`) plus
+#' the flat summary columns.
 #'
 #' @param year Character vector. Filter by year(s). Optional.
 #' @param tipo_eleccion Character vector. Filter by election type code(s).
@@ -394,19 +399,30 @@ get_votos_partido <- function(year = NULL, tipo_eleccion = NULL,
 #' @param partido_id Integer vector. Filter by party ID(s). Optional.
 #' @param limit Integer. Maximum records per page (1-500, default 50).
 #' @param skip Integer. Records to skip (default 0).
-#' @param all_pages Logical. If `TRUE`, fetches all pages. Default `FALSE`.
-#' @param clean Logical. If `TRUE` (default), renames prefixed columns and
-#'   selects only user-friendly columns. If `FALSE`, returns all flattened
-#'   columns.
-#' @return A tibble. When `clean = TRUE`: `year`, `mes`, `tipo_eleccion`,
-#'   `tipo_territorio`, `territorio_nombre`, `codigo_ccaa`,
-#'   `codigo_provincia`, `siglas`, `denominacion`, `partido_recode`,
-#'   `votos`, `representantes`. When `clean = FALSE`: all flattened columns
-#'   with prefixes `partido_*`, `recode_*`, `territorio_*`, `eleccion_*`.
+#' @param all_pages Logical. If `TRUE`, fetches all pages automatically.
+#'   Default `TRUE`.
+#' @param clean Logical. If `TRUE` (default), renames prefixed columns to
+#'   short names and selects only user-friendly columns. If `FALSE`, returns
+#'   all flattened columns.
+#' @param api_key Character. Optional API key to override the global setting
+#'   for this call only.
+#' @return A tibble. When `clean = TRUE`:
+#'   `year`, `mes`, `tipo_eleccion`, `tipo_territorio`, `territorio_nombre`,
+#'   `codigo_ccaa`, `codigo_provincia`, `codigo_municipio`, `codigo_distrito`,
+#'   `codigo_seccion`, `censo_ine`, `votos_validos`, `abstenciones`,
+#'   `votos_blancos`, `votos_nulos`, `participacion_1`, `participacion_2`,
+#'   `participacion_3`, `siglas`, `denominacion`, `partido_recode`,
+#'   `partido_agrupacion`, `votos`, `representantes`, `nrepresentantes`.
+#'
+#'   When `clean = FALSE`: all flattened columns with prefixes
+#'   `partido_*`, `recode_*`, `territorio_*`, `eleccion_*`, plus the flat
+#'   summary columns (`censo_ine`, `votos_validos`, `abstenciones`,
+#'   `votos_blancos`, `votos_nulos`, `participacion_1`, `participacion_2`,
+#'   `participacion_3`, `nrepresentantes`).
 #' @export
 #' @examples
 #' \dontrun{
-#' # Provincial results for general elections in Andalucia (clean)
+#' # Results by province for Andalucia in the 2019 general election
 #' get_resultados(
 #'     tipo_eleccion = "G", year = "2019",
 #'     tipo_territorio = "provincia",
@@ -414,12 +430,22 @@ get_votos_partido <- function(year = NULL, tipo_eleccion = NULL,
 #'     all_pages = TRUE
 #' )
 #'
-#' # Full flattened output
-#' get_resultados(
-#'     tipo_eleccion = "G", year = "2019",
-#'     tipo_territorio = "provincia",
-#'     clean = FALSE
-#' )
+#' # Provincial results for all general elections (all pages)
+#' get_resultados(tipo_eleccion = "G", tipo_territorio = "provincia",
+#'                all_pages = TRUE)
+#'
+#' # Filter afterwards with dplyr
+#' library(dplyr)
+#' get_resultados(tipo_eleccion = "G", year = "2019",
+#'                tipo_territorio = "provincia", all_pages = TRUE) |>
+#'     filter(siglas == "PSOE") |>
+#'     select(territorio_nombre, votos, representantes,
+#'            censo_ine, votos_validos)
+#'
+#' # Full flattened output (no renaming)
+#' get_resultados(tipo_eleccion = "G", year = "2019",
+#'                tipo_territorio = "provincia",
+#'                clean = FALSE)
 #' }
 get_resultados <- function(year = NULL, tipo_eleccion = NULL,
                            tipo_territorio = NULL,
@@ -430,30 +456,30 @@ get_resultados <- function(year = NULL, tipo_eleccion = NULL,
                            eleccion_id = NULL, territorio_id = NULL,
                            partido_id = NULL,
                            limit = 50L, skip = 0L,
-                           all_pages = FALSE,
+                           all_pages = TRUE,
                            clean = TRUE,
                            api_key = NULL) {
-    #' @param api_key (Opcional) Clave de API para sobrescribir la global solo en esta llamada.
-    params <- list(
-        eleccion_id = eleccion_id,
-        territorio_id = territorio_id,
-        partido_id = partido_id,
-        year = year,
-        tipo_eleccion = tipo_eleccion,
-        tipo_territorio = tipo_territorio,
-        codigo_ccaa = codigo_ccaa,
-        codigo_provincia = codigo_provincia,
-        codigo_municipio = codigo_municipio
-    )
-    tbl <- edb_paginated_get(
+    filters <- Filter(Negate(is.null), list(
+        eleccion_id    = to_json_array(eleccion_id),
+        territorio_id  = to_json_array(territorio_id),
+        partido_id     = to_json_array(partido_id),
+        year           = to_json_str_array(year),
+        tipo_eleccion  = to_json_str_array(tipo_eleccion),
+        tipo_territorio = to_json_str_array(tipo_territorio),
+        codigo_ccaa    = to_json_str_array(codigo_ccaa),
+        codigo_provincia = to_json_str_array(codigo_provincia),
+        codigo_municipio = to_json_str_array(codigo_municipio)
+    ))
+    tbl <- edb_paginated_post(
         path = "/v1/resultados/combinados",
-        params = params,
+        filters = filters,
         limit = limit,
         skip = skip,
         all_pages = all_pages,
         parse_fn = flatten_combinados,
         api_key = api_key
     )
+    tbl <- enrich_with_resumen(tbl, api_key = api_key)
     if (clean) {
         tbl <- clean_combinados_tbl(tbl)
     } else {
@@ -461,3 +487,132 @@ get_resultados <- function(year = NULL, tipo_eleccion = NULL,
     }
     tbl
 }
+
+#' Results by autonomous community
+#'
+#' A convenience wrapper around [get_resultados()] that pre-sets
+#' `tipo_territorio = "ccaa"`. All other parameters are passed through
+#' unchanged. See [get_resultados()] for the full parameter reference and
+#' details on the returned tibble.
+#'
+#' @param ... Arguments passed to [get_resultados()]. The `tipo_territorio`
+#'   parameter is fixed to `"ccaa"` and cannot be overridden.
+#' @return A tibble as returned by [get_resultados()] filtered to
+#'   `tipo_territorio = "ccaa"`.
+#' @export
+#' @examples
+#' \dontrun{
+#' # CCAA-level results for general elections in 2019
+#' get_ccaa(tipo_eleccion = "G", year = "2019", all_pages = TRUE)
+#'
+#' # Use dplyr to compare turnout across CCAA
+#' library(dplyr)
+#' get_ccaa(tipo_eleccion = "G", year = "2019", all_pages = TRUE) |>
+#'     distinct(territorio_nombre, censo_ine, votos_validos) |>
+#'     mutate(participacion = votos_validos / censo_ine)
+#' }
+get_ccaa <- function(...) {
+    args <- list(...)
+    args[["tipo_territorio"]] <- "ccaa"
+    do.call(get_resultados, args)
+}
+
+#' Results by province
+#'
+#' A convenience wrapper around [get_resultados()] that pre-sets
+#' `tipo_territorio = "provincia"`. All other parameters are passed through
+#' unchanged. See [get_resultados()] for the full parameter reference and
+#' details on the returned tibble.
+#'
+#' @param ... Arguments passed to [get_resultados()]. The `tipo_territorio`
+#'   parameter is fixed to `"provincia"` and cannot be overridden.
+#' @return A tibble as returned by [get_resultados()] filtered to
+#'   `tipo_territorio = "provincia"`.
+#' @export
+#' @examples
+#' \dontrun{
+#' # Provincial results for general elections in Andalucia
+#' get_provincias(tipo_eleccion = "G", year = "2019",
+#'               codigo_ccaa = "01", all_pages = TRUE)
+#'
+#' # Compare PSOE votes across all provinces in 2019
+#' library(dplyr)
+#' get_provincias(tipo_eleccion = "G", year = "2019", all_pages = TRUE) |>
+#'     filter(siglas == "PSOE") |>
+#'     arrange(desc(votos))
+#' }
+get_provincias <- function(...) {
+    args <- list(...)
+    args[["tipo_territorio"]] <- "provincia"
+    do.call(get_resultados, args)
+}
+
+#' Results by municipality
+#'
+#' A convenience wrapper around [get_resultados()] that pre-sets
+#' `tipo_territorio = "municipio"`. All other parameters are passed through
+#' unchanged. See [get_resultados()] for the full parameter reference and
+#' details on the returned tibble.
+#'
+#' @param ... Arguments passed to [get_resultados()]. The `tipo_territorio`
+#'   parameter is fixed to `"municipio"` and cannot be overridden.
+#' @return A tibble as returned by [get_resultados()] filtered to
+#'   `tipo_territorio = "municipio"`.
+#' @export
+#' @examples
+#' \dontrun{
+#' # Municipal results in a province (Almeria = "04")
+#' get_municipios(tipo_eleccion = "G", year = "2019",
+#'                codigo_provincia = "04", all_pages = TRUE)
+#' }
+get_municipios <- function(...) {
+    args <- list(...)
+    args[["tipo_territorio"]] <- "municipio"
+    do.call(get_resultados, args)
+}
+
+#' Results by census section
+#'
+#' A convenience wrapper around [get_resultados()] that pre-sets
+#' `tipo_territorio = "seccion"`. All other parameters are passed through
+#' unchanged. See [get_resultados()] for the full parameter reference and
+#' details on the returned tibble.
+#'
+#' Note: section-level data can be very large. Always use filters
+#' (`codigo_provincia`, `codigo_municipio`, etc.) or `all_pages = FALSE`
+#' to limit the response size.
+#'
+#' @param ... Arguments passed to [get_resultados()]. The `tipo_territorio`
+#'   parameter is fixed to `"seccion"` and cannot be overridden.
+#' @return A tibble as returned by [get_resultados()] filtered to
+#'   `tipo_territorio = "seccion"`.
+#' @export
+#' @examples
+#' \dontrun{
+#' # Section-level results for a municipality
+#' get_secciones(tipo_eleccion = "G", year = "2019",
+#'               codigo_municipio = "028079", all_pages = TRUE)
+#' }
+get_secciones <- function(...) {
+    args <- list(...)
+    args[["tipo_territorio"]] <- "seccion"
+    do.call(get_resultados, args)
+}
+
+#' @describeIn get_provincias Retrocompatibility alias for [get_provincias()].
+#'   Maintained for backwards compatibility. Prefer `get_provincias()` in new
+#'   code.
+#' @export
+getProvincias <- get_provincias
+
+#' @describeIn get_municipios Retrocompatibility alias for [get_municipios()].
+#'   Maintained for backwards compatibility. Prefer `get_municipios()` in new
+#'   code.
+#' @export
+getMunicipios <- get_municipios
+
+#' @describeIn get_secciones Retrocompatibility alias for [get_secciones()].
+#'   Maintained for backwards compatibility. Prefer `get_secciones()` in new
+#'   code.
+#' @export
+getSecciones <- get_secciones

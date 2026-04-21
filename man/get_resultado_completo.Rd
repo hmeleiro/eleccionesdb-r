@@ -10,7 +10,8 @@ get_resultado_completo(
   ...,
   denormalize = FALSE,
   use_recode = FALSE,
-  clean = denormalize
+  clean = denormalize,
+  api_key = NULL
 )
 }
 \arguments{
@@ -32,6 +33,8 @@ when the party has no recode. Default \code{FALSE}.}
 
 \item{clean}{Logical. If \code{TRUE}, removes ID and slug columns from both
 sub-tibbles. Defaults to the value of \code{denormalize}.}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A named list with two elements:

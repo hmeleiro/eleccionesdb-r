@@ -20,7 +20,8 @@ get_votos_partido(
   all_pages = FALSE,
   denormalize = FALSE,
   use_recode = FALSE,
-  clean = denormalize
+  clean = denormalize,
+  api_key = NULL
 )
 }
 \arguments{
@@ -69,6 +70,8 @@ when the party has no recode. Default \code{FALSE}.}
 
 \item{clean}{Logical. If \code{TRUE}, removes ID and slug columns from the
 result. Defaults to the value of \code{denormalize}.}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A tibble with columns: \code{id}, \code{eleccion_id}, \code{territorio_id},

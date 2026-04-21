@@ -13,7 +13,8 @@ get_territorios(
   nombre = NULL,
   limit = 50L,
   skip = 0L,
-  all_pages = FALSE
+  all_pages = FALSE,
+  api_key = NULL
 )
 }
 \arguments{
@@ -40,6 +41,8 @@ code(s). Optional.}
 \item{skip}{Integer. Records to skip (default 0).}
 
 \item{all_pages}{Logical. If \code{TRUE}, fetches all pages. Default \code{FALSE}.}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A tibble with columns: \code{id}, \code{tipo}, \code{nombre}, \code{codigo_completo},

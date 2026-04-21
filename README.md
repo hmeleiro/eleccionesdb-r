@@ -1,4 +1,4 @@
-# eleccionesdb <img src="man/figures/logo.png" align="right" height="139"/>
+# eleccionesdb
 
 > R client for the [eleccionesdb API](https://eleccionesdb-api.spainelectoralproject.com/) — Spanish electoral data as tidy tibbles.
 

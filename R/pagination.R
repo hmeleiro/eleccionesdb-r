@@ -99,3 +99,100 @@ edb_paginated_get <- function(path, params = list(), limit = 50L, skip = 0L,
     json <- do.call(edb_get, c(list(path = path, api_key = api_key), params))
     parse_fn(parse_paginated(json))
 }
+
+#' Fetch all pages from a paginated POST endpoint
+#'
+#' Like `edb_get_all_pages()` but uses POST with a JSON body. The
+#' `paginacion` field is injected/replaced inside `filters` for each
+#' page request.
+#'
+#' @param path Character. API path.
+#' @param filters Named list of filter fields (already NULL-cleaned).
+#'   Must NOT contain a `paginacion` key.
+#' @param max_limit Integer. Page size to use (max 500).
+#' @param parse_fn Function to post-process each page's tibble.
+#' @return A tibble with all records.
+#' @noRd
+edb_post_all_pages <- function(path, filters = list(), max_limit = 500L,
+                               parse_fn = identity, api_key = NULL) {
+    # Probe request to get total before downloading
+    probe_body <- c(filters, list(paginacion = list(skip = 0L, limit = 1L)))
+    probe_json <- edb_post(path, probe_body, api_key = api_key)
+    total <- probe_json[["total"]] %||% 0L
+
+    if (total > 25000) {
+        cli::cli_inform(c(
+            "!" = "La petici\u00f3n devuelve {total} registros.",
+            "i" = "Considera filtrar por {.arg tipo_territorio}, {.arg tipo_eleccion} u otros par\u00e1metros para reducir el volumen."
+        ))
+    }
+
+    if (total == 0) {
+        return(parse_fn(parse_paginated(probe_json)))
+    }
+
+    # Start actual download
+    body <- c(filters, list(paginacion = list(skip = 0L, limit = max_limit)))
+    json <- edb_post(path, body, api_key = api_key)
+
+    first_page <- parse_fn(parse_paginated(json))
+    collected <- list(first_page)
+    fetched <- nrow(first_page)
+
+    if (fetched >= total) {
+        tbl <- first_page
+        attr(tbl, "edb_total") <- total
+        return(tbl)
+    }
+
+    # Multiple pages needed
+    cli::cli_progress_bar(
+        "Descargando registros",
+        total = total,
+        clear = FALSE
+    )
+    cli::cli_progress_update(set = fetched)
+
+    while (fetched < total) {
+        body[["paginacion"]] <- list(skip = fetched, limit = max_limit)
+        json <- edb_post(path, body, api_key = api_key)
+        page <- parse_fn(parse_paginated(json))
+        if (nrow(page) == 0) break
+        collected <- c(collected, list(page))
+        fetched <- fetched + nrow(page)
+        cli::cli_progress_update(set = fetched)
+    }
+
+    cli::cli_progress_done()
+
+    tbl <- vctrs::vec_rbind(!!!collected)
+    attr(tbl, "edb_total") <- total
+    tbl
+}
+
+#' Standard paginated POST with optional all_pages
+#'
+#' POST-based equivalent of `edb_paginated_get()`. All filter fields must
+#' already be in list form (use `to_json_array()`) and NULL-cleaned (use
+#' `Filter(Negate(is.null), ...)`).
+#'
+#' @param path Character. API path.
+#' @param filters Named list of filter fields (NULL-cleaned, values as lists).
+#' @param limit Integer. Records per page (default 50, max 500).
+#' @param skip Integer. Records to skip (default 0).
+#' @param all_pages Logical. If TRUE, fetch all pages automatically.
+#' @param parse_fn Function to post-process each page's tibble.
+#' @return A tibble.
+#' @noRd
+edb_paginated_post <- function(path, filters = list(), limit = 50L, skip = 0L,
+                               all_pages = FALSE, parse_fn = identity,
+                               api_key = NULL) {
+    if (all_pages) {
+        return(edb_post_all_pages(path, filters, parse_fn = parse_fn,
+                                  api_key = api_key))
+    }
+
+    body <- c(filters, list(paginacion = list(skip = skip, limit = limit)))
+    json <- edb_post(path, body, api_key = api_key)
+    parse_fn(parse_paginated(json))
+}

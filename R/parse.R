@@ -126,6 +126,69 @@ flatten_nested <- function(tbl, col, prefix, drop = TRUE) {
     tbl
 }
 
+#' Enrich a combinados tibble with territorial summary columns
+#'
+#' Fetches territorial totals (`censo_ine`, `votos_validos`, `abstenciones`,
+#' `votos_blancos`, `votos_nulos`, `participacion_1`, `participacion_2`,
+#' `participacion_3`, `nrepresentantes`) from `/v1/resultados/totales-territorio`
+#' and joins them into the combinados tibble by `(eleccion_id, territorio_id)`.
+#'
+#' If the fetch fails or returns no rows, the summary columns are added with
+#' `NA` values so the caller always receives a consistent schema.
+#'
+#' @param tbl A tibble from `flatten_combinados()` (must have `eleccion_id`
+#'   and `territorio_id`).
+#' @param api_key Character. Optional API key override.
+#' @return The tibble with summary columns appended.
+#' @noRd
+enrich_with_resumen <- function(tbl, api_key = NULL) {
+    if (nrow(tbl) == 0L) return(tbl)
+    if (!all(c("eleccion_id", "territorio_id") %in% names(tbl))) return(tbl)
+
+    resumen_cols <- c(
+        "censo_ine", "votos_validos", "abstenciones",
+        "votos_blancos", "votos_nulos",
+        "participacion_1", "participacion_2", "participacion_3",
+        "nrepresentantes"
+    )
+
+    eleccion_ids <- unique(tbl[["eleccion_id"]])
+    territorio_ids <- unique(tbl[["territorio_id"]])
+
+    resumen_tbl <- tryCatch(
+        edb_paginated_post(
+            path = "/v1/resultados/totales-territorio",
+            filters = Filter(Negate(is.null), list(
+                eleccion_id  = to_json_array(eleccion_ids),
+                territorio_id = to_json_array(territorio_ids)
+            )),
+            limit = 500L,
+            skip = 0L,
+            all_pages = TRUE,
+            api_key = api_key
+        ),
+        error = function(e) tibble::tibble()
+    )
+
+    if (nrow(resumen_tbl) == 0L) {
+        for (col in resumen_cols) tbl[[col]] <- NA_integer_
+        return(tbl)
+    }
+
+    key_tbl <- paste(tbl[["eleccion_id"]], tbl[["territorio_id"]])
+    key_res <- paste(resumen_tbl[["eleccion_id"]], resumen_tbl[["territorio_id"]])
+
+    for (col in resumen_cols) {
+        if (col %in% names(resumen_tbl)) {
+            tbl[[col]] <- resumen_tbl[[col]][match(key_tbl, key_res)]
+        } else {
+            tbl[[col]] <- NA_integer_
+        }
+    }
+
+    tbl
+}
+
 #' Flatten nested objects in a combinados-style response
 #'
 #' Flattens `partido` (with nested `recode`), `territorio`, and `eleccion`

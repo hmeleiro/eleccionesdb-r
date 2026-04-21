@@ -4,7 +4,13 @@
 \alias{get_territorio_hijos}
 \title{List child territories (hierarchical navigation)}
 \usage{
-get_territorio_hijos(territorio_id, limit = 50L, skip = 0L, all_pages = FALSE)
+get_territorio_hijos(
+  territorio_id,
+  limit = 50L,
+  skip = 0L,
+  all_pages = FALSE,
+  api_key = NULL
+)
 }
 \arguments{
 \item{territorio_id}{Integer. The parent territory ID.}
@@ -14,6 +20,8 @@ get_territorio_hijos(territorio_id, limit = 50L, skip = 0L, all_pages = FALSE)
 \item{skip}{Integer. Records to skip (default 0).}
 
 \item{all_pages}{Logical. If \code{TRUE}, fetches all pages. Default \code{FALSE}.}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A tibble with columns: \code{id}, \code{tipo}, \code{nombre}, \code{codigo_completo},

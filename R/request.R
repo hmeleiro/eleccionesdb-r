@@ -84,8 +84,43 @@ edb_get <- function(path, ..., api_key = NULL) {
     edb_perform(req)
 }
 
+#' Build and perform a POST request with a JSON body
+#'
+#' @param path Character. API path.
+#' @param body A named list to serialise as JSON.
+#' @return Parsed JSON as an R list.
+#' @noRd
+edb_post <- function(path, body, api_key = NULL) {
+    req <- edb_base_request(path, api_key = api_key)
+    req <- httr2::req_method(req, "POST")
+    req <- httr2::req_body_json(req, body)
+    edb_perform(req)
+}
+
 #' Drop NULL elements from a list
 #' @noRd
 drop_nulls <- function(x) {
     x[!vapply(x, is.null, logical(1))]
 }
+
+#' Convert a value to a list, returning NULL unchanged
+#'
+#' Used when building POST bodies: scalar or vector values are wrapped in
+#' `as.list()` so the JSON serialiser emits an array; `NULL` stays `NULL`
+#' so it can be removed by `Filter(Negate(is.null), body)`.
+#'
+#' @param x Any R object.
+#' @return `NULL` if `x` is `NULL`; otherwise `as.list(x)`.
+#' @noRd
+to_json_array <- function(x) if (is.null(x)) NULL else as.list(x)
+
+#' Like `to_json_array()` but also coerces values to character
+#'
+#' Use for fields that the API schema declares as strings (e.g. `year`,
+#' `tipo_eleccion`, `codigo_ccaa`) so that a user-supplied numeric is sent
+#' as `"2023"` rather than `2023`.
+#'
+#' @param x Any R object.
+#' @return `NULL` if `x` is `NULL`; otherwise `as.list(as.character(x))`.
+#' @noRd
+to_json_str_array <- function(x) if (is.null(x)) NULL else as.list(as.character(x))

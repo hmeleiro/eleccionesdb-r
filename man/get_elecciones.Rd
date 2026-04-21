@@ -11,7 +11,8 @@ get_elecciones(
   ambito = NULL,
   limit = 50L,
   skip = 0L,
-  all_pages = FALSE
+  all_pages = FALSE,
+  api_key = NULL
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ Valid values: \code{"A"} (Autonomicas), \code{"E"} (Europeas), \code{"G"} (Congr
 
 \item{all_pages}{Logical. If \code{TRUE}, fetches all pages automatically.
 Default \code{FALSE}.}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A tibble with columns: \code{id}, \code{tipo_eleccion}, \code{year}, \code{mes}, \code{dia},

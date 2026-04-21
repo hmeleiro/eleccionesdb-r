@@ -23,6 +23,18 @@ articles:
       - autenticacion-api-key
 
 reference:
+  - title: Consulta principal
+    desc: >
+      Funciones de alto nivel para análisis directo. Punto de entrada
+      recomendado para la mayoría de casos de uso. Devuelven un tibble
+      listo para analizar con votos, partido, recode, territorio y totales
+      territoriales ya combinados en una sola tabla.
+    contents:
+      - get_resultados
+      - get_ccaa
+      - get_provincias
+      - get_municipios
+      - get_secciones
   - title: Elecciones
     contents:
       - get_tipos_eleccion
@@ -40,11 +52,14 @@ reference:
       - get_partido
       - get_partidos_recode
       - get_partido_recode
-  - title: Resultados
+  - title: Resultados (avanzado)
+    desc: >
+      Funciones de acceso a bajo nivel para obtener datos crudos con IDs
+      normalizados, opciones de desnormalización y control granular de
+      la paginación.
     contents:
       - get_totales_territorio_eleccion
       - get_resultado_completo
-      - get_resultados
       - get_totales_territorio
       - get_votos_partido
   - title: Voto exterior (CERA)
@@ -59,8 +74,18 @@ reference:
       Funciones para apuntar el paquete a una instancia propia de la API.
       Ver `vignette("autodespliegue")` para más detalles.
     contents:
+      - edb_set_api_key
+      - edb_get_api_key
       - edb_set_base_url
       - edb_get_base_url
+  - title: Retrocompatibilidad
+    desc: >
+      Aliases mantenidos por compatibilidad con versiones anteriores del
+      paquete. Usar las funciones modernas en código nuevo.
+    contents:
+      - getProvincias
+      - getMunicipios
+      - getSecciones
 
 footer:
   structure:

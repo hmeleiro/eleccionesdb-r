@@ -2,7 +2,7 @@
 % Please edit documentation in R/resultados.R
 \name{get_resultados}
 \alias{get_resultados}
-\title{List combined results (fully expanded)}
+\title{List combined results — main analysis function}
 \usage{
 get_resultados(
   year = NULL,
@@ -17,8 +17,9 @@ get_resultados(
   partido_id = NULL,
   limit = 50L,
   skip = 0L,
-  all_pages = FALSE,
-  clean = TRUE
+  all_pages = TRUE,
+  clean = TRUE,
+  api_key = NULL
 )
 }
 \arguments{
@@ -53,37 +54,54 @@ code(s). Optional.}
 
 \item{skip}{Integer. Records to skip (default 0).}
 
-\item{all_pages}{Logical. If \code{TRUE}, fetches all pages. Default \code{FALSE}.}
+\item{all_pages}{Logical. If \code{TRUE}, fetches all pages automatically.
+Default \code{TRUE}.}
 
-\item{clean}{Logical. If \code{TRUE} (default), renames prefixed columns and
-selects only user-friendly columns. If \code{FALSE}, returns all flattened
-columns.}
+\item{clean}{Logical. If \code{TRUE} (default), renames prefixed columns to
+short names and selects only user-friendly columns. If \code{FALSE}, returns
+all flattened columns.}
+
+\item{api_key}{Character. Optional API key to override the global setting
+for this call only.}
 }
 \value{
-A tibble. When \code{clean = TRUE}: \code{year}, \code{mes}, \code{tipo_eleccion},
-\code{tipo_territorio}, \code{territorio_nombre}, \code{codigo_ccaa},
-\code{codigo_provincia}, \code{siglas}, \code{denominacion}, \code{partido_recode},
-\code{votos}, \code{representantes}. When \code{clean = FALSE}: all flattened columns
-with prefixes \verb{partido_*}, \verb{recode_*}, \verb{territorio_*}, \verb{eleccion_*}.
+A tibble. When \code{clean = TRUE}:
+\code{year}, \code{mes}, \code{tipo_eleccion}, \code{tipo_territorio}, \code{territorio_nombre},
+\code{codigo_ccaa}, \code{codigo_provincia}, \code{codigo_municipio}, \code{codigo_distrito},
+\code{codigo_seccion}, \code{censo_ine}, \code{votos_validos}, \code{abstenciones},
+\code{votos_blancos}, \code{votos_nulos}, \code{participacion_1}, \code{participacion_2},
+\code{participacion_3}, \code{siglas}, \code{denominacion}, \code{partido_recode},
+\code{partido_agrupacion}, \code{votos}, \code{representantes}, \code{nrepresentantes}.
+
+When \code{clean = FALSE}: all flattened columns with prefixes
+\verb{partido_*}, \verb{recode_*}, \verb{territorio_*}, \verb{eleccion_*}, plus the flat
+summary columns (\code{censo_ine}, \code{votos_validos}, \code{abstenciones},
+\code{votos_blancos}, \code{votos_nulos}, \code{participacion_1}, \code{participacion_2},
+\code{participacion_3}, \code{nrepresentantes}).
 }
 \description{
-Returns paginated votes with party (including recode), territory, and
-election information fully expanded and flattened into a wide tibble.
-This is the most convenient function for cross-dimensional analysis.
+\code{get_resultados()} is the primary function of the package for analytical
+use. It returns a wide, ready-to-analyse tibble that combines per-party
+votes with territorial summary data (census, turnout, blank/null votes)
+and election metadata, all joined internally so no manual merging is
+needed.
 }
 \details{
-When \code{clean = TRUE} (the default), prefixed columns are renamed to
-short names and only the most useful subset is returned:
-\code{year}, \code{mes}, \code{tipo_eleccion}, \code{tipo_territorio}, \code{territorio_nombre},
-\code{codigo_ccaa}, \code{codigo_provincia}, \code{siglas}, \code{denominacion},
-\code{partido_recode}, \code{votos}, \code{representantes}.
+Two API calls are made internally: one to \verb{/v1/resultados/combinados}
+(votes + party + territory + election, fully expanded) and one to
+\verb{/v1/resultados/totales-territorio} (census and turnout totals). The
+results are joined by \verb{(eleccion_id, territorio_id)} before being
+returned.
 
-Set \code{clean = FALSE} to get the full flattened tibble with all prefixed
-columns (\verb{partido_*}, \verb{recode_*}, \verb{territorio_*}, \verb{eleccion_*}).
+When \code{clean = TRUE} (the default), prefixed columns are renamed to short,
+user-friendly names and only the most useful columns are returned.
+Set \code{clean = FALSE} to get all flattened columns with their original
+prefixes (\verb{partido_*}, \verb{recode_*}, \verb{territorio_*}, \verb{eleccion_*}) plus
+the flat summary columns.
 }
 \examples{
 \dontrun{
-# Provincial results for general elections in Andalucia (clean)
+# Results by province for Andalucia in the 2019 general election
 get_resultados(
     tipo_eleccion = "G", year = "2019",
     tipo_territorio = "provincia",
@@ -91,11 +109,21 @@ get_resultados(
     all_pages = TRUE
 )
 
-# Full flattened output
-get_resultados(
-    tipo_eleccion = "G", year = "2019",
-    tipo_territorio = "provincia",
-    clean = FALSE
-)
+# Provincial results for all general elections (all pages)
+get_resultados(tipo_eleccion = "G", tipo_territorio = "provincia",
+               all_pages = TRUE)
+
+# Filter afterwards with dplyr
+library(dplyr)
+get_resultados(tipo_eleccion = "G", year = "2019",
+               tipo_territorio = "provincia", all_pages = TRUE) |>
+    filter(siglas == "PSOE") |>
+    select(territorio_nombre, votos, representantes,
+           censo_ine, votos_validos)
+
+# Full flattened output (no renaming)
+get_resultados(tipo_eleccion = "G", year = "2019",
+               tipo_territorio = "provincia",
+               clean = FALSE)
 }
 }

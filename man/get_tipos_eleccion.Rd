@@ -4,7 +4,10 @@
 \alias{get_tipos_eleccion}
 \title{List all election types}
 \usage{
-get_tipos_eleccion()
+get_tipos_eleccion(api_key = NULL)
+}
+\arguments{
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A tibble with columns \code{codigo} and \code{descripcion}.

@@ -43,7 +43,10 @@ test_that("get_votos_partido returns paginated tibble", {
 })
 
 test_that("get_resultados returns clean tibble by default", {
-    local_mocked_bindings(edb_get = function(...) fixture_combinados_pag)
+    local_mocked_bindings(edb_get = function(path, ...) {
+        if (grepl("combinados", path)) fixture_combinados_pag
+        else fixture_resumen_pag
+    })
     tbl <- get_resultados(eleccion_id = 208)
     expect_s3_class(tbl, "tbl_df")
     expect_equal(nrow(tbl), 1)
@@ -56,6 +59,14 @@ test_that("get_resultados returns clean tibble by default", {
     expect_true("votos" %in% names(tbl))
     expect_true("representantes" %in% names(tbl))
 
+    # Verify enriched summary columns
+    expect_true("censo_ine" %in% names(tbl))
+    expect_true("votos_validos" %in% names(tbl))
+    expect_true("abstenciones" %in% names(tbl))
+    expect_true("votos_blancos" %in% names(tbl))
+    expect_true("votos_nulos" %in% names(tbl))
+    expect_true("nrepresentantes" %in% names(tbl))
+
     # No raw nested or prefixed columns
     expect_false("partido" %in% names(tbl))
     expect_false("territorio" %in% names(tbl))
@@ -64,8 +75,11 @@ test_that("get_resultados returns clean tibble by default", {
     expect_false("partido_siglas" %in% names(tbl))
 })
 
-test_that("get_resultados with clean = FALSE returns full flattened tibble", {
-    local_mocked_bindings(edb_get = function(...) fixture_combinados_pag)
+test_that("get_resultados with clean = FALSE returns full flattened tibble with summary cols", {
+    local_mocked_bindings(edb_get = function(path, ...) {
+        if (grepl("combinados", path)) fixture_combinados_pag
+        else fixture_resumen_pag
+    })
     tbl <- get_resultados(eleccion_id = 208, clean = FALSE)
     expect_s3_class(tbl, "tbl_df")
     expect_equal(nrow(tbl), 1)
@@ -76,10 +90,83 @@ test_that("get_resultados with clean = FALSE returns full flattened tibble", {
     expect_true("territorio_nombre" %in% names(tbl))
     expect_true("eleccion_year" %in% names(tbl))
 
+    # Verify enriched summary columns also present
+    expect_true("censo_ine" %in% names(tbl))
+    expect_true("votos_validos" %in% names(tbl))
+    expect_true("nrepresentantes" %in% names(tbl))
+
     # No raw nested columns
     expect_false("partido" %in% names(tbl))
     expect_false("territorio" %in% names(tbl))
     expect_false("eleccion" %in% names(tbl))
+})
+
+test_that("get_resultados gracefully handles failed resumen fetch", {
+    local_mocked_bindings(edb_get = function(path, ...) {
+        if (grepl("combinados", path)) fixture_combinados_pag
+        else stop("simulated network error")
+    })
+    tbl <- get_resultados(eleccion_id = 208)
+    expect_s3_class(tbl, "tbl_df")
+    expect_equal(nrow(tbl), 1)
+    # Summary columns are NA when resumen fetch fails
+    expect_true("censo_ine" %in% names(tbl))
+    expect_true(is.na(tbl$censo_ine[1]))
+})
+
+test_that("get_ccaa passes tipo_territorio = 'ccaa' to get_resultados", {
+    local_mocked_bindings(edb_get = function(path, ...) {
+        if (grepl("combinados", path)) fixture_combinados_pag
+        else fixture_resumen_pag
+    })
+    tbl <- get_ccaa(eleccion_id = 208)
+    expect_s3_class(tbl, "tbl_df")
+})
+
+test_that("get_provincia passes tipo_territorio = 'provincia' to get_resultados", {
+    local_mocked_bindings(edb_get = function(path, ...) {
+        if (grepl("combinados", path)) fixture_combinados_pag
+        else fixture_resumen_pag
+    })
+    tbl <- get_provincia(eleccion_id = 208)
+    expect_s3_class(tbl, "tbl_df")
+})
+
+test_that("get_municipios passes tipo_territorio = 'municipio' to get_resultados", {
+    local_mocked_bindings(edb_get = function(path, ...) {
+        if (grepl("combinados", path)) fixture_combinados_pag
+        else fixture_resumen_pag
+    })
+    tbl <- get_municipios(eleccion_id = 208)
+    expect_s3_class(tbl, "tbl_df")
+})
+
+test_that("get_secciones passes tipo_territorio = 'seccion' to get_resultados", {
+    local_mocked_bindings(edb_get = function(path, ...) {
+        if (grepl("combinados", path)) fixture_combinados_pag
+        else fixture_resumen_pag
+    })
+    tbl <- get_secciones(eleccion_id = 208)
+    expect_s3_class(tbl, "tbl_df")
+})
+
+test_that("retrocompat aliases behave identically to their wrappers", {
+    local_mocked_bindings(edb_get = function(path, ...) {
+        if (grepl("combinados", path)) fixture_combinados_pag
+        else fixture_resumen_pag
+    })
+    expect_identical(
+        getProvincias(eleccion_id = 208),
+        get_provincia(eleccion_id = 208)
+    )
+    expect_identical(
+        getMunicipios(eleccion_id = 208),
+        get_municipios(eleccion_id = 208)
+    )
+    expect_identical(
+        getSecciones(eleccion_id = 208),
+        get_secciones(eleccion_id = 208)
+    )
 })
 
 test_that("get_health returns 1-row tibble", {

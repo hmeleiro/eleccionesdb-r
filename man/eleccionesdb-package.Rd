@@ -2,22 +2,29 @@
 % Please edit documentation in R/eleccionesdb-package.R
 \docType{package}
 \name{eleccionesdb-package}
+\alias{eleccionesdb}
 \alias{eleccionesdb-package}
 \title{eleccionesdb: R Client for the EleccionesDB API}
 \description{
 Provides functions to access the EleccionesDB REST API for Spanish electoral data. Returns tidy tibbles ready for analysis, supports automatic pagination, and handles nested JSON structures with sensible flattening. Covers elections, territories, parties, results, and CERA (overseas vote) endpoints.
 
-Provides functions to access the EleccionesDB REST API for Spanish
+Provides functions to access the eleccionesdb REST API for Spanish
 electoral data. All functions return tidy tibbles ready for analysis
 with the tidyverse.
 }
-\section{Configuration}{
+\details{
+This is a package-level documentation file for eleccionesdb.
+}
+\section{Autenticación y configuración}{
 
-The API base URL defaults to \verb{https://api.spainelectoralproject.com/} and can be
-configured via:
+Desde abril de 2026, la mayoría de endpoints requieren autenticación mediante API key.
+Registra tu clave con \code{\link[=edb_set_api_key]{edb_set_api_key()}} para que se use automáticamente en todas las funciones protegidas.
+Puedes sobrescribir la clave global pasando \code{api_key} como argumento en cada función.
+
+La URL base de la API se puede configurar con:
 \itemize{
-\item The \code{ELECCIONESDB_URL} environment variable (read on package load)
-\item \code{\link[=edb_set_base_url]{edb_set_base_url()}} at runtime
+\item La variable de entorno \code{ELECCIONESDB_URL} (leída al cargar el paquete)
+\item \code{\link[=edb_set_base_url]{edb_set_base_url()}} en tiempo de ejecución
 }
 }
 
@@ -72,20 +79,13 @@ Set \code{all_pages = TRUE} to automatically fetch all records.
 \seealso{
 Useful links:
 \itemize{
-  \item \url{https://github.com/example/eleccionesdb}
-  \item Report bugs at \url{https://github.com/example/eleccionesdb/issues}
-}
-
-
-Useful links:
-\itemize{
-  \item \url{https://github.com/example/eleccionesdb}
-  \item Report bugs at \url{https://github.com/example/eleccionesdb/issues}
+  \item \url{https://hmeleiro.github.io/eleccionesdb-r}
+  \item Report bugs at \url{https://github.com/hmeleiro/eleccionesdb-r/issues}
 }
 
 }
 \author{
-\strong{Maintainer}: First Last \email{first.last@example.com}
+\strong{Maintainer}: Héctor Meleiro \email{hmeleiro@gmail.com}
 
 }
 \keyword{internal}

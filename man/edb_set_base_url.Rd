@@ -7,7 +7,7 @@
 edb_set_base_url(url)
 }
 \arguments{
-\item{url}{Character string with the base URL (e.g. \code{"https://api.spainelectoralproject.com/"}).}
+\item{url}{Character string with the base URL (e.g. \code{"https://data.hmeleiro.com/"}).}
 }
 \value{
 The previous base URL, invisibly.

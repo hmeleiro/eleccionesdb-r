@@ -4,12 +4,14 @@
 \alias{get_tipo_eleccion}
 \title{Get a single election type by code}
 \usage{
-get_tipo_eleccion(codigo)
+get_tipo_eleccion(codigo, api_key = NULL)
 }
 \arguments{
 \item{codigo}{Character. The election type code. Valid values: \code{"A"}
 (Autonomicas), \code{"E"} (Europeas), \code{"G"} (Congreso), \code{"L"} (Locales),
 \code{"S"} (Senado).}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A 1-row tibble with columns \code{codigo} and \code{descripcion}.

@@ -284,10 +284,12 @@ clean_combinados_tbl <- function(tbl) {
         "year", "mes", "tipo_eleccion",
         "tipo_territorio", "territorio_nombre",
         "codigo_ccaa", "codigo_provincia",
-        "codigo_circunscripcion", "codigo_municipio",
-        "codigo_distrito", "codigo_seccion",
+        "codigo_municipio", "codigo_distrito", "codigo_seccion",
+        "censo_ine", "votos_validos", "abstenciones",
+        "votos_blancos", "votos_nulos",
+        "participacion_1", "participacion_2", "participacion_3",
         "siglas", "denominacion", "partido_recode", "partido_agrupacion",
-        "votos", "representantes"
+        "votos", "representantes", "nrepresentantes"
     )
 
     keep <- intersect(keep_ordered, names(tbl))

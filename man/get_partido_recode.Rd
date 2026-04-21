@@ -4,10 +4,12 @@
 \alias{get_partido_recode}
 \title{Get a single party recode/group by ID}
 \usage{
-get_partido_recode(partido_recode_id)
+get_partido_recode(partido_recode_id, api_key = NULL)
 }
 \arguments{
 \item{partido_recode_id}{Integer. The recode group ID.}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A named list with two elements:

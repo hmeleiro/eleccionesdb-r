@@ -4,10 +4,12 @@
 \alias{get_territorio}
 \title{Get a single territory by ID}
 \usage{
-get_territorio(territorio_id)
+get_territorio(territorio_id, api_key = NULL)
 }
 \arguments{
 \item{territorio_id}{Integer. The territory ID.}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A 1-row tibble with columns: \code{id}, \code{tipo}, \code{codigo_ccaa},

@@ -4,10 +4,12 @@
 \alias{get_eleccion}
 \title{Get a single election by ID}
 \usage{
-get_eleccion(eleccion_id)
+get_eleccion(eleccion_id, api_key = NULL)
 }
 \arguments{
 \item{eleccion_id}{Integer. The election ID.}
+
+\item{api_key}{(Opcional) Clave de API para sobrescribir la global solo en esta llamada.}
 }
 \value{
 A 1-row tibble with columns: \code{id}, \code{tipo_eleccion}, \code{year}, \code{mes},
