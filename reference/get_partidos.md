@@ -13,7 +13,8 @@ get_partidos(
   partido_recode_id = NULL,
   limit = 50L,
   skip = 0L,
-  all_pages = FALSE
+  all_pages = FALSE,
+  api_key = NULL
 )
 ```
 
@@ -45,6 +46,11 @@ get_partidos(
 
   Logical. If `TRUE`, fetches all pages. Default `FALSE`.
 
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
+
 ## Value
 
 A tibble with columns: `id`, `siglas`, `denominacion`,
@@ -59,5 +65,8 @@ get_partidos(siglas = "psoe")
 
 # All parties in a specific recode group
 get_partidos(partido_recode_id = 80, all_pages = TRUE)
+
+# Usar clave explícita solo para esta llamada
+get_partidos(siglas = "psoe", api_key = "OTRA_CLAVE")
 } # }
 ```

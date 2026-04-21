@@ -32,6 +32,50 @@
     </div>
 
     <div class="section level2">
+      <h2 id="consulta-principal">Consulta principal<a class="anchor" aria-label="anchor" href="#consulta-principal"></a></h2>
+
+      <div class="section-desc"><p>Funciones de alto nivel para análisis directo. Punto de entrada recomendado para la mayoría de casos de uso. Devuelven un tibble listo para analizar con votos, partido, recode, territorio y totales territoriales ya combinados en una sola tabla.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="get_resultados.html">get_resultados()</a></code>
+
+        </dt>
+        <dd>List combined results — main analysis function</dd>
+
+        <dt>
+
+          <code><a href="get_ccaa.html">get_ccaa()</a></code>
+
+        </dt>
+        <dd>Results by autonomous community</dd>
+
+        <dt>
+
+          <code><a href="get_provincias.html">get_provincias()</a></code> <code><a href="get_provincias.html">getProvincias()</a></code>
+
+        </dt>
+        <dd>Results by province</dd>
+
+        <dt>
+
+          <code><a href="get_municipios.html">get_municipios()</a></code> <code><a href="get_municipios.html">getMunicipios()</a></code>
+
+        </dt>
+        <dd>Results by municipality</dd>
+
+        <dt>
+
+          <code><a href="get_secciones.html">get_secciones()</a></code> <code><a href="get_secciones.html">getSecciones()</a></code>
+
+        </dt>
+        <dd>Results by census section</dd>
+      </dl></div><div class="section level2">
       <h2 id="elecciones">Elecciones<a class="anchor" aria-label="anchor" href="#elecciones"></a></h2>
 
 
@@ -136,9 +180,9 @@
         </dt>
         <dd>Get a single party recode/group by ID</dd>
       </dl></div><div class="section level2">
-      <h2 id="resultados">Resultados<a class="anchor" aria-label="anchor" href="#resultados"></a></h2>
+      <h2 id="resultados-avanzado-">Resultados (avanzado)<a class="anchor" aria-label="anchor" href="#resultados-avanzado-"></a></h2>
 
-
+      <div class="section-desc"><p>Funciones de acceso a bajo nivel para obtener datos crudos con IDs normalizados, opciones de desnormalización y control granular de la paginación.</p></div>
 
       <dl></dl></div><div class="section level2">
 
@@ -158,13 +202,6 @@
 
         </dt>
         <dd>Get complete result for an election and territory</dd>
-
-        <dt>
-
-          <code><a href="get_resultados.html">get_resultados()</a></code>
-
-        </dt>
-        <dd>List combined results (fully expanded)</dd>
 
         <dt>
 
@@ -230,6 +267,20 @@
 
       <dl><dt>
 
+          <code><a href="edb_set_api_key.html">edb_set_api_key()</a></code>
+
+        </dt>
+        <dd>Set the EleccionesDB API key</dd>
+
+        <dt>
+
+          <code><a href="edb_get_api_key.html">edb_get_api_key()</a></code>
+
+        </dt>
+        <dd>Get the current EleccionesDB API key</dd>
+
+        <dt>
+
           <code><a href="edb_set_base_url.html">edb_set_base_url()</a></code>
 
         </dt>
@@ -241,6 +292,36 @@
 
         </dt>
         <dd>Get the current EleccionesDB API base URL</dd>
+      </dl></div><div class="section level2">
+      <h2 id="retrocompatibilidad">Retrocompatibilidad<a class="anchor" aria-label="anchor" href="#retrocompatibilidad"></a></h2>
+
+      <div class="section-desc"><p>Aliases mantenidos por compatibilidad con versiones anteriores del paquete. Usar las funciones modernas en código nuevo.</p></div>
+
+      <dl></dl></div><div class="section level2">
+
+
+
+
+      <dl><dt>
+
+          <code><a href="get_provincias.html">get_provincias()</a></code> <code><a href="get_provincias.html">getProvincias()</a></code>
+
+        </dt>
+        <dd>Results by province</dd>
+
+        <dt>
+
+          <code><a href="get_municipios.html">get_municipios()</a></code> <code><a href="get_municipios.html">getMunicipios()</a></code>
+
+        </dt>
+        <dd>Results by municipality</dd>
+
+        <dt>
+
+          <code><a href="get_secciones.html">get_secciones()</a></code> <code><a href="get_secciones.html">getSecciones()</a></code>
+
+        </dt>
+        <dd>Results by census section</dd>
       </dl></div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
     </nav></aside></div>

@@ -52,7 +52,8 @@ de Espanoles Residentes Ausentes).</p>
 <span>  skip <span class="op">=</span> <span class="fl">0L</span>,</span>
 <span>  all_pages <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  denormalize <span class="op">=</span> <span class="cn">FALSE</span>,</span>
-<span>  clean <span class="op">=</span> <span class="va">denormalize</span></span>
+<span>  clean <span class="op">=</span> <span class="va">denormalize</span>,</span>
+<span>  api_key <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -104,6 +105,10 @@ calls. Default <code>FALSE</code>.</p></dd>
 <dt id="arg-clean">clean<a class="anchor" aria-label="anchor" href="#arg-clean"></a></dt>
 <dd><p>Logical. If <code>TRUE</code>, removes ID and slug columns from the
 result. Defaults to the value of <code>denormalize</code>.</p></dd>
+
+
+<dt id="arg-api-key">api_key<a class="anchor" aria-label="anchor" href="#arg-api-key"></a></dt>
+<dd><p>(Opcional) Clave de API para sobrescribir la global solo en esta llamada.</p></dd>
 
 </dl></div>
     <div class="section level2">

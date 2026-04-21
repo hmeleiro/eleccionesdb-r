@@ -6,19 +6,29 @@ automatic pagination, and handles nested JSON structures with sensible
 flattening. Covers elections, territories, parties, results, and CERA
 (overseas vote) endpoints.
 
-Provides functions to access the EleccionesDB REST API for Spanish
+Provides functions to access the eleccionesdb REST API for Spanish
 electoral data. All functions return tidy tibbles ready for analysis
 with the tidyverse.
 
-## Configuration
+## Details
 
-The API base URL defaults to `https://api.spainelectoralproject.com/`
-and can be configured via:
+This is a package-level documentation file for eleccionesdb.
 
-- The `ELECCIONESDB_URL` environment variable (read on package load)
+## Autenticación y configuración
+
+Desde abril de 2026, la mayoría de endpoints requieren autenticación
+mediante API key. Registra tu clave con
+[`edb_set_api_key()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_set_api_key.md)
+para que se use automáticamente en todas las funciones protegidas.
+Puedes sobrescribir la clave global pasando `api_key` como argumento en
+cada función.
+
+La URL base de la API se puede configurar con:
+
+- La variable de entorno `ELECCIONESDB_URL` (leída al cargar el paquete)
 
 - [`edb_set_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_set_base_url.md)
-  at runtime
+  en tiempo de ejecución
 
 ## Main functions
 
@@ -95,16 +105,10 @@ Set `all_pages = TRUE` to automatically fetch all records.
 
 Useful links:
 
-- <https://github.com/example/eleccionesdb>
+- <https://hmeleiro.github.io/eleccionesdb-r>
 
-- Report bugs at <https://github.com/example/eleccionesdb/issues>
-
-Useful links:
-
-- <https://github.com/example/eleccionesdb>
-
-- Report bugs at <https://github.com/example/eleccionesdb/issues>
+- Report bugs at <https://github.com/hmeleiro/eleccionesdb-r/issues>
 
 ## Author
 
-**Maintainer**: First Last <first.last@example.com>
+**Maintainer**: Héctor Meleiro <hmeleiro@gmail.com>

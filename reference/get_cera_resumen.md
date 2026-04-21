@@ -16,7 +16,8 @@ get_cera_resumen(
   skip = 0L,
   all_pages = FALSE,
   denormalize = FALSE,
-  clean = denormalize
+  clean = denormalize,
+  api_key = NULL
 )
 ```
 
@@ -67,6 +68,11 @@ get_cera_resumen(
 
   Logical. If `TRUE`, removes ID and slug columns from the result.
   Defaults to the value of `denormalize`.
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 

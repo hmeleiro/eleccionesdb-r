@@ -1,5 +1,26 @@
 # Package index
 
+## Consulta principal
+
+Funciones de alto nivel para análisis directo. Punto de entrada
+recomendado para la mayoría de casos de uso. Devuelven un tibble listo
+para analizar con votos, partido, recode, territorio y totales
+territoriales ya combinados en una sola tabla.
+
+- [`get_resultados()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultados.md)
+  : List combined results — main analysis function
+- [`get_ccaa()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_ccaa.md)
+  : Results by autonomous community
+- [`get_provincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
+  [`getProvincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
+  : Results by province
+- [`get_municipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
+  [`getMunicipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
+  : Results by municipality
+- [`get_secciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
+  [`getSecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
+  : Results by census section
+
 ## Elecciones
 
 - [`get_tipos_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_tipos_eleccion.md)
@@ -31,14 +52,16 @@
 - [`get_partido_recode()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_partido_recode.md)
   : Get a single party recode/group by ID
 
-## Resultados
+## Resultados (avanzado)
+
+Funciones de acceso a bajo nivel para obtener datos crudos con IDs
+normalizados, opciones de desnormalización y control granular de la
+paginación.
 
 - [`get_totales_territorio_eleccion()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio_eleccion.md)
   : List territorial totals for an election
 - [`get_resultado_completo()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultado_completo.md)
   : Get complete result for an election and territory
-- [`get_resultados()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_resultados.md)
-  : List combined results (fully expanded)
 - [`get_totales_territorio()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_totales_territorio.md)
   : List territorial totals (cross-election)
 - [`get_votos_partido()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_votos_partido.md)
@@ -62,7 +85,26 @@ Funciones para apuntar el paquete a una instancia propia de la API. Ver
 [`vignette("autodespliegue")`](https://hmeleiro.github.io/eleccionesdb-r/articles/autodespliegue.md)
 para más detalles.
 
+- [`edb_set_api_key()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_set_api_key.md)
+  : Set the EleccionesDB API key
+- [`edb_get_api_key()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_api_key.md)
+  : Get the current EleccionesDB API key
 - [`edb_set_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_set_base_url.md)
   : Set the EleccionesDB API base URL
 - [`edb_get_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_base_url.md)
   : Get the current EleccionesDB API base URL
+
+## Retrocompatibilidad
+
+Aliases mantenidos por compatibilidad con versiones anteriores del
+paquete. Usar las funciones modernas en código nuevo.
+
+- [`get_provincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
+  [`getProvincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
+  : Results by province
+- [`get_municipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
+  [`getMunicipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
+  : Results by municipality
+- [`get_secciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
+  [`getSecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
+  : Results by census section

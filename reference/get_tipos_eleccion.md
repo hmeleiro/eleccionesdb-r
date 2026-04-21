@@ -6,8 +6,15 @@ non-paginated endpoint that returns all types directly as an array.
 ## Usage
 
 ``` r
-get_tipos_eleccion()
+get_tipos_eleccion(api_key = NULL)
 ```
+
+## Arguments
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 

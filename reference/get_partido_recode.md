@@ -7,7 +7,7 @@ named list instead of a single tibble.
 ## Usage
 
 ``` r
-get_partido_recode(partido_recode_id)
+get_partido_recode(partido_recode_id, api_key = NULL)
 ```
 
 ## Arguments
@@ -15,6 +15,11 @@ get_partido_recode(partido_recode_id)
 - partido_recode_id:
 
   Integer. The recode group ID.
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 

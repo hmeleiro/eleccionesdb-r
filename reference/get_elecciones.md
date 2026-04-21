@@ -13,7 +13,8 @@ get_elecciones(
   ambito = NULL,
   limit = 50L,
   skip = 0L,
-  all_pages = FALSE
+  all_pages = FALSE,
+  api_key = NULL
 )
 ```
 
@@ -51,6 +52,11 @@ get_elecciones(
 - all_pages:
 
   Logical. If `TRUE`, fetches all pages automatically. Default `FALSE`.
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 

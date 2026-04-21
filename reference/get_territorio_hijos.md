@@ -6,7 +6,13 @@ within an autonomous community, or municipalities within a province.
 ## Usage
 
 ``` r
-get_territorio_hijos(territorio_id, limit = 50L, skip = 0L, all_pages = FALSE)
+get_territorio_hijos(
+  territorio_id,
+  limit = 50L,
+  skip = 0L,
+  all_pages = FALSE,
+  api_key = NULL
+)
 ```
 
 ## Arguments
@@ -26,6 +32,11 @@ get_territorio_hijos(territorio_id, limit = 50L, skip = 0L, all_pages = FALSE)
 - all_pages:
 
   Logical. If `TRUE`, fetches all pages. Default `FALSE`.
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 

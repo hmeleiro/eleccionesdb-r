@@ -13,7 +13,8 @@ get_resultado_completo(
   ...,
   denormalize = FALSE,
   use_recode = FALSE,
-  clean = denormalize
+  clean = denormalize,
+  api_key = NULL
 )
 ```
 
@@ -49,6 +50,11 @@ get_resultado_completo(
 
   Logical. If `TRUE`, removes ID and slug columns from both sub-tibbles.
   Defaults to the value of `denormalize`.
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 

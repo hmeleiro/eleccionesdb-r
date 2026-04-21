@@ -72,72 +72,138 @@ resultados electorales españoles con <strong>dplyr</strong> y
 visualización.</p>
 <hr>
 <div class="section level2">
-<h2 id="funciones-de-resultados">Funciones de resultados<a class="anchor" aria-label="anchor" href="#funciones-de-resultados"></a>
+<h2 id="función-principal-get_resultados">Función principal: <code>get_resultados()</code><a class="anchor" aria-label="anchor" href="#funci%C3%B3n-principal-get_resultados"></a>
 </h2>
-<p>El paquete ofrece varias funciones para acceder a resultados. Es
-importante entender la diferencia entre ellas:</p>
+<p><code><a href="../reference/get_resultados.html">get_resultados()</a></code> es la función central del paquete para
+análisis electoral. Devuelve un tibble ancho que combina en una sola
+tabla:</p>
+<ul>
+<li>
+<strong>Votos por partido</strong>: <code>siglas</code>,
+<code>denominacion</code>, <code>partido_recode</code>,
+<code>partido_agrupacion</code>, <code>votos</code>,
+<code>representantes</code>
+</li>
+<li>
+<strong>Totales territoriales</strong>: <code>censo_ine</code>,
+<code>votos_validos</code>, <code>abstenciones</code>,
+<code>votos_blancos</code>, <code>votos_nulos</code>,
+<code>participacion_1</code>, <code>participacion_2</code>,
+<code>participacion_3</code>, <code>nrepresentantes</code>
+</li>
+<li>
+<strong>Metadatos de elección y territorio</strong>:
+<code>year</code>, <code>mes</code>, <code>tipo_eleccion</code>,
+<code>tipo_territorio</code>, <code>territorio_nombre</code>,
+<code>codigo_ccaa</code>, <code>codigo_provincia</code>,
+<code>codigo_municipio</code>, <code>codigo_distrito</code>,
+<code>codigo_seccion</code>
+</li>
+</ul>
+<p>La unión de votos y totales se realiza internamente (no hace falta
+ningún <code>join</code> manual). Por defecto, <code>clean = TRUE</code>
+renombra las columnas y devuelve solo las más útiles para análisis.</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Resultados provinciales de Andalucía — Elecciones Generales abril 2019</span></span>
+<span><span class="va">andalucia</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_resultados.html">get_resultados</a></span><span class="op">(</span></span>
+<span>  tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>,</span>
+<span>  tipo_territorio <span class="op">=</span> <span class="st">"provincia"</span>,</span>
+<span>  codigo_ccaa <span class="op">=</span> <span class="st">"01"</span>,</span>
+<span>  all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Las 25 columnas listas para usar directamente:</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">andalucia</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  [1] "year"              "mes"               "tipo_eleccion"</span></span>
+<span><span class="co">#&gt;  [4] "tipo_territorio"   "territorio_nombre" "codigo_ccaa"</span></span>
+<span><span class="co">#&gt;  [7] "codigo_provincia"  "codigo_municipio"  "codigo_distrito"</span></span>
+<span><span class="co">#&gt; [10] "codigo_seccion"    "censo_ine"         "votos_validos"</span></span>
+<span><span class="co">#&gt; [13] "abstenciones"      "votos_blancos"     "votos_nulos"</span></span>
+<span><span class="co">#&gt; [16] "participacion_1"   "participacion_2"   "participacion_3"</span></span>
+<span><span class="co">#&gt; [19] "siglas"            "denominacion"      "partido_recode"</span></span>
+<span><span class="co">#&gt; [22] "partido_agrupacion" "votos"            "representantes"</span></span>
+<span><span class="co">#&gt; [25] "nrepresentantes"</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="atajos-territoriales">Atajos territoriales<a class="anchor" aria-label="anchor" href="#atajos-territoriales"></a>
+</h3>
+<p>Para los niveles más habituales existen funciones derivadas que
+evitan tener que escribir <code>tipo_territorio</code> cada vez:</p>
 <table class="table">
 <colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
+<col width="50%">
+<col width="50%">
 </colgroup>
 <thead><tr class="header">
 <th>Función</th>
-<th>Alcance</th>
+<th>Equivale a</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td><code>get_ccaa(...)</code></td>
+<td><code>get_resultados(..., tipo_territorio = "ccaa")</code></td>
+</tr>
+<tr class="even">
+<td><code>get_provincia(...)</code></td>
+<td><code>get_resultados(..., tipo_territorio = "provincia")</code></td>
+</tr>
+<tr class="odd">
+<td><code>get_municipios(...)</code></td>
+<td><code>get_resultados(..., tipo_territorio = "municipio")</code></td>
+</tr>
+<tr class="even">
+<td><code>get_secciones(...)</code></td>
+<td><code>get_resultados(..., tipo_territorio = "seccion")</code></td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Equivalentes, misma salida:</span></span>
+<span><span class="fu"><a href="../reference/get_ccaa.html">get_ccaa</a></span><span class="op">(</span>tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="../reference/get_resultados.html">get_resultados</a></span><span class="op">(</span>tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>,</span>
+<span>               tipo_territorio <span class="op">=</span> <span class="st">"ccaa"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+<hr>
+</div>
+</div>
+<div class="section level2">
+<h2 id="otras-funciones-de-resultados">Otras funciones de resultados<a class="anchor" aria-label="anchor" href="#otras-funciones-de-resultados"></a>
+</h2>
+<p>Para casos de uso más específicos (control fino de paginación, datos
+con IDs normalizados, joins con tablas propias), el paquete ofrece
+funciones de acceso a bajo nivel:</p>
+<table class="table">
+<colgroup>
+<col width="50%">
+<col width="50%">
+</colgroup>
+<thead><tr class="header">
+<th>Función</th>
 <th>Devuelve</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td><code><a href="../reference/get_totales_territorio_eleccion.html">get_totales_territorio_eleccion()</a></code></td>
-<td>Una elección</td>
-<td>Totales territoriales (censo, participación, votos)</td>
+<td>Totales territoriales de una elección concreta</td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/get_resultado_completo.html">get_resultado_completo()</a></code></td>
-<td>Una elección + un territorio</td>
-<td>Lista: <code>$totales_territorio</code> +
-<code>$votos_partido</code> (por partido)</td>
+<td>Lista con <code>$totales_territorio</code> +
+<code>$votos_partido</code> para una elección y territorio</td>
 </tr>
 <tr class="odd">
 <td><code><a href="../reference/get_totales_territorio.html">get_totales_territorio()</a></code></td>
-<td>Cruce de elecciones</td>
-<td>Totales territoriales filtrables</td>
+<td>Totales territoriales filtrables (cruce de elecciones)</td>
 </tr>
 <tr class="even">
 <td><code><a href="../reference/get_votos_partido.html">get_votos_partido()</a></code></td>
-<td>Cruce de elecciones</td>
-<td>Votos por partido filtrables</td>
-</tr>
-<tr class="odd">
-<td><code><a href="../reference/get_resultados.html">get_resultados()</a></code></td>
-<td>Cruce de elecciones</td>
-<td>Todo expandido: votos + partido + recode + territorio +
-elección</td>
+<td>Votos por partido filtrables (cruce de elecciones)</td>
 </tr>
 </tbody>
 </table>
-<p>Para la mayoría de análisis,
-<strong><code><a href="../reference/get_resultados.html">get_resultados()</a></code></strong> es la opción más
-práctica, ya que devuelve toda la información aplanada y lista para usar
-con dplyr. Por defecto, <code>clean = TRUE</code> renombra las columnas
-con prefijo a nombres cortos (<code>year</code>, <code>siglas</code>,
-<code>territorio_nombre</code>…).</p>
-<hr>
-</div>
-<div class="section level2">
-<h2 id="desnormalización-de-ids">Desnormalización de IDs<a class="anchor" aria-label="anchor" href="#desnormalizaci%C3%B3n-de-ids"></a>
-</h2>
-<p>Las funciones <code><a href="../reference/get_totales_territorio.html">get_totales_territorio()</a></code>,
-<code><a href="../reference/get_votos_partido.html">get_votos_partido()</a></code>,
-<code><a href="../reference/get_totales_territorio_eleccion.html">get_totales_territorio_eleccion()</a></code>,
-<code><a href="../reference/get_resultado_completo.html">get_resultado_completo()</a></code>, <code><a href="../reference/get_cera_resumen.html">get_cera_resumen()</a></code> y
-<code><a href="../reference/get_cera_votos.html">get_cera_votos()</a></code> devuelven columnas de ID
-(<code>eleccion_id</code>, <code>territorio_id</code>,
-<code>partido_id</code>) que hacen referencia a otras tablas. Para
-facilitar el análisis sin necesidad de hacer joins manuales, puedes usar
-el parámetro <code>denormalize = TRUE</code>:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<p>Estas funciones devuelven IDs normalizados. Usa
+<code>denormalize = TRUE</code> para añadir columnas descriptivas sin
+join manual:</p>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Sin desnormalizar: solo IDs</span></span>
 <span><span class="va">votos</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_votos_partido.html">get_votos_partido</a></span><span class="op">(</span>eleccion_id <span class="op">=</span> <span class="fl">208</span>, territorio_id <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span><span class="va">votos</span></span>
@@ -147,60 +213,15 @@ el parámetro <code>denormalize = TRUE</code>:</p>
 <span><span class="co">#&gt;  1 50001         208            20       9451 89432              3</span></span>
 <span><span class="co">#&gt; ...</span></span>
 <span></span>
-<span><span class="co"># Con desnormalización: se añaden columnas descriptivas</span></span>
+<span><span class="co"># Con desnormalización: columnas descriptivas insertadas junto a sus IDs</span></span>
 <span><span class="va">votos_dn</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_votos_partido.html">get_votos_partido</a></span><span class="op">(</span></span>
-<span>  eleccion_id <span class="op">=</span> <span class="fl">208</span>,</span>
-<span>  territorio_id <span class="op">=</span> <span class="fl">20</span>,</span>
+<span>  eleccion_id <span class="op">=</span> <span class="fl">208</span>, territorio_id <span class="op">=</span> <span class="fl">20</span>,</span>
 <span>  denormalize <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">votos_dn</span></span>
-<span><span class="co">#&gt; # A tibble: 22 × 9</span></span>
-<span><span class="co">#&gt;       id eleccion_id eleccion_descripcion   territorio_id territorio_nombre</span></span>
-<span><span class="co">#&gt;    &lt;int&gt;       &lt;int&gt; &lt;chr&gt;                          &lt;int&gt; &lt;chr&gt;</span></span>
-<span><span class="co">#&gt;  1 50001         208 Elecciones Generales…             20 Almeria</span></span>
-<span><span class="co">#&gt; # ℹ … partido_id partido_nombre votos representantes</span></span></code></pre></div>
-<p>Las columnas descriptivas se insertan justo después de su columna de
-ID correspondiente:</p>
-<table class="table">
-<colgroup>
-<col width="33%">
-<col width="33%">
-<col width="33%">
-</colgroup>
-<thead><tr class="header">
-<th>ID original</th>
-<th>Columna añadida</th>
-<th>Origen</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td><code>eleccion_id</code></td>
-<td><code>eleccion_descripcion</code></td>
-<td>Campo <code>descripcion</code> de la elección</td>
-</tr>
-<tr class="even">
-<td><code>territorio_id</code></td>
-<td><code>territorio_nombre</code></td>
-<td>Campo <code>nombre</code> del territorio</td>
-</tr>
-<tr class="odd">
-<td><code>partido_id</code></td>
-<td><code>partido_nombre</code></td>
-<td>Campo <code>siglas</code> del partido</td>
-</tr>
-</tbody>
-</table>
+<span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="usar-la-agrupación-recode-como-nombre-del-partido">Usar la agrupación (recode) como nombre del partido<a class="anchor" aria-label="anchor" href="#usar-la-agrupaci%C3%B3n-recode-como-nombre-del-partido"></a>
 </h3>
-<p>Cuando se trabaja con datos electorales, es habitual agrupar los
-votos de las distintas candidaturas locales de un mismo partido bajo una
-misma etiqueta. El parámetro <code>use_recode = TRUE</code> hace que
-<code>partido_nombre</code> use la agrupación del recode (de la tabla
-<code>partidos_recode</code>) en lugar de las siglas originales del
-partido. Si un partido no tiene recode asignado, se mantienen sus
-siglas:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># partido_nombre usa la agrupación del recode</span></span>
 <span><span class="va">votos_recode</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_votos_partido.html">get_votos_partido</a></span><span class="op">(</span></span>
 <span>  eleccion_id <span class="op">=</span> <span class="fl">208</span>,</span>
@@ -223,166 +244,90 @@ siglas:</p>
 <span><span class="co">#&gt; 3 Cs               2692092</span></span>
 <span><span class="co">#&gt; 4 UP               2381960</span></span>
 <span><span class="co">#&gt; 5 VOX              2677173</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="desnormalizar-con-get_totales_territorio">Desnormalizar con <code>get_totales_territorio()</code><a class="anchor" aria-label="anchor" href="#desnormalizar-con-get_totales_territorio"></a>
-</h3>
-<p>Las funciones sin <code>partido_id</code>
-(<code><a href="../reference/get_totales_territorio.html">get_totales_territorio()</a></code>,
-<code><a href="../reference/get_totales_territorio_eleccion.html">get_totales_territorio_eleccion()</a></code>,
-<code><a href="../reference/get_cera_resumen.html">get_cera_resumen()</a></code>) solo añaden
-<code>eleccion_descripcion</code> y <code>territorio_nombre</code>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">resumenes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_totales_territorio.html">get_totales_territorio</a></span><span class="op">(</span></span>
-<span>  eleccion_id <span class="op">=</span> <span class="fl">208</span>,</span>
-<span>  tipo_territorio <span class="op">=</span> <span class="st">"provincia"</span>,</span>
-<span>  all_pages <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  denormalize <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">resumenes</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">eleccion_id</span>, <span class="va">eleccion_descripcion</span>,</span>
-<span>         <span class="va">territorio_id</span>, <span class="va">territorio_nombre</span>,</span>
-<span>         <span class="va">censo_ine</span>, <span class="va">votos_validos</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 52 × 6</span></span>
-<span><span class="co">#&gt;   eleccion_id eleccion_descripcion    territorio_id territorio_nombre   censo_ine</span></span>
-<span><span class="co">#&gt;         &lt;int&gt; &lt;chr&gt;                           &lt;int&gt; &lt;chr&gt;                   &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1         208 Elecciones Generales…              20 Almeria                402054</span></span>
-<span><span class="co">#&gt; 2         208 Elecciones Generales…              21 Cadiz                  816291</span></span>
-<span><span class="co">#&gt; ...</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="get_resultado_completo-con-desnormalización">
-<code>get_resultado_completo()</code> con desnormalización<a class="anchor" aria-label="anchor" href="#get_resultado_completo-con-desnormalizaci%C3%B3n"></a>
-</h3>
-<p><code><a href="../reference/get_resultado_completo.html">get_resultado_completo()</a></code> devuelve una lista con
-<code>$totales_territorio</code> y <code>$votos_partido</code>. Con
-<code>denormalize = TRUE</code>, ambos elementos reciben las columnas
-descriptivas:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">resultado</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_resultado_completo.html">get_resultado_completo</a></span><span class="op">(</span></span>
-<span>  <span class="fl">208</span>, <span class="fl">20</span>,</span>
-<span>  denormalize <span class="op">=</span> <span class="cn">TRUE</span>,</span>
-<span>  use_recode <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Los totales incluyen eleccion_descripcion y territorio_nombre</span></span>
-<span><span class="va">resultado</span><span class="op">$</span><span class="va">totales_territorio</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">eleccion_id</span>, <span class="va">eleccion_descripcion</span>,</span>
-<span>         <span class="va">territorio_id</span>, <span class="va">territorio_nombre</span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Los votos incluyen además partido_nombre (con recode)</span></span>
-<span><span class="va">resultado</span><span class="op">$</span><span class="va">votos_partido</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">partido_nombre</span>, <span class="va">partido_siglas</span>, <span class="va">votos</span>, <span class="va">representantes</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="fl">5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; # A tibble: 5 × 4</span></span>
-<span><span class="co">#&gt;   partido_nombre partido_siglas votos representantes</span></span>
-<span><span class="co">#&gt;   &lt;chr&gt;          &lt;chr&gt;          &lt;int&gt;          &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1 PSOE           P.S.O.E.      89432              3</span></span>
-<span><span class="co">#&gt; 2 AP/PP          PP            72105              2</span></span>
-<span><span class="co">#&gt; ...</span></span></code></pre></div>
 <hr>
 </div>
 </div>
 <div class="section level2">
-<h2 id="resultados-de-una-elección-concreta">1. Resultados de una elección concreta<a class="anchor" aria-label="anchor" href="#resultados-de-una-elecci%C3%B3n-concreta"></a>
+<h2 id="resultados-por-nivel-territorial">1. Resultados por nivel territorial<a class="anchor" aria-label="anchor" href="#resultados-por-nivel-territorial"></a>
 </h2>
 <div class="section level3">
-<h3 id="identificar-la-elección">Identificar la elección<a class="anchor" aria-label="anchor" href="#identificar-la-elecci%C3%B3n"></a>
+<h3 id="comunidades-autónomas">Comunidades autónomas<a class="anchor" aria-label="anchor" href="#comunidades-aut%C3%B3nomas"></a>
 </h3>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Elecciones generales de abril de 2019</span></span>
-<span><span class="va">elecciones_2019</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elecciones.html">get_elecciones</a></span><span class="op">(</span>tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span><span class="op">)</span></span>
-<span><span class="va">elecciones_2019</span></span>
-<span><span class="co">#&gt; # A tibble: 2 × 9</span></span>
-<span><span class="co">#&gt;      id tipo_eleccion year  mes   dia   fecha      descripcion       ambito   slug</span></span>
-<span><span class="co">#&gt;   &lt;int&gt; &lt;chr&gt;         &lt;chr&gt; &lt;chr&gt; &lt;chr&gt; &lt;date&gt;     &lt;chr&gt;             &lt;chr&gt;    &lt;chr&gt;</span></span>
-<span><span class="co">#&gt; 1   208 G             2019  04    28    2019-04-28 Elecciones Gene…  Nacional elecc…</span></span>
-<span><span class="co">#&gt; 2   226 G             2019  11    10    2019-11-10 Elecciones Gene…  Nacional elecc…</span></span>
+<code class="sourceCode R"><span><span class="co"># Resultados a nivel CCAA en las generales de abril 2019</span></span>
+<span><span class="va">ccaa_2019</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_ccaa.html">get_ccaa</a></span><span class="op">(</span>tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># La de abril es la id = 208</span></span>
-<span><span class="va">elec_id</span> <span class="op">&lt;-</span> <span class="fl">208</span></span></code></pre></div>
+<span><span class="co"># Comparar participación por CCAA (censo y votos ya incluidos en la misma tabla)</span></span>
+<span><span class="va">ccaa_2019</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">territorio_nombre</span>, <span class="va">censo_ine</span>, <span class="va">votos_validos</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_participacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">votos_validos</span> <span class="op">/</span> <span class="va">censo_ine</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/arrange.html" class="external-link">arrange</a></span><span class="op">(</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/desc.html" class="external-link">desc</a></span><span class="op">(</span><span class="va">pct_participacion</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; # A tibble: 17 × 4</span></span>
+<span><span class="co">#&gt;   territorio_nombre  censo_ine votos_validos pct_participacion</span></span>
+<span><span class="co">#&gt;   &lt;chr&gt;                  &lt;int&gt;         &lt;int&gt;             &lt;dbl&gt;</span></span>
+<span><span class="co">#&gt; 1 Pais Vasco           1847364       1374293              74.4</span></span>
+<span><span class="co">#&gt; 2 Navarra               490123        354012              72.2</span></span>
+<span><span class="co">#&gt; ...</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="resúmenes-por-provincia">Resúmenes por provincia<a class="anchor" aria-label="anchor" href="#res%C3%BAmenes-por-provincia"></a>
+<h3 id="provincias">Provincias<a class="anchor" aria-label="anchor" href="#provincias"></a>
 </h3>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Totales provinciales de la elección 208</span></span>
-<span><span class="va">resumenes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_totales_territorio_eleccion.html">get_totales_territorio_eleccion</a></span><span class="op">(</span></span>
-<span>  eleccion_id <span class="op">=</span> <span class="va">elec_id</span>,</span>
-<span>  tipo_territorio <span class="op">=</span> <span class="st">"provincia"</span>,</span>
-<span>  all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
+<code class="sourceCode R"><span><span class="co"># Votos por partido en las provincias de Andalucía</span></span>
+<span><span class="va">andalucia_prov</span> <span class="op">&lt;-</span> <span class="fu">get_provincia</span><span class="op">(</span></span>
+<span>  tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>,</span>
+<span>  codigo_ccaa <span class="op">=</span> <span class="st">"01"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">resumenes</span></span>
-<span><span class="co">#&gt; # A tibble: 52 × 11</span></span>
-<span><span class="co">#&gt;       id eleccion_id territorio_id censo_ine participacion_1 participacion_2</span></span>
-<span><span class="co">#&gt;    &lt;int&gt;       &lt;int&gt;         &lt;int&gt;     &lt;int&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
-<span><span class="co">#&gt;  1  1001         208            20    402054          261543          290178</span></span>
-<span><span class="co">#&gt;  2  1002         208            21    816291          531099          574123</span></span>
-<span><span class="co">#&gt; # ℹ 50 more rows</span></span>
-<span><span class="co">#&gt; # ℹ 5 more variables: participacion_3 &lt;int&gt;, votos_validos &lt;int&gt;,</span></span>
-<span><span class="co">#&gt; #   votos_nulos &lt;int&gt;, votos_blanco &lt;int&gt;, nrepresentantes &lt;int&gt;</span></span></code></pre></div>
+<span></span>
+<span><span class="co"># Top 3 partidos por provincia, con datos de censo ya incluidos</span></span>
+<span><span class="va">andalucia_prov</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">partido_recode</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">territorio_nombre</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_max</a></span><span class="op">(</span><span class="va">votos</span>, n <span class="op">=</span> <span class="fl">3</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">territorio_nombre</span>, <span class="va">partido_recode</span>, <span class="va">votos</span>, <span class="va">representantes</span>,</span>
+<span>         <span class="va">censo_ine</span>, <span class="va">votos_validos</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="resultado-completo-de-un-territorio">Resultado completo de un territorio<a class="anchor" aria-label="anchor" href="#resultado-completo-de-un-territorio"></a>
+<h3 id="municipios">Municipios<a class="anchor" aria-label="anchor" href="#municipios"></a>
 </h3>
-<p><code><a href="../reference/get_resultado_completo.html">get_resultado_completo()</a></code> devuelve una lista con los
-totales territoriales y el desglose de votos por partido para una
-combinación elección-territorio:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Resultado completo de Almería (territorio_id = 20) en la elección 208</span></span>
-<span><span class="va">resultado</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_resultado_completo.html">get_resultado_completo</a></span><span class="op">(</span>eleccion_id <span class="op">=</span> <span class="fl">208</span>, territorio_id <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Resultados municipales en la provincia de Almería</span></span>
+<span><span class="va">almeria_mun</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_municipios.html">get_municipios</a></span><span class="op">(</span></span>
+<span>  tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>,</span>
+<span>  codigo_provincia <span class="op">=</span> <span class="st">"04"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Totales territorio: censo, participación, abstención</span></span>
-<span><span class="va">resultado</span><span class="op">$</span><span class="va">totales_territorio</span></span>
-<span><span class="co">#&gt; # A tibble: 1 × 11</span></span>
-<span><span class="co">#&gt;      id eleccion_id territorio_id censo_ine participacion_1 participacion_2</span></span>
-<span><span class="co">#&gt;   &lt;int&gt;       &lt;int&gt;         &lt;int&gt;     &lt;int&gt;           &lt;int&gt;           &lt;int&gt;</span></span>
-<span><span class="co">#&gt; 1  1001         208            20    402054          261543          290178</span></span>
-<span><span class="co">#&gt; # ℹ 5 more variables: ...</span></span>
-<span></span>
-<span><span class="co"># Votos por partido (con datos del partido aplanados)</span></span>
-<span><span class="va">resultado</span><span class="op">$</span><span class="va">votos_partido</span></span>
-<span><span class="co">#&gt; # A tibble: 22 × 7</span></span>
-<span><span class="co">#&gt;       id eleccion_id territorio_id partido_id votos representantes partido_siglas</span></span>
-<span><span class="co">#&gt;    &lt;int&gt;       &lt;int&gt;         &lt;int&gt;      &lt;int&gt; &lt;int&gt;          &lt;int&gt; &lt;chr&gt;</span></span>
-<span><span class="co">#&gt;  1 50001         208            20       9451 89432              3 P.S.O.E.</span></span>
-<span><span class="co">#&gt;  2 50002         208            20       3421 72105              2 PP</span></span>
-<span><span class="co">#&gt; # ℹ 20 more rows</span></span></code></pre></div>
+<span><span class="co"># Municipios con mayor abstención</span></span>
+<span><span class="va">almeria_mun</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">territorio_nombre</span>, <span class="va">censo_ine</span>, <span class="va">abstenciones</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>pct_abstencion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Round.html" class="external-link">round</a></span><span class="op">(</span><span class="va">abstenciones</span> <span class="op">/</span> <span class="va">censo_ine</span> <span class="op">*</span> <span class="fl">100</span>, <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/slice.html" class="external-link">slice_max</a></span><span class="op">(</span><span class="va">pct_abstencion</span>, n <span class="op">=</span> <span class="fl">5</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">territorio_nombre</span>, <span class="va">pct_abstencion</span>, <span class="va">censo_ine</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level3">
+<h3 id="secciones-censales">Secciones censales<a class="anchor" aria-label="anchor" href="#secciones-censales"></a>
+</h3>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Datos por sección en un municipio (volumen alto: usar filtros siempre)</span></span>
+<span><span class="va">madrid_sec</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_secciones.html">get_secciones</a></span><span class="op">(</span></span>
+<span>  tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>,</span>
+<span>  codigo_municipio <span class="op">=</span> <span class="st">"2807900"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 <hr>
 </div>
 </div>
 <div class="section level2">
 <h2 id="análisis-con-resultados-combinados">2. Análisis con resultados combinados<a class="anchor" aria-label="anchor" href="#an%C3%A1lisis-con-resultados-combinados"></a>
 </h2>
-<p><code><a href="../reference/get_resultados.html">get_resultados()</a></code> es la función más potente: devuelve
-cada fila de votos con todos los objetos anidados aplanados (partido +
-recode, territorio, elección). Por defecto, <code>clean = TRUE</code>
-renombra los campos con prefijo a nombres cortos y descarta las columnas
-de IDs y slugs.</p>
+<p><code><a href="../reference/get_resultados.html">get_resultados()</a></code> y sus atajos territoriales combinan
+votos y totales territoriales en una sola tabla lista para analizar con
+dplyr.</p>
 <div class="section level3">
-<h3 id="votos-por-partido-en-una-comunidad-autónoma">Votos por partido en una comunidad autónoma<a class="anchor" aria-label="anchor" href="#votos-por-partido-en-una-comunidad-aut%C3%B3noma"></a>
-</h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Resultados provinciales de Andalucía en las generales de abril 2019</span></span>
-<span><span class="va">andalucia</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_resultados.html">get_resultados</a></span><span class="op">(</span></span>
-<span>  tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>,</span>
-<span>  tipo_territorio <span class="op">=</span> <span class="st">"provincia"</span>,</span>
-<span>  codigo_ccaa <span class="op">=</span> <span class="st">"01"</span>,</span>
-<span>  all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Columnas limpias (clean = TRUE por defecto):</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/names.html" class="external-link">names</a></span><span class="op">(</span><span class="va">andalucia</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  [1] "year"               "mes"                "tipo_eleccion"</span></span>
-<span><span class="co">#&gt;  [4] "tipo_territorio"    "territorio_nombre"  "codigo_ccaa"</span></span>
-<span><span class="co">#&gt;  [7] "codigo_provincia"   "siglas"             "denominacion"</span></span>
-<span><span class="co">#&gt; [10] "partido_recode"     "votos"              "representantes"</span></span></code></pre></div>
-</div>
-<div class="section level3">
-<h3 id="ejemplo-top-5-partidos-por-votos-totales">Ejemplo: Top 5 partidos por votos totales<a class="anchor" aria-label="anchor" href="#ejemplo-top-5-partidos-por-votos-totales"></a>
+<h3 id="top-5-partidos-por-votos-totales">Top 5 partidos por votos totales<a class="anchor" aria-label="anchor" href="#top-5-partidos-por-votos-totales"></a>
 </h3>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">top5</span> <span class="op">&lt;-</span> <span class="va">andalucia</span> <span class="op">|&gt;</span></span>
+<code class="sourceCode R"><span><span class="co"># Trabajamos con los datos de Andalucía provinciales ya cargados</span></span>
+<span><span class="va">top5</span> <span class="op">&lt;-</span> <span class="va">andalucia_prov</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">partido_recode</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>total_votos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">votos</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">partido_recode</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -428,7 +373,7 @@ agrupaciones:</p>
 </h3>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Desglose de los 5 principales partidos por provincia</span></span>
-<span><span class="va">por_provincia</span> <span class="op">&lt;-</span> <span class="va">andalucia</span> <span class="op">|&gt;</span></span>
+<span><span class="va">por_provincia</span> <span class="op">&lt;-</span> <span class="va">andalucia_prov</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">partido_recode</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">top5</span><span class="op">$</span><span class="va">partido_recode</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">territorio_nombre</span>, <span class="va">partido_recode</span>, <span class="va">votos</span><span class="op">)</span></span>
 <span></span>
@@ -464,40 +409,28 @@ agrupaciones:</p>
 <div class="section level2">
 <h2 id="comparar-participación-entre-elecciones">3. Comparar participación entre elecciones<a class="anchor" aria-label="anchor" href="#comparar-participaci%C3%B3n-entre-elecciones"></a>
 </h2>
-<p><code><a href="../reference/get_totales_territorio.html">get_totales_territorio()</a></code> permite consultar totales
-territoriales cruzando múltiples elecciones:</p>
+<p>Con <code><a href="../reference/get_ccaa.html">get_ccaa()</a></code> o <code>get_provincia()</code>, los datos
+de censo y participación ya están incluidos en la misma tabla, por lo
+que no hace falta un join manual:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Totales a nivel de CCAA para todas las generales</span></span>
-<span><span class="va">resumenes_generales</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_totales_territorio.html">get_totales_territorio</a></span><span class="op">(</span></span>
-<span>  tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>,</span>
-<span>  tipo_territorio <span class="op">=</span> <span class="st">"ccaa"</span>,</span>
-<span>  all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Resultados a nivel CCAA para todas las generales</span></span>
+<span><span class="co"># (censo_ine y votos_validos ya incluidos en la misma tabla)</span></span>
+<span><span class="va">ccaa_generales</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_ccaa.html">get_ccaa</a></span><span class="op">(</span>tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># Calcular tasa de participación por elección y territorio</span></span>
-<span><span class="va">participacion</span> <span class="op">&lt;-</span> <span class="va">resumenes_generales</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>tasa_participacion <span class="op">=</span> <span class="va">participacion_1</span> <span class="op">/</span> <span class="va">censo_ine</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">eleccion_id</span>, <span class="va">territorio_id</span>, <span class="va">tasa_participacion</span><span class="op">)</span></span></code></pre></div>
-<p>Para enriquecer con los datos de la elección, podemos cruzar con
-<code><a href="../reference/get_elecciones.html">get_elecciones()</a></code>:</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">elecciones</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_elecciones.html">get_elecciones</a></span><span class="op">(</span>tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">participacion_enriquecida</span> <span class="op">&lt;-</span> <span class="va">participacion</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate-joins.html" class="external-link">left_join</a></span><span class="op">(</span></span>
-<span>    <span class="va">elecciones</span> <span class="op">|&gt;</span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">id</span>, <span class="va">year</span>, <span class="va">fecha</span><span class="op">)</span>,</span>
-<span>    by <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"eleccion_id"</span> <span class="op">=</span> <span class="st">"id"</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span></code></pre></div>
+<span><span class="co"># Calcular tasa de participación por elección y territorio en una sola operación</span></span>
+<span><span class="va">participacion</span> <span class="op">&lt;-</span> <span class="va">ccaa_generales</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/distinct.html" class="external-link">distinct</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">mes</span>, <span class="va">territorio_nombre</span>, <span class="va">censo_ine</span>, <span class="va">votos_validos</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>tasa_participacion <span class="op">=</span> <span class="va">votos_validos</span> <span class="op">/</span> <span class="va">censo_ine</span> <span class="op">*</span> <span class="fl">100</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="gráfico-evolución-de-la-participación">Gráfico: evolución de la participación<a class="anchor" aria-label="anchor" href="#gr%C3%A1fico-evoluci%C3%B3n-de-la-participaci%C3%B3n"></a>
 </h3>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Participación media nacional por elección</span></span>
-<span><span class="va">media_nacional</span> <span class="op">&lt;-</span> <span class="va">participacion_enriquecida</span> <span class="op">|&gt;</span></span>
-<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">fecha</span><span class="op">)</span> <span class="op">|&gt;</span></span>
+<span><span class="va">media_nacional</span> <span class="op">&lt;-</span> <span class="va">participacion</span> <span class="op">|&gt;</span></span>
+<span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">year</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>media_participacion <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">tasa_participacion</span>, na.rm <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">media_nacional</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">fecha</span>, y <span class="op">=</span> <span class="va">media_participacion</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
+<span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/ggplot.html" class="external-link">ggplot</a></span><span class="op">(</span><span class="va">media_nacional</span>, <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/aes.html" class="external-link">aes</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">year</span>, y <span class="op">=</span> <span class="va">media_participacion</span>, group <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_path.html" class="external-link">geom_line</a></span><span class="op">(</span>linewidth <span class="op">=</span> <span class="fl">1</span>, color <span class="op">=</span> <span class="st">"#333333"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/geom_point.html" class="external-link">geom_point</a></span><span class="op">(</span>size <span class="op">=</span> <span class="fl">3</span>, color <span class="op">=</span> <span class="st">"#E30613"</span><span class="op">)</span> <span class="op">+</span></span>
 <span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_continuous.html" class="external-link">scale_y_continuous</a></span><span class="op">(</span>limits <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">50</span>, <span class="fl">85</span><span class="op">)</span>, labels <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span><span class="op">)</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste0</a></span><span class="op">(</span><span class="va">x</span>, <span class="st">"%"</span><span class="op">)</span><span class="op">)</span> <span class="op">+</span></span>
@@ -513,26 +446,19 @@ territoriales cruzando múltiples elecciones:</p>
 <div class="section level2">
 <h2 id="evolución-del-voto-de-una-agrupación">4. Evolución del voto de una agrupación<a class="anchor" aria-label="anchor" href="#evoluci%C3%B3n-del-voto-de-una-agrupaci%C3%B3n"></a>
 </h2>
-<p><code><a href="../reference/get_votos_partido.html">get_votos_partido()</a></code> devuelve votos por partido, cruzando
-elecciones. Combinado con las agrupaciones de recode permite hacer
-análisis temporales:</p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Usamos get_resultados para obtener votos con partido y elección</span></span>
-<span><span class="va">votos_combinados</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_resultados.html">get_resultados</a></span><span class="op">(</span></span>
-<span>  tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>,</span>
-<span>  tipo_territorio <span class="op">=</span> <span class="st">"provincia"</span>,</span>
-<span>  all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
-<span><span class="op">)</span></span>
-<span></span>
-<span><span class="co"># Total nacional por agrupación y elección</span></span>
-<span><span class="va">evolucion</span> <span class="op">&lt;-</span> <span class="va">votos_combinados</span> <span class="op">|&gt;</span></span>
+<p>Con <code>get_provincia()</code> (o <code><a href="../reference/get_ccaa.html">get_ccaa()</a></code>) se
+obtienen votos y metadatos de elección en la misma tabla, por lo que el
+análisis temporal no requiere joins:</p>
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="co"># Total nacional por agrupación y año en elecciones generales</span></span>
+<span><span class="va">evolucion</span> <span class="op">&lt;-</span> <span class="fu">get_provincia</span><span class="op">(</span>tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, all_pages <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/NA.html" class="external-link">is.na</a></span><span class="op">(</span><span class="va">partido_recode</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">year</span>, <span class="va">partido_recode</span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/summarise.html" class="external-link">summarise</a></span><span class="op">(</span>total_votos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">votos</span><span class="op">)</span>, .groups <span class="op">=</span> <span class="st">"drop"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level3">
 <h3 id="gráfico-evolución-temporal-de-los-principales-partidos">Gráfico: evolución temporal de los principales partidos<a class="anchor" aria-label="anchor" href="#gr%C3%A1fico-evoluci%C3%B3n-temporal-de-los-principales-partidos"></a>
 </h3>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Seleccionar las 4 agrupaciones con más votos históricos</span></span>
 <span><span class="va">top_agrupaciones</span> <span class="op">&lt;-</span> <span class="va">evolucion</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/group_by.html" class="external-link">group_by</a></span><span class="op">(</span><span class="va">partido_recode</span><span class="op">)</span> <span class="op">|&gt;</span></span>
@@ -566,11 +492,10 @@ análisis temporales:</p>
 <div class="section level2">
 <h2 id="mapa-de-calor-representantes-por-provincia">5. Mapa de calor: representantes por provincia<a class="anchor" aria-label="anchor" href="#mapa-de-calor-representantes-por-provincia"></a>
 </h2>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Representantes por provincia y agrupación en las generales 28-A 2019</span></span>
-<span><span class="va">representantes</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/get_resultados.html">get_resultados</a></span><span class="op">(</span></span>
+<span><span class="va">representantes</span> <span class="op">&lt;-</span> <span class="fu">get_provincia</span><span class="op">(</span></span>
 <span>  tipo_eleccion <span class="op">=</span> <span class="st">"G"</span>, year <span class="op">=</span> <span class="st">"2019"</span>,</span>
-<span>  tipo_territorio <span class="op">=</span> <span class="st">"provincia"</span>,</span>
 <span>  all_pages <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span> <span class="op">|&gt;</span></span>
 <span>  <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">partido_recode</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"PSOE"</span>, <span class="st">"AP/PP"</span>, <span class="st">"Cs"</span>, <span class="st">"UP"</span>, <span class="st">"VOX"</span><span class="op">)</span><span class="op">)</span> <span class="op">|&gt;</span></span>

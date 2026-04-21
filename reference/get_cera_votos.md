@@ -17,7 +17,8 @@ get_cera_votos(
   all_pages = FALSE,
   denormalize = FALSE,
   use_recode = FALSE,
-  clean = denormalize
+  clean = denormalize,
+  api_key = NULL
 )
 ```
 
@@ -79,6 +80,11 @@ get_cera_votos(
 
   Logical. If `TRUE`, removes ID and slug columns from the result.
   Defaults to the value of `denormalize`.
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 

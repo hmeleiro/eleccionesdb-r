@@ -13,7 +13,7 @@ edb_set_base_url(url)
 - url:
 
   Character string with the base URL (e.g.
-  `"https://api.spainelectoralproject.com/"`).
+  `"https://data.hmeleiro.com/"`).
 
 ## Value
 

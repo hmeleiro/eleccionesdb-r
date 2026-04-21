@@ -49,7 +49,7 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="eleccionesdb-">eleccionesdb <img src="reference/figures/logo.png" align="right" height="139"><a class="anchor" aria-label="anchor" href="#eleccionesdb-"></a>
+<div class="page-header"><h1 id="eleccionesdb">eleccionesdb<a class="anchor" aria-label="anchor" href="#eleccionesdb"></a>
 </h1></div>
 <blockquote>
 <p>R client for the <a href="https://eleccionesdb-api.spainelectoralproject.com/" class="external-link">eleccionesdb API</a> — Spanish electoral data as tidy tibbles.</p>
@@ -289,14 +289,14 @@
 </h4>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Guardar la clave solo para la sesión actual:</span></span>
-<span><span class="fu">edb_set_api_key</span><span class="op">(</span><span class="st">"TU_API_KEY"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/edb_set_api_key.html">edb_set_api_key</a></span><span class="op">(</span><span class="st">"TU_API_KEY"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Guardar la clave de forma persistente (en ~/.Renviron):</span></span>
-<span><span class="fu">edb_set_api_key</span><span class="op">(</span><span class="st">"TU_API_KEY"</span>, persist <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="fu"><a href="reference/edb_set_api_key.html">edb_set_api_key</a></span><span class="op">(</span><span class="st">"TU_API_KEY"</span>, persist <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co"># Reinicia R para que esté disponible globalmente.</span></span></code></pre></div>
 <p>Puedes consultar la clave actual con:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">edb_get_api_key</span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="reference/edb_get_api_key.html">edb_get_api_key</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level4">
 <h4 id="uso-automático-y-sobrescritura">Uso automático y sobrescritura<a class="anchor" aria-label="anchor" href="#uso-autom%C3%A1tico-y-sobrescritura"></a>
@@ -331,7 +331,7 @@
 <td>Set API key (session/persistente)</td>
 </tr>
 <tr class="even">
-<td><code>edb_get_api_key()</code></td>
+<td><code><a href="reference/edb_get_api_key.html">edb_get_api_key()</a></code></td>
 <td>Get current API key</td>
 </tr>
 <tr class="odd">

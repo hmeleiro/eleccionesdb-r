@@ -1,8 +1,10 @@
-# List combined results (fully expanded)
+# List combined results — main analysis function
 
-Returns paginated votes with party (including recode), territory, and
-election information fully expanded and flattened into a wide tibble.
-This is the most convenient function for cross-dimensional analysis.
+`get_resultados()` is the primary function of the package for analytical
+use. It returns a wide, ready-to-analyse tibble that combines per-party
+votes with territorial summary data (census, turnout, blank/null votes)
+and election metadata, all joined internally so no manual merging is
+needed.
 
 ## Usage
 
@@ -20,8 +22,9 @@ get_resultados(
   partido_id = NULL,
   limit = 50L,
   skip = 0L,
-  all_pages = FALSE,
-  clean = TRUE
+  all_pages = TRUE,
+  clean = TRUE,
+  api_key = NULL
 )
 ```
 
@@ -83,37 +86,54 @@ get_resultados(
 
 - all_pages:
 
-  Logical. If `TRUE`, fetches all pages. Default `FALSE`.
+  Logical. If `TRUE`, fetches all pages automatically. Default `TRUE`.
 
 - clean:
 
-  Logical. If `TRUE` (default), renames prefixed columns and selects
-  only user-friendly columns. If `FALSE`, returns all flattened columns.
+  Logical. If `TRUE` (default), renames prefixed columns to short names
+  and selects only user-friendly columns. If `FALSE`, returns all
+  flattened columns.
+
+- api_key:
+
+  Character. Optional API key to override the global setting for this
+  call only.
 
 ## Value
 
 A tibble. When `clean = TRUE`: `year`, `mes`, `tipo_eleccion`,
 `tipo_territorio`, `territorio_nombre`, `codigo_ccaa`,
-`codigo_provincia`, `siglas`, `denominacion`, `partido_recode`, `votos`,
-`representantes`. When `clean = FALSE`: all flattened columns with
-prefixes `partido_*`, `recode_*`, `territorio_*`, `eleccion_*`.
+`codigo_provincia`, `codigo_municipio`, `codigo_distrito`,
+`codigo_seccion`, `censo_ine`, `votos_validos`, `abstenciones`,
+`votos_blancos`, `votos_nulos`, `participacion_1`, `participacion_2`,
+`participacion_3`, `siglas`, `denominacion`, `partido_recode`,
+`partido_agrupacion`, `votos`, `representantes`, `nrepresentantes`.
+
+When `clean = FALSE`: all flattened columns with prefixes `partido_*`,
+`recode_*`, `territorio_*`, `eleccion_*`, plus the flat summary columns
+(`censo_ine`, `votos_validos`, `abstenciones`, `votos_blancos`,
+`votos_nulos`, `participacion_1`, `participacion_2`, `participacion_3`,
+`nrepresentantes`).
 
 ## Details
 
-When `clean = TRUE` (the default), prefixed columns are renamed to short
-names and only the most useful subset is returned: `year`, `mes`,
-`tipo_eleccion`, `tipo_territorio`, `territorio_nombre`, `codigo_ccaa`,
-`codigo_provincia`, `siglas`, `denominacion`, `partido_recode`, `votos`,
-`representantes`.
+Two API calls are made internally: one to `/v1/resultados/combinados`
+(votes + party + territory + election, fully expanded) and one to
+`/v1/resultados/totales-territorio` (census and turnout totals). The
+results are joined by `(eleccion_id, territorio_id)` before being
+returned.
 
-Set `clean = FALSE` to get the full flattened tibble with all prefixed
-columns (`partido_*`, `recode_*`, `territorio_*`, `eleccion_*`).
+When `clean = TRUE` (the default), prefixed columns are renamed to
+short, user-friendly names and only the most useful columns are
+returned. Set `clean = FALSE` to get all flattened columns with their
+original prefixes (`partido_*`, `recode_*`, `territorio_*`,
+`eleccion_*`) plus the flat summary columns.
 
 ## Examples
 
 ``` r
 if (FALSE) { # \dontrun{
-# Provincial results for general elections in Andalucia (clean)
+# Results by province for Andalucia in the 2019 general election
 get_resultados(
     tipo_eleccion = "G", year = "2019",
     tipo_territorio = "provincia",
@@ -121,11 +141,21 @@ get_resultados(
     all_pages = TRUE
 )
 
-# Full flattened output
-get_resultados(
-    tipo_eleccion = "G", year = "2019",
-    tipo_territorio = "provincia",
-    clean = FALSE
-)
+# Provincial results for all general elections (all pages)
+get_resultados(tipo_eleccion = "G", tipo_territorio = "provincia",
+               all_pages = TRUE)
+
+# Filter afterwards with dplyr
+library(dplyr)
+get_resultados(tipo_eleccion = "G", year = "2019",
+               tipo_territorio = "provincia", all_pages = TRUE) |>
+    filter(siglas == "PSOE") |>
+    select(territorio_nombre, votos, representantes,
+           censo_ine, votos_validos)
+
+# Full flattened output (no renaming)
+get_resultados(tipo_eleccion = "G", year = "2019",
+               tipo_territorio = "provincia",
+               clean = FALSE)
 } # }
 ```

@@ -1,4 +1,4 @@
-# eleccionesdb ![](reference/figures/logo.png)
+# eleccionesdb
 
 > R client for the [eleccionesdb
 > API](https://eleccionesdb-api.spainelectoralproject.com/) — Spanish
@@ -174,7 +174,7 @@ get_partidos(siglas = "psoe", api_key = "OTRA_CLAVE")
 | `edb_set_base_url(url)`                                                                         | Set API base URL                  |
 | [`edb_get_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_base_url.md) | Get current API base URL          |
 | `edb_set_api_key(key, persist=FALSE)`                                                           | Set API key (session/persistente) |
-| `edb_get_api_key()`                                                                             | Get current API key               |
+| [`edb_get_api_key()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_api_key.md)   | Get current API key               |
 | [`edb_get_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_base_url.md) | Get current API base URL          |
 
 ## Nested data handling

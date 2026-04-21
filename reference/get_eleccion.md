@@ -6,7 +6,7 @@ expanded columns (`tipo_codigo`, `tipo_descripcion`).
 ## Usage
 
 ``` r
-get_eleccion(eleccion_id)
+get_eleccion(eleccion_id, api_key = NULL)
 ```
 
 ## Arguments
@@ -14,6 +14,11 @@ get_eleccion(eleccion_id)
 - eleccion_id:
 
   Integer. The election ID.
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 

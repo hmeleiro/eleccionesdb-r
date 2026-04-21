@@ -5,7 +5,7 @@ Returns the full detail of a territory with all administrative codes.
 ## Usage
 
 ``` r
-get_territorio(territorio_id)
+get_territorio(territorio_id, api_key = NULL)
 ```
 
 ## Arguments
@@ -13,6 +13,11 @@ get_territorio(territorio_id)
 - territorio_id:
 
   Integer. The territory ID.
+
+- api_key:
+
+  (Opcional) Clave de API para sobrescribir la global solo en esta
+  llamada.
 
 ## Value
 
