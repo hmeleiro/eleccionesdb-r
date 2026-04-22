@@ -15,7 +15,7 @@
 #' }
 edb_set_api_key <- function(key, persist = FALSE) {
     if (!is.character(key) || length(key) != 1 || nchar(key) == 0) {
-        cli::cli_abort("{.arg key} debe ser una cadena de texto no vacía.")
+        cli::cli_abort("{.arg key} debe ser una cadena de texto no vac\u00eda.")
     }
     old <- getOption("eleccionesdb.api_key", NULL)
     options(eleccionesdb.api_key = key)
@@ -32,7 +32,7 @@ edb_set_api_key <- function(key, persist = FALSE) {
         }
         lines <- c(lines, paste0("ELECCIONESDB_API_KEY=", key))
         writeLines(lines, renv_path)
-        cli::cli_alert_success("Clave guardada en {.file ~/.Renviron}. Reinicia R para que esté disponible globalmente.")
+        cli::cli_alert_success("Clave guardada en {.file ~/.Renviron}. Reinicia R para que est\u00e9 disponible globalmente.")
     }
     invisible(old)
 }
@@ -97,8 +97,8 @@ edb_base_request <- function(path, api_key = NULL, require_key = TRUE) {
         key <- api_key %||% edb_get_api_key()
         if (is.null(key) || nchar(key) == 0) {
             cli::cli_abort(c(
-                "x" = "Este endpoint requiere autenticación por API key.",
-                "i" = "Registra tu clave con edb_set_api_key('TU_API_KEY') o pásala como argumento."
+                "x" = "Este endpoint requiere autenticaci\u00f3n por API key.",
+                "i" = "Registra tu clave con edb_set_api_key('TU_API_KEY') o p\u00e1sala como argumento."
             ))
         }
         req <- httr2::req_headers(req, "X-API-Key" = key)

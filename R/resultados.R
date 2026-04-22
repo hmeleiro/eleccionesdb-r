@@ -491,12 +491,32 @@ get_resultados <- function(year = NULL, tipo_eleccion = NULL,
 #' Results by autonomous community
 #'
 #' A convenience wrapper around [get_resultados()] that pre-sets
-#' `tipo_territorio = "ccaa"`. All other parameters are passed through
-#' unchanged. See [get_resultados()] for the full parameter reference and
-#' details on the returned tibble.
+#' `tipo_territorio = "ccaa"`. See [get_resultados()] for full details on
+#' the returned tibble.
 #'
-#' @param ... Arguments passed to [get_resultados()]. The `tipo_territorio`
-#'   parameter is fixed to `"ccaa"` and cannot be overridden.
+#' @param year Character vector. Filter by year(s). Optional.
+#' @param tipo_eleccion Character vector. Filter by election type code(s).
+#'   Valid values: `"A"` (Autonomicas), `"E"` (Europeas), `"G"` (Congreso),
+#'   `"L"` (Locales), `"S"` (Senado). Optional.
+#' @param codigo_ccaa Character vector. Filter by autonomous community INE
+#'   code(s) (e.g. `"01"`, `"13"`). Optional.
+#' @param codigo_provincia Character vector. Filter by province INE code(s)
+#'   (e.g. `"28"`, `"08"`). Optional.
+#' @param codigo_municipio Character vector. Filter by municipality INE
+#'   code(s). Optional.
+#' @param ... Arguments after `...` must be named.
+#' @param eleccion_id Integer vector. Filter by election ID(s). Optional.
+#' @param territorio_id Integer vector. Filter by territory ID(s). Optional.
+#' @param partido_id Integer vector. Filter by party ID(s). Optional.
+#' @param limit Integer. Maximum records per page (1-500, default 50).
+#' @param skip Integer. Records to skip (default 0).
+#' @param all_pages Logical. If `TRUE`, fetches all pages automatically.
+#'   Default `TRUE`.
+#' @param clean Logical. If `TRUE` (default), renames prefixed columns to
+#'   short names and selects only user-friendly columns. If `FALSE`, returns
+#'   all flattened columns.
+#' @param api_key Character. Optional API key to override the global setting
+#'   for this call only.
 #' @return A tibble as returned by [get_resultados()] filtered to
 #'   `tipo_territorio = "ccaa"`.
 #' @export
@@ -511,21 +531,57 @@ get_resultados <- function(year = NULL, tipo_eleccion = NULL,
 #'     distinct(territorio_nombre, censo_ine, votos_validos) |>
 #'     mutate(participacion = votos_validos / censo_ine)
 #' }
-get_ccaa <- function(...) {
-    args <- list(...)
-    args[["tipo_territorio"]] <- "ccaa"
-    do.call(get_resultados, args)
+get_ccaa <- function(year = NULL, tipo_eleccion = NULL,
+                     codigo_ccaa = NULL, codigo_provincia = NULL,
+                     codigo_municipio = NULL,
+                     ...,
+                     eleccion_id = NULL, territorio_id = NULL,
+                     partido_id = NULL,
+                     limit = 50L, skip = 0L, all_pages = TRUE,
+                     clean = TRUE, api_key = NULL) {
+    get_resultados(
+        year = year, tipo_eleccion = tipo_eleccion,
+        tipo_territorio = "ccaa",
+        codigo_ccaa = codigo_ccaa,
+        codigo_provincia = codigo_provincia,
+        codigo_municipio = codigo_municipio,
+        ...,
+        eleccion_id = eleccion_id, territorio_id = territorio_id,
+        partido_id = partido_id,
+        limit = limit, skip = skip, all_pages = all_pages,
+        clean = clean, api_key = api_key
+    )
 }
 
 #' Results by province
 #'
 #' A convenience wrapper around [get_resultados()] that pre-sets
-#' `tipo_territorio = "provincia"`. All other parameters are passed through
-#' unchanged. See [get_resultados()] for the full parameter reference and
-#' details on the returned tibble.
+#' `tipo_territorio = "provincia"`. See [get_resultados()] for full details
+#' on the returned tibble.
 #'
-#' @param ... Arguments passed to [get_resultados()]. The `tipo_territorio`
-#'   parameter is fixed to `"provincia"` and cannot be overridden.
+#' @param year Character vector. Filter by year(s). Optional.
+#' @param tipo_eleccion Character vector. Filter by election type code(s).
+#'   Valid values: `"A"` (Autonomicas), `"E"` (Europeas), `"G"` (Congreso),
+#'   `"L"` (Locales), `"S"` (Senado). Optional.
+#' @param codigo_ccaa Character vector. Filter by autonomous community INE
+#'   code(s) (e.g. `"01"`, `"13"`). Optional.
+#' @param codigo_provincia Character vector. Filter by province INE code(s)
+#'   (e.g. `"28"`, `"08"`). Optional.
+#' @param codigo_municipio Character vector. Filter by municipality INE
+#'   code(s). Optional.
+#' @param ... Arguments after `...` must be named.
+#' @param eleccion_id Integer vector. Filter by election ID(s). Optional.
+#' @param territorio_id Integer vector. Filter by territory ID(s). Optional.
+#' @param partido_id Integer vector. Filter by party ID(s). Optional.
+#' @param limit Integer. Maximum records per page (1-500, default 50).
+#' @param skip Integer. Records to skip (default 0).
+#' @param all_pages Logical. If `TRUE`, fetches all pages automatically.
+#'   Default `TRUE`.
+#' @param clean Logical. If `TRUE` (default), renames prefixed columns to
+#'   short names and selects only user-friendly columns. If `FALSE`, returns
+#'   all flattened columns.
+#' @param api_key Character. Optional API key to override the global setting
+#'   for this call only.
 #' @return A tibble as returned by [get_resultados()] filtered to
 #'   `tipo_territorio = "provincia"`.
 #' @export
@@ -541,21 +597,57 @@ get_ccaa <- function(...) {
 #'     filter(siglas == "PSOE") |>
 #'     arrange(desc(votos))
 #' }
-get_provincias <- function(...) {
-    args <- list(...)
-    args[["tipo_territorio"]] <- "provincia"
-    do.call(get_resultados, args)
+get_provincias <- function(year = NULL, tipo_eleccion = NULL,
+                           codigo_ccaa = NULL, codigo_provincia = NULL,
+                           codigo_municipio = NULL,
+                           ...,
+                           eleccion_id = NULL, territorio_id = NULL,
+                           partido_id = NULL,
+                           limit = 50L, skip = 0L, all_pages = TRUE,
+                           clean = TRUE, api_key = NULL) {
+    get_resultados(
+        year = year, tipo_eleccion = tipo_eleccion,
+        tipo_territorio = "provincia",
+        codigo_ccaa = codigo_ccaa,
+        codigo_provincia = codigo_provincia,
+        codigo_municipio = codigo_municipio,
+        ...,
+        eleccion_id = eleccion_id, territorio_id = territorio_id,
+        partido_id = partido_id,
+        limit = limit, skip = skip, all_pages = all_pages,
+        clean = clean, api_key = api_key
+    )
 }
 
 #' Results by municipality
 #'
 #' A convenience wrapper around [get_resultados()] that pre-sets
-#' `tipo_territorio = "municipio"`. All other parameters are passed through
-#' unchanged. See [get_resultados()] for the full parameter reference and
-#' details on the returned tibble.
+#' `tipo_territorio = "municipio"`. See [get_resultados()] for full details
+#' on the returned tibble.
 #'
-#' @param ... Arguments passed to [get_resultados()]. The `tipo_territorio`
-#'   parameter is fixed to `"municipio"` and cannot be overridden.
+#' @param year Character vector. Filter by year(s). Optional.
+#' @param tipo_eleccion Character vector. Filter by election type code(s).
+#'   Valid values: `"A"` (Autonomicas), `"E"` (Europeas), `"G"` (Congreso),
+#'   `"L"` (Locales), `"S"` (Senado). Optional.
+#' @param codigo_ccaa Character vector. Filter by autonomous community INE
+#'   code(s) (e.g. `"01"`, `"13"`). Optional.
+#' @param codigo_provincia Character vector. Filter by province INE code(s)
+#'   (e.g. `"28"`, `"08"`). Optional.
+#' @param codigo_municipio Character vector. Filter by municipality INE
+#'   code(s). Optional.
+#' @param ... Arguments after `...` must be named.
+#' @param eleccion_id Integer vector. Filter by election ID(s). Optional.
+#' @param territorio_id Integer vector. Filter by territory ID(s). Optional.
+#' @param partido_id Integer vector. Filter by party ID(s). Optional.
+#' @param limit Integer. Maximum records per page (1-500, default 50).
+#' @param skip Integer. Records to skip (default 0).
+#' @param all_pages Logical. If `TRUE`, fetches all pages automatically.
+#'   Default `TRUE`.
+#' @param clean Logical. If `TRUE` (default), renames prefixed columns to
+#'   short names and selects only user-friendly columns. If `FALSE`, returns
+#'   all flattened columns.
+#' @param api_key Character. Optional API key to override the global setting
+#'   for this call only.
 #' @return A tibble as returned by [get_resultados()] filtered to
 #'   `tipo_territorio = "municipio"`.
 #' @export
@@ -565,25 +657,61 @@ get_provincias <- function(...) {
 #' get_municipios(tipo_eleccion = "G", year = "2019",
 #'                codigo_provincia = "04", all_pages = TRUE)
 #' }
-get_municipios <- function(...) {
-    args <- list(...)
-    args[["tipo_territorio"]] <- "municipio"
-    do.call(get_resultados, args)
+get_municipios <- function(year = NULL, tipo_eleccion = NULL,
+                           codigo_ccaa = NULL, codigo_provincia = NULL,
+                           codigo_municipio = NULL,
+                           ...,
+                           eleccion_id = NULL, territorio_id = NULL,
+                           partido_id = NULL,
+                           limit = 50L, skip = 0L, all_pages = TRUE,
+                           clean = TRUE, api_key = NULL) {
+    get_resultados(
+        year = year, tipo_eleccion = tipo_eleccion,
+        tipo_territorio = "municipio",
+        codigo_ccaa = codigo_ccaa,
+        codigo_provincia = codigo_provincia,
+        codigo_municipio = codigo_municipio,
+        ...,
+        eleccion_id = eleccion_id, territorio_id = territorio_id,
+        partido_id = partido_id,
+        limit = limit, skip = skip, all_pages = all_pages,
+        clean = clean, api_key = api_key
+    )
 }
 
 #' Results by census section
 #'
 #' A convenience wrapper around [get_resultados()] that pre-sets
-#' `tipo_territorio = "seccion"`. All other parameters are passed through
-#' unchanged. See [get_resultados()] for the full parameter reference and
-#' details on the returned tibble.
+#' `tipo_territorio = "seccion"`. See [get_resultados()] for full details
+#' on the returned tibble.
 #'
 #' Note: section-level data can be very large. Always use filters
 #' (`codigo_provincia`, `codigo_municipio`, etc.) or `all_pages = FALSE`
 #' to limit the response size.
 #'
-#' @param ... Arguments passed to [get_resultados()]. The `tipo_territorio`
-#'   parameter is fixed to `"seccion"` and cannot be overridden.
+#' @param year Character vector. Filter by year(s). Optional.
+#' @param tipo_eleccion Character vector. Filter by election type code(s).
+#'   Valid values: `"A"` (Autonomicas), `"E"` (Europeas), `"G"` (Congreso),
+#'   `"L"` (Locales), `"S"` (Senado). Optional.
+#' @param codigo_ccaa Character vector. Filter by autonomous community INE
+#'   code(s) (e.g. `"01"`, `"13"`). Optional.
+#' @param codigo_provincia Character vector. Filter by province INE code(s)
+#'   (e.g. `"28"`, `"08"`). Optional.
+#' @param codigo_municipio Character vector. Filter by municipality INE
+#'   code(s). Optional.
+#' @param ... Arguments after `...` must be named.
+#' @param eleccion_id Integer vector. Filter by election ID(s). Optional.
+#' @param territorio_id Integer vector. Filter by territory ID(s). Optional.
+#' @param partido_id Integer vector. Filter by party ID(s). Optional.
+#' @param limit Integer. Maximum records per page (1-500, default 50).
+#' @param skip Integer. Records to skip (default 0).
+#' @param all_pages Logical. If `TRUE`, fetches all pages automatically.
+#'   Default `TRUE`.
+#' @param clean Logical. If `TRUE` (default), renames prefixed columns to
+#'   short names and selects only user-friendly columns. If `FALSE`, returns
+#'   all flattened columns.
+#' @param api_key Character. Optional API key to override the global setting
+#'   for this call only.
 #' @return A tibble as returned by [get_resultados()] filtered to
 #'   `tipo_territorio = "seccion"`.
 #' @export
@@ -593,26 +721,24 @@ get_municipios <- function(...) {
 #' get_secciones(tipo_eleccion = "G", year = "2019",
 #'               codigo_municipio = "028079", all_pages = TRUE)
 #' }
-get_secciones <- function(...) {
-    args <- list(...)
-    args[["tipo_territorio"]] <- "seccion"
-    do.call(get_resultados, args)
+get_secciones <- function(year = NULL, tipo_eleccion = NULL,
+                          codigo_ccaa = NULL, codigo_provincia = NULL,
+                          codigo_municipio = NULL,
+                          ...,
+                          eleccion_id = NULL, territorio_id = NULL,
+                          partido_id = NULL,
+                          limit = 50L, skip = 0L, all_pages = TRUE,
+                          clean = TRUE, api_key = NULL) {
+    get_resultados(
+        year = year, tipo_eleccion = tipo_eleccion,
+        tipo_territorio = "seccion",
+        codigo_ccaa = codigo_ccaa,
+        codigo_provincia = codigo_provincia,
+        codigo_municipio = codigo_municipio,
+        ...,
+        eleccion_id = eleccion_id, territorio_id = territorio_id,
+        partido_id = partido_id,
+        limit = limit, skip = skip, all_pages = all_pages,
+        clean = clean, api_key = api_key
+    )
 }
-
-#' @describeIn get_provincias Retrocompatibility alias for [get_provincias()].
-#'   Maintained for backwards compatibility. Prefer `get_provincias()` in new
-#'   code.
-#' @export
-getProvincias <- get_provincias
-
-#' @describeIn get_municipios Retrocompatibility alias for [get_municipios()].
-#'   Maintained for backwards compatibility. Prefer `get_municipios()` in new
-#'   code.
-#' @export
-getMunicipios <- get_municipios
-
-#' @describeIn get_secciones Retrocompatibility alias for [get_secciones()].
-#'   Maintained for backwards compatibility. Prefer `get_secciones()` in new
-#'   code.
-#' @export
-getSecciones <- get_secciones

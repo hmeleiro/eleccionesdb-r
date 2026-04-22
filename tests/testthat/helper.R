@@ -181,7 +181,7 @@ fixture_votos_pag <- list(
 )
 
 fixture_combinados_pag <- list(
-    total = 91L, skip = 0L, limit = 1L,
+    total = 1L, skip = 0L, limit = 1L,
     data = list(
         list(
             id = 5732188L, eleccion_id = 208L, territorio_id = 20L,

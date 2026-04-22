@@ -78,14 +78,6 @@ reference:
       - edb_get_api_key
       - edb_set_base_url
       - edb_get_base_url
-  - title: Retrocompatibilidad
-    desc: >
-      Aliases mantenidos por compatibilidad con versiones anteriores del
-      paquete. Usar las funciones modernas en código nuevo.
-    contents:
-      - getProvincias
-      - getMunicipios
-      - getSecciones
 
 footer:
   structure:

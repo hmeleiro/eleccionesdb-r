@@ -2,16 +2,62 @@
 % Please edit documentation in R/resultados.R
 \name{get_provincias}
 \alias{get_provincias}
-\alias{getProvincias}
 \title{Results by province}
 \usage{
-get_provincias(...)
-
-getProvincias(...)
+get_provincias(
+  year = NULL,
+  tipo_eleccion = NULL,
+  codigo_ccaa = NULL,
+  codigo_provincia = NULL,
+  codigo_municipio = NULL,
+  ...,
+  eleccion_id = NULL,
+  territorio_id = NULL,
+  partido_id = NULL,
+  limit = 50L,
+  skip = 0L,
+  all_pages = TRUE,
+  clean = TRUE,
+  api_key = NULL
+)
 }
 \arguments{
-\item{...}{Arguments passed to \code{\link[=get_resultados]{get_resultados()}}. The \code{tipo_territorio}
-parameter is fixed to \code{"provincia"} and cannot be overridden.}
+\item{year}{Character vector. Filter by year(s). Optional.}
+
+\item{tipo_eleccion}{Character vector. Filter by election type code(s).
+Valid values: \code{"A"} (Autonomicas), \code{"E"} (Europeas), \code{"G"} (Congreso),
+\code{"L"} (Locales), \code{"S"} (Senado). Optional.}
+
+\item{codigo_ccaa}{Character vector. Filter by autonomous community INE
+code(s) (e.g. \code{"01"}, \code{"13"}). Optional.}
+
+\item{codigo_provincia}{Character vector. Filter by province INE code(s)
+(e.g. \code{"28"}, \code{"08"}). Optional.}
+
+\item{codigo_municipio}{Character vector. Filter by municipality INE
+code(s). Optional.}
+
+\item{...}{Arguments after \code{...} must be named.}
+
+\item{eleccion_id}{Integer vector. Filter by election ID(s). Optional.}
+
+\item{territorio_id}{Integer vector. Filter by territory ID(s). Optional.}
+
+\item{partido_id}{Integer vector. Filter by party ID(s). Optional.}
+
+\item{limit}{Integer. Maximum records per page (1-500, default 50).}
+
+\item{skip}{Integer. Records to skip (default 0).}
+
+\item{all_pages}{Logical. If \code{TRUE}, fetches all pages automatically.
+Default \code{TRUE}.}
+
+\item{clean}{Logical. If \code{TRUE} (default), renames prefixed columns to
+short names and selects only user-friendly columns. If \code{FALSE}, returns
+all flattened columns.}
+
+\item{api_key}{Character. Optional API key to override the global setting
+for this call only.}
 }
 \value{
 A tibble as returned by \code{\link[=get_resultados]{get_resultados()}} filtered to
@@ -19,17 +65,9 @@ A tibble as returned by \code{\link[=get_resultados]{get_resultados()}} filtered
 }
 \description{
 A convenience wrapper around \code{\link[=get_resultados]{get_resultados()}} that pre-sets
-\code{tipo_territorio = "provincia"}. All other parameters are passed through
-unchanged. See \code{\link[=get_resultados]{get_resultados()}} for the full parameter reference and
-details on the returned tibble.
+\code{tipo_territorio = "provincia"}. See \code{\link[=get_resultados]{get_resultados()}} for full details
+on the returned tibble.
 }
-\section{Functions}{
-\itemize{
-\item \code{getProvincias()}: Retrocompatibility alias for \code{\link[=get_provincias]{get_provincias()}}.
-Maintained for backwards compatibility. Prefer \code{get_provincias()} in new
-code.
-
-}}
 \examples{
 \dontrun{
 # Provincial results for general elections in Andalucia

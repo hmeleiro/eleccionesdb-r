@@ -27,14 +27,14 @@ test_that("get_resultado_completo returns list with totales_territorio and votos
 })
 
 test_that("get_totales_territorio returns paginated tibble", {
-    local_mocked_bindings(edb_get = function(...) fixture_resumen_pag)
+    local_mocked_bindings(edb_post = function(...) fixture_resumen_pag)
     tbl <- get_totales_territorio(eleccion_id = 208, tipo_territorio = "provincia")
     expect_s3_class(tbl, "tbl_df")
     expect_equal(nrow(tbl), 2)
 })
 
 test_that("get_votos_partido returns paginated tibble", {
-    local_mocked_bindings(edb_get = function(...) fixture_votos_pag)
+    local_mocked_bindings(edb_post = function(...) fixture_votos_pag)
     tbl <- get_votos_partido(eleccion_id = 208, territorio_id = 20)
     expect_s3_class(tbl, "tbl_df")
     expect_equal(nrow(tbl), 2)
@@ -43,7 +43,7 @@ test_that("get_votos_partido returns paginated tibble", {
 })
 
 test_that("get_resultados returns clean tibble by default", {
-    local_mocked_bindings(edb_get = function(path, ...) {
+    local_mocked_bindings(edb_post = function(path, body, ...) {
         if (grepl("combinados", path)) fixture_combinados_pag
         else fixture_resumen_pag
     })
@@ -76,7 +76,7 @@ test_that("get_resultados returns clean tibble by default", {
 })
 
 test_that("get_resultados with clean = FALSE returns full flattened tibble with summary cols", {
-    local_mocked_bindings(edb_get = function(path, ...) {
+    local_mocked_bindings(edb_post = function(path, body, ...) {
         if (grepl("combinados", path)) fixture_combinados_pag
         else fixture_resumen_pag
     })
@@ -102,7 +102,7 @@ test_that("get_resultados with clean = FALSE returns full flattened tibble with 
 })
 
 test_that("get_resultados gracefully handles failed resumen fetch", {
-    local_mocked_bindings(edb_get = function(path, ...) {
+    local_mocked_bindings(edb_post = function(path, body, ...) {
         if (grepl("combinados", path)) fixture_combinados_pag
         else stop("simulated network error")
     })
@@ -115,7 +115,7 @@ test_that("get_resultados gracefully handles failed resumen fetch", {
 })
 
 test_that("get_ccaa passes tipo_territorio = 'ccaa' to get_resultados", {
-    local_mocked_bindings(edb_get = function(path, ...) {
+    local_mocked_bindings(edb_post = function(path, body, ...) {
         if (grepl("combinados", path)) fixture_combinados_pag
         else fixture_resumen_pag
     })
@@ -123,17 +123,17 @@ test_that("get_ccaa passes tipo_territorio = 'ccaa' to get_resultados", {
     expect_s3_class(tbl, "tbl_df")
 })
 
-test_that("get_provincia passes tipo_territorio = 'provincia' to get_resultados", {
-    local_mocked_bindings(edb_get = function(path, ...) {
+test_that("get_provincias passes tipo_territorio = 'provincia' to get_resultados", {
+    local_mocked_bindings(edb_post = function(path, body, ...) {
         if (grepl("combinados", path)) fixture_combinados_pag
         else fixture_resumen_pag
     })
-    tbl <- get_provincia(eleccion_id = 208)
+    tbl <- get_provincias(eleccion_id = 208)
     expect_s3_class(tbl, "tbl_df")
 })
 
 test_that("get_municipios passes tipo_territorio = 'municipio' to get_resultados", {
-    local_mocked_bindings(edb_get = function(path, ...) {
+    local_mocked_bindings(edb_post = function(path, body, ...) {
         if (grepl("combinados", path)) fixture_combinados_pag
         else fixture_resumen_pag
     })
@@ -142,7 +142,7 @@ test_that("get_municipios passes tipo_territorio = 'municipio' to get_resultados
 })
 
 test_that("get_secciones passes tipo_territorio = 'seccion' to get_resultados", {
-    local_mocked_bindings(edb_get = function(path, ...) {
+    local_mocked_bindings(edb_post = function(path, body, ...) {
         if (grepl("combinados", path)) fixture_combinados_pag
         else fixture_resumen_pag
     })
@@ -150,24 +150,6 @@ test_that("get_secciones passes tipo_territorio = 'seccion' to get_resultados", 
     expect_s3_class(tbl, "tbl_df")
 })
 
-test_that("retrocompat aliases behave identically to their wrappers", {
-    local_mocked_bindings(edb_get = function(path, ...) {
-        if (grepl("combinados", path)) fixture_combinados_pag
-        else fixture_resumen_pag
-    })
-    expect_identical(
-        getProvincias(eleccion_id = 208),
-        get_provincia(eleccion_id = 208)
-    )
-    expect_identical(
-        getMunicipios(eleccion_id = 208),
-        get_municipios(eleccion_id = 208)
-    )
-    expect_identical(
-        getSecciones(eleccion_id = 208),
-        get_secciones(eleccion_id = 208)
-    )
-})
 
 test_that("get_health returns 1-row tibble", {
     local_mocked_bindings(edb_get = function(...) fixture_health)
