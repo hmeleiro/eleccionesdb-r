@@ -12,13 +12,10 @@ territoriales ya combinados en una sola tabla.
 - [`get_ccaa()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_ccaa.md)
   : Results by autonomous community
 - [`get_provincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
-  [`getProvincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
   : Results by province
 - [`get_municipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
-  [`getMunicipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
   : Results by municipality
 - [`get_secciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
-  [`getSecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
   : Results by census section
 
 ## Elecciones
@@ -93,18 +90,3 @@ para más detalles.
   : Set the EleccionesDB API base URL
 - [`edb_get_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_base_url.md)
   : Get the current EleccionesDB API base URL
-
-## Retrocompatibilidad
-
-Aliases mantenidos por compatibilidad con versiones anteriores del
-paquete. Usar las funciones modernas en código nuevo.
-
-- [`get_provincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
-  [`getProvincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
-  : Results by province
-- [`get_municipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
-  [`getMunicipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
-  : Results by municipality
-- [`get_secciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
-  [`getSecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
-  : Results by census section

@@ -1,5 +1,11 @@
 # eleccionesdb
 
+[![R-CMD-check](https://github.com/hmeleiro/eleccionesdb-r/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/hmeleiro/eleccionesdb-r/actions/workflows/R-CMD-check.yaml)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![License: GPL
+v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
 > R client for the [eleccionesdb
 > API](https://eleccionesdb-api.spainelectoralproject.com/) — Spanish
 > electoral data as tidy tibbles.
@@ -243,13 +249,10 @@ territoriales ya combinados en una sola tabla.
 - [`get_ccaa()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_ccaa.md)
   : Results by autonomous community
 - [`get_provincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
-  [`getProvincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
   : Results by province
 - [`get_municipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
-  [`getMunicipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
   : Results by municipality
 - [`get_secciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
-  [`getSecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
   : Results by census section
 
 ## Elecciones
@@ -324,21 +327,6 @@ para más detalles.
   : Set the EleccionesDB API base URL
 - [`edb_get_base_url()`](https://hmeleiro.github.io/eleccionesdb-r/reference/edb_get_base_url.md)
   : Get the current EleccionesDB API base URL
-
-## Retrocompatibilidad
-
-Aliases mantenidos por compatibilidad con versiones anteriores del
-paquete. Usar las funciones modernas en código nuevo.
-
-- [`get_provincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
-  [`getProvincias()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_provincias.md)
-  : Results by province
-- [`get_municipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
-  [`getMunicipios()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_municipios.md)
-  : Results by municipality
-- [`get_secciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
-  [`getSecciones()`](https://hmeleiro.github.io/eleccionesdb-r/reference/get_secciones.md)
-  : Results by census section
 
 # Articles
 
